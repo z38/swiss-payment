@@ -1,0 +1,26 @@
+{
+    "name": "z38/swiss-payment",
+    "type": "library",
+    "license": "MIT",
+    "description": "PHP library to generate Swiss pain.001 messages (complies with ISO-20022)",
+    "keywords": ["library", "iso-20022", "six", "credit-transfer", "switzerland"],
+    "homepage": "https://github.com/z38/swiss-payment",
+    "authors": [
+        {
+            "name": "z38",
+            "homepage": "https://github.com/z38",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Z38\\SwissPayment": "src/"
+        }
+    }
+}
