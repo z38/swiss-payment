@@ -2,14 +2,34 @@
 
 namespace Z38\SwissPayment\Message;
 
+/**
+ * AbstractMessages eases message creation using DOM
+ */
 abstract class AbstractMessage implements MessageInterface
 {
     const SCHEMA_LOCATION = 'http://www.six-interbank-clearing.com/de/%s';
 
+    /**
+     * Builds the DOM of the actual message
+     *
+     * @param \DOMDocument $doc
+     *
+     * @return \DOMElement
+     */
     abstract protected function buildDom(\DOMDocument $doc);
 
+    /**
+     * Gets the name of the schema
+     *
+     * @return string
+     */
     abstract protected function getSchemaName();
 
+    /**
+     * Builds a DOM document of the message
+     *
+     * @return \DOMDocument
+     */
     public function asDom()
     {
         $schema = $this->getSchemaName();
@@ -27,21 +47,41 @@ abstract class AbstractMessage implements MessageInterface
         return $doc;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function asXml()
     {
         return $this->asDom()->saveXML();
     }
 
+    /**
+     * Returns the name of the software used to create the message
+     *
+     * @return string
+     */
     public function getSoftwareName()
     {
         return 'Z38_SwissPayment';
     }
 
+    /**
+     * Returns the version of the software used to create the message
+     *
+     * @return string
+     */
     public function getSoftwareVersion()
     {
         return 'dev-master';
     }
 
+    /**
+     * Creates a DOM element which contains details about the software used to create the message
+     *
+     * @param \DOMDocument $doc
+     *
+     * @return \DOMElement
+     */
     protected function buildContactDetails(\DOMDocument $doc)
     {
         $root = $doc->createElement('CtctDtls');

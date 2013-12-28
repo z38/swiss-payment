@@ -2,6 +2,9 @@
 
 namespace Z38\SwissPayment;
 
+/**
+ * This class holds a structured representation of a postal address
+ */
 class PostalAddress
 {
     protected $street;
@@ -10,6 +13,15 @@ class PostalAddress
     protected $town;
     protected $country;
 
+    /**
+     * Constructor
+     *
+     * @param string      $street     Street name
+     * @param string|null $buildingNo Building number or null
+     * @param string      $postCode   Postal code
+     * @param string      $town       Town name
+     * @param string      $country    Country code (ISO 3166-1 alpha-2)
+     */
     public function __construct($street, $buildingNo, $postCode, $town, $country = 'CH')
     {
         $this->street = $street;
@@ -19,6 +31,13 @@ class PostalAddress
         $this->country = $country;
     }
 
+    /**
+     * Returns a DOM element
+     *
+     * @param \DOMDocument $doc
+     *
+     * @return \DOMElement
+     */
     public function asDom(\DOMDocument $doc)
     {
         $root = $doc->createElement('PstlAdr');

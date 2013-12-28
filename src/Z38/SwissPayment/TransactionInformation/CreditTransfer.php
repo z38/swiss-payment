@@ -7,6 +7,9 @@ use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\PostalAddress;
 use Z38\SwissPayment\Money;
 
+/**
+ * CreditTransfer contains all the information about the beneficiary and further information about the transaction.
+ */
 class CreditTransfer
 {
     protected $instructionId;
@@ -18,6 +21,17 @@ class CreditTransfer
     protected $amount;
     protected $remittanceInformation;
 
+    /**
+     * Constructor
+     *
+     * @param string        $instructionId    Identifier of the instruction (should be unique within the message)
+     * @param string        $endToEndId       End-To-End Identifier of the instruction (passed unchanged along the complete processing chain)
+     * @param string        $creditorName     Name of the creditor
+     * @param PostalAddress $creditorAddress  Address of the creditor
+     * @param IBAN          $creditorIBAN     IBAN of the creditor
+     * @param BIC           $creditorAgentBIC BIC of the creditor's financial institution
+     * @param Money\CHF     $amount           Amount of money to be transferred
+     */
     public function __construct($instructionId, $endToEndId, $creditorName, PostalAddress $creditorAddress, IBAN $creditorIBAN, BIC $creditorAgentBIC, Money\CHF $amount)
     {
         $this->instructionId = $instructionId;
@@ -30,6 +44,13 @@ class CreditTransfer
         $this->remittanceInformation = null;
     }
 
+    /**
+     * Sets the unstructured remittance information
+     *
+     * @param string|null $remittanceInformation
+     *
+     * @return CreditTransfer This credit transfer
+     */
     public function setRemittanceInformation($remittanceInformation)
     {
         $this->remittanceInformation = $remittanceInformation;
@@ -37,11 +58,23 @@ class CreditTransfer
         return $this;
     }
 
+    /**
+     * Gets the instructed amount of this transaction
+     *
+     * @return Money\CHF The instructed amount
+     */
     public function getAmount()
     {
         return $this->amount;
     }
 
+    /**
+     * Builds a DOM tree of this transaction
+     *
+     * @param \DOMDocument $doc
+     *
+     * @return \DOMElement The built DOM tree
+     */
     public function asDom(\DOMDocument $doc)
     {
         $root = $doc->createElement('CdtTrfTxInf');
