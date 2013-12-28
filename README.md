@@ -31,6 +31,11 @@ $ composer install
 
 Have a look at `Z38\SwissPayment\Tests\Message\CustomerCreditTransferTest` on how to create a pain.001 XML file.
 
+## Caveats
+
+- At the moment only payment type 3 is supported (for details consult chapter 2.2 of the Implementation Guidelines)
+- The whole project is still under development and therefore BC breaks can occur. Please contact me if you need a stable code base.
+
 ## Contributing
 
 If you want to get your hands dirty, great! Here's a couple of steps/guidelines:
