@@ -2,45 +2,37 @@
 
 namespace Z38\SwissPayment\TransactionInformation;
 
-use Z38\SwissPayment\BIC;
-use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\PostalAddress;
-use Z38\SwissPayment\Money;
+use Z38\SwissPayment\Money\Money;
 
 /**
  * CreditTransfer contains all the information about the beneficiary and further information about the transaction.
  */
-class CreditTransfer
+abstract class CreditTransfer
 {
     protected $instructionId;
     protected $endToEndId;
     protected $creditorName;
     protected $creditorAddress;
-    protected $creditorIBAN;
-    protected $creditorAgentBIC;
     protected $amount;
     protected $remittanceInformation;
 
     /**
      * Constructor
      *
-     * @param string        $instructionId    Identifier of the instruction (should be unique within the message)
-     * @param string        $endToEndId       End-To-End Identifier of the instruction (passed unchanged along the complete processing chain)
-     * @param string        $creditorName     Name of the creditor
-     * @param PostalAddress $creditorAddress  Address of the creditor
-     * @param IBAN          $creditorIBAN     IBAN of the creditor
-     * @param BIC           $creditorAgentBIC BIC of the creditor's financial institution
-     * @param Money\CHF     $amount           Amount of money to be transferred
+     * @param string        $instructionId   Identifier of the instruction (should be unique within the message)
+     * @param string        $endToEndId      End-To-End Identifier of the instruction (passed unchanged along the complete processing chain)
+     * @param Money         $amount          Amount of money to be transferred
+     * @param string        $creditorName    Name of the creditor
+     * @param PostalAddress $creditorAddress Address of the creditor
      */
-    public function __construct($instructionId, $endToEndId, $creditorName, PostalAddress $creditorAddress, IBAN $creditorIBAN, BIC $creditorAgentBIC, Money\CHF $amount)
+    public function __construct($instructionId, $endToEndId, Money $amount, $creditorName, PostalAddress $creditorAddress)
     {
         $this->instructionId = $instructionId;
         $this->endToEndId = $endToEndId;
+        $this->amount = $amount;
         $this->creditorName = $creditorName;
         $this->creditorAddress = $creditorAddress;
-        $this->creditorIBAN = $creditorIBAN;
-        $this->creditorAgentBIC = $creditorAgentBIC;
-        $this->amount = $amount;
         $this->remittanceInformation = null;
     }
 
@@ -61,7 +53,7 @@ class CreditTransfer
     /**
      * Gets the instructed amount of this transaction
      *
-     * @return Money\CHF The instructed amount
+     * @return Money The instructed amount
      */
     public function getAmount()
     {
@@ -69,13 +61,14 @@ class CreditTransfer
     }
 
     /**
-     * Builds a DOM tree of this transaction
+     * Builds a DOM tree of this transaction and adds header nodes
      *
      * @param \DOMDocument $doc
+     * @param string|null  $localInstrument Local Instrument
      *
-     * @return \DOMElement The built DOM tree
+     * @return \DOMNode The built DOM node
      */
-    public function asDom(\DOMDocument $doc)
+    protected function buildHeader(\DOMDocument $doc, $localInstrument)
     {
         $root = $doc->createElement('CdtTrfTxInf');
 
@@ -84,35 +77,69 @@ class CreditTransfer
         $id->appendChild($doc->createElement('EndToEndId', $this->endToEndId));
         $root->appendChild($id);
 
+        if (!empty($localInstrument)) {
+            $paymentType = $doc->createElement('PmtTpInf');
+            $localInstrumentNode = $doc->createElement('LclInstrm');
+            $localInstrumentNode->appendChild($doc->createElement('Prtry', $localInstrument));
+            $paymentType->appendChild($localInstrumentNode);
+            $root->appendChild($paymentType);
+        }
+
         $amount = $doc->createElement('Amt');
         $instdAmount = $doc->createElement('InstdAmt', $this->amount->format());
         $instdAmount->setAttribute('Ccy', $this->amount->getCurrency());
         $amount->appendChild($instdAmount);
         $root->appendChild($amount);
 
-        $creditorAgent = $doc->createElement('CdtrAgt');
-        $creditorAgentId = $doc->createElement('FinInstnId');
-        $creditorAgentId->appendChild($doc->createElement('BIC', $this->creditorAgentBIC->format()));
-        $creditorAgent->appendChild($creditorAgentId);
-        $root->appendChild($creditorAgent);
+        return $root;
+    }
 
+    /**
+     * Builds a DOM node of the Creditor field
+     *
+     * @param \DOMDocument $doc
+     *
+     * @return \DOMNode The built DOM node
+     */
+    protected function buildCreditor(\DOMDocument $doc)
+    {
         $creditor = $doc->createElement('Cdtr');
         $creditor->appendChild($doc->createElement('Nm', $this->creditorName));
         $creditor->appendChild($this->creditorAddress->asDom($doc));
-        $root->appendChild($creditor);
 
-        $creditorAccount = $doc->createElement('CdtrAcct');
-        $creditorAccountId = $doc->createElement('Id');
-        $creditorAccountId->appendChild($doc->createElement('IBAN', $this->creditorIBAN->format(false)));
-        $creditorAccount->appendChild($creditorAccountId);
-        $root->appendChild($creditorAccount);
+        return $creditor;
+    }
 
-        if (!empty($this->remittanceInformation)) {
+    /**
+     * Indicates whether remittance information is set
+     *
+     * @param \DOMDocument $doc
+     *
+     * @return bool true if remittance information is set
+     */
+    protected function hasRemittanceInformation()
+    {
+        return !empty($this->remittanceInformation);
+    }
+
+    /**
+     * Builds a DOM node of the Remittance Information field
+     *
+     * @param \DOMDocument $doc
+     *
+     * @return \DOMNode The built DOM node
+     *
+     * @throws \LogicException When no remittance information is set
+     */
+    protected function buildRemittanceInformation(\DOMDocument $doc)
+    {
+        if ($this->hasRemittanceInformation()) {
             $remittance = $doc->createElement('RmtInf');
             $remittance->appendChild($doc->createElement('Ustrd', $this->remittanceInformation));
-            $root->appendChild($remittance);
-        }
 
-        return $root;
+            return $remittance;
+        } else {
+            throw new \LogicException('Can not build node without data.');
+        }
     }
 }
