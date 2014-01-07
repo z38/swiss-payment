@@ -61,6 +61,15 @@ abstract class CreditTransfer
     }
 
     /**
+     * Builds a DOM tree of this transaction
+     *
+     * @param \DOMDocument $doc
+     *
+     * @return \DOMElement The built DOM tree
+     */
+    abstract public function asDom(\DOMDocument $doc);
+
+    /**
      * Builds a DOM tree of this transaction and adds header nodes
      *
      * @param \DOMDocument $doc
