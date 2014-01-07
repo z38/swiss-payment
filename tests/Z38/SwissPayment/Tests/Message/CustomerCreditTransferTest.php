@@ -19,7 +19,7 @@ class CustomerCreditTransferTest extends TestCase
     const SCHEMA = 'pain.001.001.03.ch.02.xsd';
     const NS_URI_ROOT = 'http://www.six-interbank-clearing.com/de/';
 
-    public function testTransaction()
+    protected function buildMessage()
     {
         $transaction = new BankCreditTransfer(
             'instr-001',
@@ -59,9 +59,12 @@ class CustomerCreditTransferTest extends TestCase
         $message = new CustomerCreditTransfer('message-001', 'InnoMuster AG');
         $message->addPayment($payment);
 
-        $xml = $message->asXml();
+        return $message;
+    }
 
-        $this->validateXml($xml, self::SCHEMA);
+    public function testGroupHeader()
+    {
+        $xml = $this->buildMessage()->asXml();
 
         $doc = new \DOMDocument();
         $doc->loadXML($xml);
@@ -75,15 +78,15 @@ class CustomerCreditTransferTest extends TestCase
         $this->assertEquals('1800.00', $ctrlSum->item(0)->textContent);
     }
 
-    protected function validateXml($xml, $schema)
+    public function testSchemaValidation()
     {
-        $schemaPath = __DIR__.'/../../../../'.$schema;
+        $xml = $this->buildMessage()->asXml();
+        $schemaPath = __DIR__.'/../../../../'.self::SCHEMA;
 
         $doc = new \DOMDocument();
         $doc->loadXML($xml);
 
         libxml_use_internal_errors(true);
-        $doc->schemaValidate($schemaPath);
         $valid = $doc->schemaValidate($schemaPath);
         foreach (libxml_get_errors() as $error) {
             $this->fail($error->message);
