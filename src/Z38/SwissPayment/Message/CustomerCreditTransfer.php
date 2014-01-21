@@ -2,7 +2,8 @@
 
 namespace Z38\SwissPayment\Message;
 
-use Z38\SwissPayment\Money;
+use Money\Money;
+use Z38\SwissPayment\Money\MoneyFormatter;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
 
 /**
@@ -68,11 +69,13 @@ class CustomerCreditTransfer extends AbstractMessage
      */
     protected function buildDom(\DOMDocument $doc)
     {
+        $moneyFormatter = new MoneyFormatter(2);
+
         $transactionCount = 0;
-        $transactionSum = new Money\CHF(0);
+        $transactionSum = Money::CHF(0);
         foreach ($this->payments as $payment) {
             $transactionCount += $payment->getTransactionCount();
-            $transactionSum = $transactionSum->plus($payment->getTransactionSum());
+            $transactionSum = $transactionSum->add($payment->getTransactionSum());
         }
 
         $root = $doc->createElement('CstmrCdtTrfInitn');
@@ -80,7 +83,7 @@ class CustomerCreditTransfer extends AbstractMessage
         $header->appendChild($doc->createElement('MsgId', $this->id));
         $header->appendChild($doc->createElement('CreDtTm', $this->creationTime->format('Y-m-d\TH:i:sP')));
         $header->appendChild($doc->createElement('NbOfTxs', $transactionCount));
-        $header->appendChild($doc->createElement('CtrlSum', $transactionSum->format()));
+        $header->appendChild($doc->createElement('CtrlSum', $moneyFormatter->format($transactionSum)));
         $initgParty = $doc->createElement('InitgPty');
         $initgParty->appendChild($doc->createElement('Nm', $this->initiatingParty));
         $initgParty->appendChild($this->buildContactDetails($doc));

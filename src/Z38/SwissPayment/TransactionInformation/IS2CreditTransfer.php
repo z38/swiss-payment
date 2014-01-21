@@ -2,10 +2,10 @@
 
 namespace Z38\SwissPayment\TransactionInformation;
 
+use Money\Money;
 use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\PostalAddress;
 use Z38\SwissPayment\PostalAccount;
-use Z38\SwissPayment\Money;
 
 /**
  * IS2CreditTransfer contains all the information about a IS 2-stage (type 2.2) transaction.
@@ -21,10 +21,14 @@ class IS2CreditTransfer extends CreditTransfer
      * @param IBAN          $creditorIBAN        IBAN of the creditor
      * @param string        $creditorAgentName   Name of the creditor's financial institution
      * @param PostalAccount $creditorAgentPostal Postal account of the creditor's financial institution
+     *
+     * @throws \InvalidArgumentException When the instructed amount is not in Swiss Francs.
      */
-    public function __construct($instructionId, $endToEndId, Money\CHF $amount, $creditorName, PostalAddress $creditorAddress, IBAN $creditorIBAN, $creditorAgentName, PostalAccount $creditorAgentPostal)
+    public function __construct($instructionId, $endToEndId, Money $amount, $creditorName, PostalAddress $creditorAddress, IBAN $creditorIBAN, $creditorAgentName, PostalAccount $creditorAgentPostal)
     {
         parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress);
+
+        $this->assertCurrency('CHF');
 
         $this->creditorIBAN = $creditorIBAN;
         $this->creditorAgentName = $creditorAgentName;

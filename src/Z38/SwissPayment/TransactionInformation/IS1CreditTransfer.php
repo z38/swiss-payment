@@ -2,9 +2,9 @@
 
 namespace Z38\SwissPayment\TransactionInformation;
 
+use Money\Money;
 use Z38\SwissPayment\PostalAddress;
 use Z38\SwissPayment\PostalAccount;
-use Z38\SwissPayment\Money;
 
 /**
  * IS1CreditTransfer contains all the information about a IS 1-stage (type 2.1) transaction.
@@ -16,10 +16,14 @@ class IS1CreditTransfer extends CreditTransfer
     /**
      * {@inheritdoc}
      * @param PostalAccount $creditorAccount Postal account of the creditor
+     *
+     * @throws \InvalidArgumentException When the instructed amount is not in Swiss Francs.
      */
-    public function __construct($instructionId, $endToEndId, Money\CHF $amount, $creditorName, PostalAddress $creditorAddress, PostalAccount $creditorAccount)
+    public function __construct($instructionId, $endToEndId, Money $amount, $creditorName, PostalAddress $creditorAddress, PostalAccount $creditorAccount)
     {
         parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress);
+
+        $this->assertCurrency('CHF');
 
         $this->creditorAccount = $creditorAccount;
     }

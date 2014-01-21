@@ -2,10 +2,10 @@
 
 namespace Z38\SwissPayment\TransactionInformation;
 
+use Money\Money;
 use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\PostalAddress;
-use Z38\SwissPayment\Money;
 
 /**
  * BankCreditTransfer contains all the information about a type 3 transaction.
@@ -19,10 +19,14 @@ class BankCreditTransfer extends CreditTransfer
      * {@inheritdoc}
      * @param IBAN $creditorIBAN     IBAN of the creditor
      * @param BIC  $creditorAgentBIC BIC of the creditor's financial institution
+     *
+     * @throws \InvalidArgumentException When the instructed amount is not in Swiss Francs.
      */
-    public function __construct($instructionId, $endToEndId, Money\CHF $amount, $creditorName, PostalAddress $creditorAddress, IBAN $creditorIBAN, BIC $creditorAgentBIC)
+    public function __construct($instructionId, $endToEndId, Money $amount, $creditorName, PostalAddress $creditorAddress, IBAN $creditorIBAN, BIC $creditorAgentBIC)
     {
         parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress);
+
+        $this->assertCurrency('CHF');
 
         $this->creditorIBAN = $creditorIBAN;
         $this->creditorAgentBIC = $creditorAgentBIC;

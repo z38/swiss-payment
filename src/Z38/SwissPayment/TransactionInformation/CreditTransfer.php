@@ -2,8 +2,9 @@
 
 namespace Z38\SwissPayment\TransactionInformation;
 
+use Money\Money;
+use Z38\SwissPayment\Money\MoneyFormatter;
 use Z38\SwissPayment\PostalAddress;
-use Z38\SwissPayment\Money\Money;
 
 /**
  * CreditTransfer contains all the information about the beneficiary and further information about the transaction.
@@ -94,9 +95,10 @@ abstract class CreditTransfer
             $root->appendChild($paymentType);
         }
 
+        $moneyFormatter = new MoneyFormatter(2);
         $amount = $doc->createElement('Amt');
-        $instdAmount = $doc->createElement('InstdAmt', $this->amount->format());
-        $instdAmount->setAttribute('Ccy', $this->amount->getCurrency());
+        $instdAmount = $doc->createElement('InstdAmt', $moneyFormatter->format($this->amount));
+        $instdAmount->setAttribute('Ccy', $this->amount->getCurrency()->getName());
         $amount->appendChild($instdAmount);
         $root->appendChild($amount);
 
@@ -149,6 +151,20 @@ abstract class CreditTransfer
             return $remittance;
         } else {
             throw new \LogicException('Can not build node without data.');
+        }
+    }
+
+    /**
+     * Checks if the amount is of a certain currency
+     *
+     * @param string $currencyName Name of the currency (e.g. CHF)
+     *
+     * @throws \InvalidArgumentException If the currencies do not match
+     */
+    protected function assertCurrency($currencyName)
+    {
+        if ($this->amount->getCurrency()->getName() !== $currencyName) {
+            throw new \InvalidArgumentException('Invalid currency');
         }
     }
 }

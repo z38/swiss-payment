@@ -2,9 +2,9 @@
 
 namespace Z38\SwissPayment\PaymentInformation;
 
+use Money\Money;
 use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\IBAN;
-use Z38\SwissPayment\Money;
 use Z38\SwissPayment\TransactionInformation\CreditTransfer;
 
 /**
@@ -66,14 +66,14 @@ class PaymentInformation
     /**
      * Gets the sum of transactions
      *
-     * @return Money\CHF Sum of transactions
+     * @return Money Sum of transactions
      */
     public function getTransactionSum()
     {
-        $sum = new Money\CHF(0);
+        $sum = Money::CHF(0);
 
         foreach ($this->transactions as $transaction) {
-            $sum = $sum->plus($transaction->getAmount());
+            $sum = $sum->add($transaction->getAmount());
         }
 
         return $sum;
