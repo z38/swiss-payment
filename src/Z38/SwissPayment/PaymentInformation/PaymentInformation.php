@@ -42,7 +42,7 @@ class PaymentInformation
     /**
      * Adds a single transaction to this payment
      *
-     * @param CreditTranfer $transaction The transaction to be added
+     * @param CreditTransfer $transaction The transaction to be added
      *
      * @return PaymentInformation This payment instruction
      */

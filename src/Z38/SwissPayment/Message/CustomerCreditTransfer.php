@@ -25,7 +25,7 @@ class CustomerCreditTransfer extends AbstractMessage
     {
         $this->id = $id;
         $this->initiatingParty = $initiatingParty;
-        $this->transactions = array();
+        $this->payments = array();
         $this->creationTime = new \DateTime();
     }
 

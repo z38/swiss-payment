@@ -122,8 +122,6 @@ abstract class CreditTransfer
     /**
      * Indicates whether remittance information is set
      *
-     * @param \DOMDocument $doc
-     *
      * @return bool true if remittance information is set
      */
     protected function hasRemittanceInformation()
