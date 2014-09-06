@@ -6,23 +6,50 @@ use Z38\SwissPayment\BIC;
 
 class BICTest extends TestCase
 {
-    public function testValid()
+    /**
+     * @dataProvider validSamples
+     * @covers \Z38\SwissPayment\BIC::__construct
+     */
+    public function testValid($bic)
     {
-        $this->check('AABAFI22', true);
-        $this->check('HANDFIHH', true);
-        $this->check('DEUTDEFF500', true);
+        $this->check($bic, true);
     }
 
+    /**
+     * @covers \Z38\SwissPayment\BIC::__construct
+     */
     public function testInvalidLength()
     {
         $this->check('AABAFI22F', false);
         $this->check('HANDFIHH00', false);
     }
 
+    /**
+     * @covers \Z38\SwissPayment\BIC::__construct
+     */
     public function testInvalidChars()
     {
         $this->check('HAND-FIHH', false);
         $this->check('HAND FIHH', false);
+    }
+
+    /**
+     * @dataProvider validSamples
+     * @covers \Z38\SwissPayment\BIC::format
+     */
+    public function testFormat($bic)
+    {
+        $instance = new BIC($bic);
+        $this->assertEquals($bic, $instance->format());
+    }
+
+    public function validSamples()
+    {
+        return array(
+            array('AABAFI22'),
+            array('HANDFIHH'),
+            array('DEUTDEFF500')
+        );
     }
 
     protected function check($iban, $valid)
