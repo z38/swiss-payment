@@ -3,7 +3,7 @@
     "type": "library",
     "license": "MIT",
     "description": "PHP library to generate Swiss pain.001 messages (complies with ISO-20022)",
-    "keywords": ["library", "iso-20022", "six", "credit-transfer", "switzerland"],
+    "keywords": ["banking", "iso-20022", "six", "credit-transfer", "switzerland", "sepa", "xml"],
     "homepage": "https://github.com/z38/swiss-payment",
     "authors": [
         {
