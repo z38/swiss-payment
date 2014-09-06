@@ -8,7 +8,7 @@ use Z38\SwissPayment\Tests\TestCase;
 class MoneyTest extends TestCase
 {
     /**
-     * @covers \Z38\SwissPayment\Money::getAmount
+     * @covers \Z38\SwissPayment\Money\Money::getAmount
      */
     public function testGetAmount()
     {
@@ -23,7 +23,7 @@ class MoneyTest extends TestCase
     }
 
     /**
-     * @covers \Z38\SwissPayment\Money::equals
+     * @covers \Z38\SwissPayment\Money\Money::equals
      */
     public function testEquals()
     {
@@ -41,9 +41,9 @@ class MoneyTest extends TestCase
 
     /**
      * @dataProvider validSamplePairs
-     * @covers \Z38\SwissPayment\Money::plus
-     * @covers \Z38\SwissPayment\Money::minus
-     * @covers \Z38\SwissPayment\Money::compareTo
+     * @covers \Z38\SwissPayment\Money\Money::plus
+     * @covers \Z38\SwissPayment\Money\Money::minus
+     * @covers \Z38\SwissPayment\Money\Money::compareTo
      */
     public function testBinaryOperands($a, $b, $expectedSum, $expectedDiff, $expectedComparison)
     {
@@ -55,7 +55,7 @@ class MoneyTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      * @dataProvider invalidSamplePairs
-     * @covers \Z38\SwissPayment\Money::plus
+     * @covers \Z38\SwissPayment\Money\Money::plus
      */
     public function testInvalidPlus($a, $b)
     {
@@ -65,7 +65,7 @@ class MoneyTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      * @dataProvider invalidSamplePairs
-     * @covers \Z38\SwissPayment\Money::minus
+     * @covers \Z38\SwissPayment\Money\Money::minus
      */
     public function testInvalidMinus($a, $b)
     {
@@ -75,7 +75,7 @@ class MoneyTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      * @dataProvider invalidSamplePairs
-     * @covers \Z38\SwissPayment\Money::minus
+     * @covers \Z38\SwissPayment\Money\Money::minus
      */
     public function testInvalidCompareTo($a, $b)
     {
