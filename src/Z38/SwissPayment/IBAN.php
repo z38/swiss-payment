@@ -7,6 +7,7 @@ namespace Z38\SwissPayment;
  */
 class IBAN
 {
+    const MAX_LENGTH = 34;
     const PATTERN = '/^[A-Z]{2,2}[0-9]{2,2}[A-Z0-9]{1,30}$/';
 
     protected $iban;
@@ -32,21 +33,25 @@ class IBAN
     }
 
     /**
-     * Format the IBAN either in a human or machine-readable format
-     *
-     * @param bool $human Whether to group the IBAN in blocks of four characters
+     * Format the IBAN either in a human-readable manner
      *
      * @return string The formatted IBAN
      */
-    public function format($human = true)
+    public function format()
     {
-        if ($human) {
-            $parts = str_split($iban, 4);
+        $parts = str_split($this->iban, 4);
 
-            return implode(' ', $parts);
-        } else {
-            return $this->iban;
-        }
+        return implode(' ', $parts);
+    }
+
+    /**
+     * Normalize the IBAN
+     *
+     * @return string The normalized IBAN
+     */
+    public function normalize()
+    {
+        return $this->iban;
     }
 
     /**
@@ -86,5 +91,15 @@ class IBAN
         }
 
         return ($r == 1);
+    }
+
+    /**
+     * Returns a string representation.
+     *
+     * @return string The string representation.
+     */
+    public function __toString()
+    {
+        return $this->format();
     }
 }

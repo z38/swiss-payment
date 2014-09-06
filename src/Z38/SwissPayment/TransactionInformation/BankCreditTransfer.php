@@ -45,7 +45,7 @@ class BankCreditTransfer extends CreditTransfer
 
         $creditorAccount = $doc->createElement('CdtrAcct');
         $creditorAccountId = $doc->createElement('Id');
-        $creditorAccountId->appendChild($doc->createElement('IBAN', $this->creditorIBAN->format(false)));
+        $creditorAccountId->appendChild($doc->createElement('IBAN', $this->creditorIBAN->normalize()));
         $creditorAccount->appendChild($creditorAccountId);
         $root->appendChild($creditorAccount);
 

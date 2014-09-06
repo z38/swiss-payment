@@ -131,7 +131,7 @@ class PaymentInformation
 
         $debtorAccount = $doc->createElement('DbtrAcct');
         $debtorAccountId = $doc->createElement('Id');
-        $debtorAccountId->appendChild($doc->createElement('IBAN', $this->debtorIBAN->format(false)));
+        $debtorAccountId->appendChild($doc->createElement('IBAN', $this->debtorIBAN->normalize()));
         $debtorAccount->appendChild($debtorAccountId);
         $root->appendChild($debtorAccount);
 
