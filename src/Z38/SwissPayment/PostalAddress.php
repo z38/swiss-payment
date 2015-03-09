@@ -7,10 +7,29 @@ namespace Z38\SwissPayment;
  */
 class PostalAddress
 {
+    /**
+     * @var string
+     */
     protected $street;
+
+    /**
+     * @var string|null
+     */
     protected $buildingNo;
+
+    /**
+     * @var string
+     */
     protected $postCode;
+
+    /**
+     * @var string
+     */
     protected $town;
+
+    /**
+     * @var string
+     */
     protected $country;
 
     /**
@@ -24,11 +43,11 @@ class PostalAddress
      */
     public function __construct($street, $buildingNo, $postCode, $town, $country = 'CH')
     {
-        $this->street = $street;
+        $this->street = (string) $street;
         $this->buildingNo = $buildingNo;
-        $this->postCode = $postCode;
-        $this->town = $town;
-        $this->country = $country;
+        $this->postCode = (string) $postCode;
+        $this->town = (string) $town;
+        $this->country = (string) $country;
     }
 
     /**

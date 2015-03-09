@@ -11,6 +11,9 @@ use Z38\SwissPayment\Money;
  */
 class IS1CreditTransfer extends CreditTransfer
 {
+    /**
+     * @var PostalAccount
+     */
     protected $creditorAccount;
 
     /**

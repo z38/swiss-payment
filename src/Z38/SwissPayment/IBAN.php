@@ -10,6 +10,9 @@ class IBAN
     const MAX_LENGTH = 34;
     const PATTERN = '/^[A-Z]{2,2}[0-9]{2,2}[A-Z0-9]{1,30}$/';
 
+    /**
+     * @var string
+     */
     protected $iban;
 
     /**

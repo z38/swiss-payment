@@ -14,12 +14,39 @@ use Z38\SwissPayment\TransactionInformation\CreditTransfer;
  */
 class PaymentInformation
 {
+    /**
+     * @var string
+     */
     protected $id;
+
+    /**
+     * @var array
+     */
     protected $transactions;
+
+    /**
+     * @var bool
+     */
     protected $batchBooking;
+
+    /**
+     * @var \DateTime
+     */
     protected $executionDate;
+
+    /**
+     * @var string
+     */
     protected $debtorName;
+
+    /**
+     * @var FinancialInstitutionInterface
+     */
     protected $debtorAgent;
+
+    /**
+     * @var IBAN
+     */
     protected $debtorIBAN;
 
     /**
@@ -36,11 +63,11 @@ class PaymentInformation
             throw new \InvalidArgumentException('The debtor agent must be an instance of BC or BIC.');
         }
 
-        $this->id = $id;
+        $this->id = (string) $id;
         $this->transactions = array();
         $this->batchBooking = true;
         $this->executionDate = new \DateTime();
-        $this->debtorName = $debtorName;
+        $this->debtorName = (string) $debtorName;
         $this->debtorAgent = $debtorAgent;
         $this->debtorIBAN = $debtorIBAN;
     }

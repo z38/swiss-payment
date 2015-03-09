@@ -9,8 +9,19 @@ class PostalAccount
 {
     const PATTERN = '/^[0-9]{2}-[1-9][0-9]{0,5}-[0-9]$/';
 
+    /**
+     * @var int
+     */
     protected $prefix;
+
+    /**
+     * @var int
+     */
     protected $number;
+
+    /**
+     * @var int
+     */
     protected $checkDigit;
 
     /**
@@ -31,9 +42,9 @@ class PostalAccount
             throw new \InvalidArgumentException('Postal account number has an invalid prefix.');
         }
 
-        $this->prefix = $parts[0];
-        $this->number = $parts[1];
-        $this->checkDigit = $parts[2];
+        $this->prefix = (int) $parts[0];
+        $this->number = (int) $parts[1];
+        $this->checkDigit = (int) $parts[2];
     }
 
     /**
@@ -46,6 +57,13 @@ class PostalAccount
         return sprintf('%d-%d-%d', $this->prefix, $this->number, $this->checkDigit);
     }
 
+    /**
+     * Checks whether a given prefix is valid
+     *
+     * @param int $prefix The prefix to be checked
+     *
+     * @return bool True if the prefix is valid
+     */
     private static function checkPrefix($prefix)
     {
         return in_array($prefix, array(

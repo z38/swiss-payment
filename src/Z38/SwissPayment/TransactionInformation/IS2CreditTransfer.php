@@ -12,8 +12,19 @@ use Z38\SwissPayment\Money;
  */
 class IS2CreditTransfer extends CreditTransfer
 {
+    /**
+     * @var IBAN
+     */
     protected $creditorIBAN;
+
+    /**
+     * @var string
+     */
     protected $creditorAgentName;
+
+    /**
+     * @var PostalAccount
+     */
     protected $creditorAgentPostal;
 
     /**
@@ -27,7 +38,7 @@ class IS2CreditTransfer extends CreditTransfer
         parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress);
 
         $this->creditorIBAN = $creditorIBAN;
-        $this->creditorAgentName = $creditorAgentName;
+        $this->creditorAgentName = (string) $creditorAgentName;
         $this->creditorAgentPostal = $creditorAgentPostal;
     }
 

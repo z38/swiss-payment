@@ -10,9 +10,24 @@ use Z38\SwissPayment\PaymentInformation\PaymentInformation;
  */
 class CustomerCreditTransfer extends AbstractMessage
 {
+    /**
+     * @var string
+     */
     protected $id;
+
+    /**
+     * @var string
+     */
     protected $initiatingParty;
+
+    /**
+     * @var array
+     */
     protected $payments;
+
+    /**
+     * @var \DateTime
+     */
     protected $creationTime;
 
     /**
@@ -23,8 +38,8 @@ class CustomerCreditTransfer extends AbstractMessage
      */
     public function __construct($id, $initiatingParty)
     {
-        $this->id = $id;
-        $this->initiatingParty = $initiatingParty;
+        $this->id = (string) $id;
+        $this->initiatingParty = (string) $initiatingParty;
         $this->payments = array();
         $this->creationTime = new \DateTime();
     }

@@ -7,6 +7,9 @@ namespace Z38\SwissPayment\Money;
  */
 abstract class Money
 {
+    /**
+     * @var int
+     */
     protected $cents;
 
     /**

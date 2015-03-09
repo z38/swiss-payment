@@ -10,11 +10,34 @@ use Z38\SwissPayment\Money\Money;
  */
 abstract class CreditTransfer
 {
+    /**
+     * @var string
+     */
     protected $instructionId;
+
+    /**
+     * @var string
+     */
     protected $endToEndId;
+
+    /**
+     * @var string
+     */
     protected $creditorName;
+
+    /**
+     * @var PostalAddress
+     */
     protected $creditorAddress;
+
+    /**
+     * @var Money
+     */
     protected $amount;
+
+    /**
+     * @var string|null
+     */
     protected $remittanceInformation;
 
     /**
@@ -28,10 +51,10 @@ abstract class CreditTransfer
      */
     public function __construct($instructionId, $endToEndId, Money $amount, $creditorName, PostalAddress $creditorAddress)
     {
-        $this->instructionId = $instructionId;
-        $this->endToEndId = $endToEndId;
+        $this->instructionId = (string) $instructionId;
+        $this->endToEndId = (string) $endToEndId;
         $this->amount = $amount;
-        $this->creditorName = $creditorName;
+        $this->creditorName = (string) $creditorName;
         $this->creditorAddress = $creditorAddress;
         $this->remittanceInformation = null;
     }
