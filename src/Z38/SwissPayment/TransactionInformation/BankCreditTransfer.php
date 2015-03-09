@@ -2,7 +2,9 @@
 
 namespace Z38\SwissPayment\TransactionInformation;
 
+use Z38\SwissPayment\BC;
 use Z38\SwissPayment\BIC;
+use Z38\SwissPayment\FinancialInstitutionInterface;
 use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\PostalAddress;
 use Z38\SwissPayment\Money;
@@ -12,20 +14,31 @@ use Z38\SwissPayment\Money;
  */
 class BankCreditTransfer extends CreditTransfer
 {
+    /**
+     * @var IBAN
+     */
     protected $creditorIBAN;
-    protected $creditorAgentBIC;
+
+    /**
+     * @var FinancialInstitutionInterface
+     */
+    protected $creditorAgent;
 
     /**
      * {@inheritdoc}
-     * @param IBAN $creditorIBAN     IBAN of the creditor
-     * @param BIC  $creditorAgentBIC BIC of the creditor's financial institution
+     * @param IBAN   $creditorIBAN  IBAN of the creditor
+     * @param BC|BIC $creditorAgent BC or BIC of the creditor's financial institution
      */
-    public function __construct($instructionId, $endToEndId, Money\CHF $amount, $creditorName, PostalAddress $creditorAddress, IBAN $creditorIBAN, BIC $creditorAgentBIC)
+    public function __construct($instructionId, $endToEndId, Money\CHF $amount, $creditorName, PostalAddress $creditorAddress, IBAN $creditorIBAN, FinancialInstitutionInterface $creditorAgent)
     {
         parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress);
 
+        if (!$creditorAgent instanceof BC && !$creditorAgent instanceof BIC) {
+            throw new \InvalidArgumentException('The creditor agent must be an instance of BC or BIC.');
+        }
+
         $this->creditorIBAN = $creditorIBAN;
-        $this->creditorAgentBIC = $creditorAgentBIC;
+        $this->creditorAgent = $creditorAgent;
     }
 
     /**
@@ -36,9 +49,7 @@ class BankCreditTransfer extends CreditTransfer
         $root = $this->buildHeader($doc, null);
 
         $creditorAgent = $doc->createElement('CdtrAgt');
-        $creditorAgentId = $doc->createElement('FinInstnId');
-        $creditorAgentId->appendChild($doc->createElement('BIC', $this->creditorAgentBIC->format()));
-        $creditorAgent->appendChild($creditorAgentId);
+        $creditorAgent->appendChild($this->creditorAgent->asDom($doc));
         $root->appendChild($creditorAgent);
 
         $root->appendChild($this->buildCreditor($doc));

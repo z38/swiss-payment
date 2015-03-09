@@ -5,10 +5,13 @@ namespace Z38\SwissPayment;
 /**
  * BIC
  */
-class BIC
+class BIC implements FinancialInstitutionInterface
 {
     const PATTERN = '/^[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}$/';
 
+    /**
+     * @var string
+     */
     protected $bic;
 
     /**
@@ -35,5 +38,16 @@ class BIC
     public function format()
     {
         return $this->bic;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function asDom(\DOMDocument $doc)
+    {
+        $xml = $doc->createElement('FinInstnId');
+        $xml->appendChild($doc->createElement('BIC', $this->format()));
+
+        return $xml;
     }
 }

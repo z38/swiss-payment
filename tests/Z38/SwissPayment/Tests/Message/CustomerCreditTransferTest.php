@@ -7,6 +7,7 @@ use Z38\SwissPayment\TransactionInformation\BankCreditTransfer;
 use Z38\SwissPayment\TransactionInformation\IS1CreditTransfer;
 use Z38\SwissPayment\TransactionInformation\IS2CreditTransfer;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
+use Z38\SwissPayment\BC;
 use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\Money;
@@ -51,10 +52,22 @@ class CustomerCreditTransferTest extends TestCase
             new PostalAccount('80-5928-4')
         );
 
+        $iban4 = new IBAN('CH51 0022 5225 9529 1301 C');
+        $transaction4 = new BankCreditTransfer(
+            'instr-004',
+            'e2e-004',
+            new Money\CHF(30000), // CHF 300.00
+            'Muster Transport AG',
+            new PostalAddress('Wiesenweg', '14b', '8058', 'Zürich-Flughafen'),
+            $iban4,
+            BC::fromIBAN($iban4)
+        );
+
         $payment = new PaymentInformation('payment-001', 'InnoMuster AG', new BIC('ZKBKCHZZ80A'), new IBAN('CH6600700110000204481'));
         $payment->addTransaction($transaction);
         $payment->addTransaction($transaction2);
         $payment->addTransaction($transaction3);
+        $payment->addTransaction($transaction4);
 
         $message = new CustomerCreditTransfer('message-001', 'InnoMuster AG');
         $message->addPayment($payment);
@@ -72,10 +85,10 @@ class CustomerCreditTransferTest extends TestCase
         $xpath->registerNamespace('pain001', self::NS_URI_ROOT.self::SCHEMA);
 
         $nbOfTxs = $xpath->query('//pain001:GrpHdr/pain001:NbOfTxs');
-        $this->assertEquals('3', $nbOfTxs->item(0)->textContent);
+        $this->assertEquals('4', $nbOfTxs->item(0)->textContent);
 
         $ctrlSum = $xpath->query('//pain001:GrpHdr/pain001:CtrlSum');
-        $this->assertEquals('1800.00', $ctrlSum->item(0)->textContent);
+        $this->assertEquals('2100.00', $ctrlSum->item(0)->textContent);
     }
 
     public function testSchemaValidation()

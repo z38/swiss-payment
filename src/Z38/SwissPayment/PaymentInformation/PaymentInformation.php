@@ -2,9 +2,11 @@
 
 namespace Z38\SwissPayment\PaymentInformation;
 
+use Z38\SwissPayment\BC;
 use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\Money;
+use Z38\SwissPayment\FinancialInstitutionInterface;
 use Z38\SwissPayment\TransactionInformation\CreditTransfer;
 
 /**
@@ -17,25 +19,29 @@ class PaymentInformation
     protected $batchBooking;
     protected $executionDate;
     protected $debtorName;
-    protected $debtorBIC;
+    protected $debtorAgent;
     protected $debtorIBAN;
 
     /**
      * Constructor
      *
-     * @param string $id         Identifier of this group (should be unique within a message)
-     * @param string $debtorName Name of the debtor
-     * @param BIC    $debtorBIC  BIC of the debtor's financial institution
-     * @param IBAN   $debtorIBAN IBAN of the debtor's account
+     * @param string $id          Identifier of this group (should be unique within a message)
+     * @param string $debtorName  Name of the debtor
+     * @param BC|BIC $debtorAgent BC or BIC of the debtor's financial institution
+     * @param IBAN   $debtorIBAN  IBAN of the debtor's account
      */
-    public function __construct($id, $debtorName, BIC $debtorBIC, IBAN $debtorIBAN)
+    public function __construct($id, $debtorName, FinancialInstitutionInterface $debtorAgent, IBAN $debtorIBAN)
     {
+        if (!$debtorAgent instanceof BC && !$debtorAgent instanceof BIC) {
+            throw new \InvalidArgumentException('The debtor agent must be an instance of BC or BIC.');
+        }
+
         $this->id = $id;
         $this->transactions = array();
         $this->batchBooking = true;
         $this->executionDate = new \DateTime();
         $this->debtorName = $debtorName;
-        $this->debtorBIC = $debtorBIC;
+        $this->debtorAgent = $debtorAgent;
         $this->debtorIBAN = $debtorIBAN;
     }
 
@@ -136,9 +142,7 @@ class PaymentInformation
         $root->appendChild($debtorAccount);
 
         $debtorAgent = $doc->createElement('DbtrAgt');
-        $debtorAgentId = $doc->createElement('FinInstnId');
-        $debtorAgentId->appendChild($doc->createElement('BIC', $this->debtorBIC->format()));
-        $debtorAgent->appendChild($debtorAgentId);
+        $debtorAgent->appendChild($this->debtorAgent->asDom($doc));
         $root->appendChild($debtorAgent);
 
         foreach ($this->transactions as $transaction) {
