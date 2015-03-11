@@ -76,21 +76,25 @@ class IBAN
      */
     protected static function check($iban)
     {
-        $prepared = str_split(substr($iban, 4).substr($iban, 0, 4));
-        foreach ($prepared as &$c) {
-            if (ord($c) >= ord('A') && ord($c) <= ord('Z')) {
-                $c = ord($c) - ord('A') + 10;
+        $chars = str_split(substr($iban, 4).substr($iban, 0, 4));
+        $length = count($chars);
+        for ($i = 0; $i < $length; $i++) {
+            $code = ord($chars[$i]);
+            if ($code >= 65 && $code <= 90) { // A-Z
+                $chars[$i] = $code - 65 + 10;
             }
         }
-        unset($c);
-        $prepared = implode($prepared);
+        $prepared = implode($chars);
 
         $r = '';
+        $rLength = 0;
         $i = 0;
-        while ($i < strlen($prepared)) {
-            $d = $r.substr($prepared, $i, 9 - strlen($r));
-            $i += 9 - strlen($r);
+        $length = strlen($prepared);
+        while ($i < $length) {
+            $d = $r.substr($prepared, $i, 9 - $rLength);
+            $i += 9 - $rLength;
             $r = $d % 97;
+            $rLength = 1 + ($r >= 10);
         }
 
         return ($r == 1);
