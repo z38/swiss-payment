@@ -33,5 +33,5 @@ let me know, and/or **open a new issue report** so that I or others may take car
 ## Further Resources
 
 - [www.iso-payments.ch](http://www.iso-payments.ch) General website about the Swiss recommendations regarding ISO 20022
-- [Swiss Business Rules for Customer-Bank Messages](http://www.six-interbank-clearing.com/dam/downloads/en/standardization/iso/swiss_recommendations/business_rules/standardization_isopayments_ch_business_rules.pdf)
-- [Swiss Implementation Guidelines for pain.001 and pain.002 Messages](http://www.six-interbank-clearing.com/dam/downloads/en/standardization/iso/swiss_recommendations/implementation_guidelines_ct/standardization_isopayments_iso_20022_ch_implementation_guidelines_ct.pdf)
+- [Swiss Business Rules for Customer-Bank Messages](http://www.six-interbank-clearing.com/dam/downloads/en/standardization/iso/swiss-recommendations/business-rules.pdf)
+- [Swiss Implementation Guidelines for pain.001 and pain.002 Messages](http://www.six-interbank-clearing.com/dam/downloads/en/standardization/iso/swiss-recommendations/implementation_guidelines_ct.pdf)
