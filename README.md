@@ -5,28 +5,9 @@
 
 **SwissPayment** is a PHP library to generate Swiss pain.001 XML messages (complies with ISO-20022).
 
-## Installing
+## Installation
 
-- Install [Composer](http://getcomposer.org) and place the executable somewhere in your `$PATH`.
-
-- Add `z38/swiss-payment` to your project's `composer.json`:
-
-```json
-{
-    "require": {
-        "z38/swiss-payment": "dev-master"
-    }
-}
-```
-
-- Install/update your dependencies
-
-```bash
-$ cd my_project
-$ composer install
-```
-
-- And you're good to go!
+Just install [Composer](http://getcomposer.org) and run `composer require z38/swiss-payment` in your project directory.
 
 ## Usage
 
