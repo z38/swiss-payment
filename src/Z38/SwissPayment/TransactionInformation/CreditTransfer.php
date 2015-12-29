@@ -97,10 +97,11 @@ abstract class CreditTransfer
      *
      * @param \DOMDocument $doc
      * @param string|null  $localInstrument Local Instrument
+     * @param string|null  $serviceLevel
      *
      * @return \DOMNode The built DOM node
      */
-    protected function buildHeader(\DOMDocument $doc, $localInstrument)
+    protected function buildHeader(\DOMDocument $doc, $localInstrument, $serviceLevel = null)
     {
         $root = $doc->createElement('CdtTrfTxInf');
 
@@ -113,6 +114,12 @@ abstract class CreditTransfer
             $paymentType = $doc->createElement('PmtTpInf');
             $localInstrumentNode = $doc->createElement('LclInstrm');
             $localInstrumentNode->appendChild($doc->createElement('Prtry', $localInstrument));
+            $paymentType->appendChild($localInstrumentNode);
+            $root->appendChild($paymentType);
+        } elseif (!empty($serviceLevel)) {
+            $paymentType = $doc->createElement('PmtTpInf');
+            $localInstrumentNode = $doc->createElement('SvcLvl');
+            $localInstrumentNode->appendChild($doc->createElement('Cd', $serviceLevel));
             $paymentType->appendChild($localInstrumentNode);
             $root->appendChild($paymentType);
         }

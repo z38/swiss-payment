@@ -99,11 +99,11 @@ class PaymentInformation
     /**
      * Gets the sum of transactions
      *
-     * @return Money\CHF Sum of transactions
+     * @return Money\Mixed Sum of transactions
      */
     public function getTransactionSum()
     {
-        $sum = new Money\CHF(0);
+        $sum = new Money\Mixed(0);
 
         foreach ($this->transactions as $transaction) {
             $sum = $sum->plus($transaction->getAmount());

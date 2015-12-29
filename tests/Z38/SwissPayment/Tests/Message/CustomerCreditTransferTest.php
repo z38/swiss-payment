@@ -4,6 +4,7 @@ namespace Z38\SwissPayment\Tests\Message;
 
 use Z38\SwissPayment\Message\CustomerCreditTransfer;
 use Z38\SwissPayment\TransactionInformation\BankCreditTransfer;
+use Z38\SwissPayment\TransactionInformation\ForeignSEPACreditTransfer;
 use Z38\SwissPayment\TransactionInformation\IS1CreditTransfer;
 use Z38\SwissPayment\TransactionInformation\IS2CreditTransfer;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
@@ -63,14 +64,29 @@ class CustomerCreditTransferTest extends TestCase
             BC::fromIBAN($iban4)
         );
 
+        $iban5 = new IBAN('DE89 3704 0044 0532 0130 00');
+        $transaction5 = new ForeignSEPACreditTransfer(
+            'instr-005',
+            'e2e-005',
+            new Money\EUR(70000), // EUR 700.00
+            'Muster Immo AG',
+            new PostalAddress('Musterstraße', '35', '80333', 'München'),
+            $iban5,
+            new BIC('COBADEFFXXX')
+        );
+
         $payment = new PaymentInformation('payment-001', 'InnoMuster AG', new BIC('ZKBKCHZZ80A'), new IBAN('CH6600700110000204481'));
         $payment->addTransaction($transaction);
         $payment->addTransaction($transaction2);
         $payment->addTransaction($transaction3);
         $payment->addTransaction($transaction4);
 
+        $payment2 = new PaymentInformation('payment-002', 'InnoMuster AG', new BIC('POFICHBEXXX'), new IBAN('CH6309000000250097798'));
+        $payment2->addTransaction($transaction5);
+
         $message = new CustomerCreditTransfer('message-001', 'InnoMuster AG');
         $message->addPayment($payment);
+        $message->addPayment($payment2);
 
         return $message;
     }
@@ -85,10 +101,10 @@ class CustomerCreditTransferTest extends TestCase
         $xpath->registerNamespace('pain001', self::NS_URI_ROOT.self::SCHEMA);
 
         $nbOfTxs = $xpath->query('//pain001:GrpHdr/pain001:NbOfTxs');
-        $this->assertEquals('4', $nbOfTxs->item(0)->textContent);
+        $this->assertEquals('5', $nbOfTxs->item(0)->textContent);
 
         $ctrlSum = $xpath->query('//pain001:GrpHdr/pain001:CtrlSum');
-        $this->assertEquals('2100.00', $ctrlSum->item(0)->textContent);
+        $this->assertEquals('2800.00', $ctrlSum->item(0)->textContent);
     }
 
     public function testSchemaValidation()
