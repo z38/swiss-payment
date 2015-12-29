@@ -4,7 +4,7 @@ namespace Z38\SwissPayment\Tests\Message;
 
 use Z38\SwissPayment\Message\CustomerCreditTransfer;
 use Z38\SwissPayment\TransactionInformation\BankCreditTransfer;
-use Z38\SwissPayment\TransactionInformation\ForeignSEPACreditTransfer;
+use Z38\SwissPayment\TransactionInformation\SEPACreditTransfer;
 use Z38\SwissPayment\TransactionInformation\IS1CreditTransfer;
 use Z38\SwissPayment\TransactionInformation\IS2CreditTransfer;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
@@ -65,7 +65,7 @@ class CustomerCreditTransferTest extends TestCase
         );
 
         $iban5 = new IBAN('DE89 3704 0044 0532 0130 00');
-        $transaction5 = new ForeignSEPACreditTransfer(
+        $transaction5 = new SEPACreditTransfer(
             'instr-005',
             'e2e-005',
             new Money\EUR(70000), // EUR 700.00

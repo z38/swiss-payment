@@ -5,13 +5,12 @@ namespace Z38\SwissPayment\TransactionInformation;
 use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\PostalAddress;
-use Z38\SwissPayment\PostalAccount;
 use Z38\SwissPayment\Money;
 
 /**
- * ForeignSEPACreditTransfer contains all the information about a foreign SEPA (type 5) transaction.
+ * SEPACreditTransfer contains all the information about a foreign SEPA (type 5) transaction.
  */
-class ForeignSEPACreditTransfer extends CreditTransfer
+class SEPACreditTransfer extends CreditTransfer
 {
     /**
      * @var IBAN
@@ -24,14 +23,10 @@ class ForeignSEPACreditTransfer extends CreditTransfer
     protected $creditorAgentBIC;
 
     /**
-     * @var PostalAccount
-     */
-    protected $creditorAgentPostal;
-
-    /**
      * {@inheritdoc}
-     * @param IBAN          $creditorIBAN        IBAN of the creditor
-     * @param BIC           $creditorAgentBIC    BIC of the creditor's financial institution
+     *
+     * @param IBAN $creditorIBAN     IBAN of the creditor
+     * @param BIC  $creditorAgentBIC BIC of the creditor's financial institution
      */
     public function __construct($instructionId, $endToEndId, Money\EUR $amount, $creditorName, PostalAddress $creditorAddress, IBAN $creditorIBAN, BIC $creditorAgentBIC)
     {
