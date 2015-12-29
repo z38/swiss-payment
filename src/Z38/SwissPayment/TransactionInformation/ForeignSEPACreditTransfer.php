@@ -51,13 +51,6 @@ class ForeignSEPACreditTransfer extends CreditTransfer
         $creditorAgent = $doc->createElement('CdtrAgt');
 
         $creditorAgent->appendChild($this->creditorAgentBIC->asDom($doc));
-
-        /*$creditorAgentId = $doc->createElement('FinInstnId');
-        $creditorAgentId->appendChild($doc->createElement('BIC', $this->creditorAgentBIC));
-        $creditorAgentIdOther = $doc->createElement('Othr');
-        $creditorAgentIdOther->appendChild($doc->createElement('Id', $this->creditorAgentPostal->format()));
-        $creditorAgentId->appendChild($creditorAgentIdOther);
-        $creditorAgent->appendChild($creditorAgentId);*/
         $root->appendChild($creditorAgent);
 
         $root->appendChild($this->buildCreditor($doc));
