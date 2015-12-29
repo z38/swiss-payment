@@ -101,7 +101,7 @@ abstract class CreditTransfer
      *
      * @return \DOMNode The built DOM node
      */
-    protected function buildHeader(\DOMDocument $doc, $localInstrument, $serviceLevel = null)
+    protected function buildHeader(\DOMDocument $doc, $localInstrument = null, $serviceLevel = null)
     {
         $root = $doc->createElement('CdtTrfTxInf');
 
@@ -110,17 +110,18 @@ abstract class CreditTransfer
         $id->appendChild($doc->createElement('EndToEndId', $this->endToEndId));
         $root->appendChild($id);
 
-        if (!empty($localInstrument)) {
+        if (!empty($localInstrument) || !empty($serviceLevel)) {
             $paymentType = $doc->createElement('PmtTpInf');
-            $localInstrumentNode = $doc->createElement('LclInstrm');
-            $localInstrumentNode->appendChild($doc->createElement('Prtry', $localInstrument));
-            $paymentType->appendChild($localInstrumentNode);
-            $root->appendChild($paymentType);
-        } elseif (!empty($serviceLevel)) {
-            $paymentType = $doc->createElement('PmtTpInf');
-            $localInstrumentNode = $doc->createElement('SvcLvl');
-            $localInstrumentNode->appendChild($doc->createElement('Cd', $serviceLevel));
-            $paymentType->appendChild($localInstrumentNode);
+            if (!empty($localInstrument)) {
+                $localInstrumentNode = $doc->createElement('LclInstrm');
+                $localInstrumentNode->appendChild($doc->createElement('Prtry', $localInstrument));
+                $paymentType->appendChild($localInstrumentNode);
+            }
+            if (!empty($serviceLevel)) {
+                $serviceLevelNode = $doc->createElement('SvcLvl');
+                $serviceLevelNode->appendChild($doc->createElement('Cd', $serviceLevel));
+                $paymentType->appendChild($serviceLevelNode);
+            }
             $root->appendChild($paymentType);
         }
 
