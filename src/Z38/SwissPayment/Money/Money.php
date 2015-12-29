@@ -128,7 +128,7 @@ abstract class Money
      */
     public function equals($obj)
     {
-        if (!($obj instanceof Money)) {
+        if (!($obj instanceof self)) {
             return false;
         }
 

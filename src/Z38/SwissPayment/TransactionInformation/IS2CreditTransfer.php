@@ -29,6 +29,7 @@ class IS2CreditTransfer extends CreditTransfer
 
     /**
      * {@inheritdoc}
+     *
      * @param IBAN          $creditorIBAN        IBAN of the creditor
      * @param string        $creditorAgentName   Name of the creditor's financial institution
      * @param PostalAccount $creditorAgentPostal Postal account of the creditor's financial institution

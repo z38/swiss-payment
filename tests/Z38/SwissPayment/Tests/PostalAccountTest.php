@@ -51,7 +51,7 @@ class PostalAccountTest extends TestCase
             array('80-2-2'),
             array('80-470-3'),
             array('40-3213-8'),
-            array('87-344666-2')
+            array('87-344666-2'),
         );
     }
 

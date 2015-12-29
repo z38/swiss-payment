@@ -39,8 +39,8 @@ abstract class AbstractMessage implements MessageInterface
         $doc->formatOutput = true;
         $root = $doc->createElement('Document');
         $root->setAttribute('xmlns', $ns);
-        $root->setAttribute('xmlns:xsi',"http://www.w3.org/2001/XMLSchema-instance");
-        $root->setAttribute('xsi:schemaLocation', sprintf("%s %s", $ns, $schema));
+        $root->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
+        $root->setAttribute('xsi:schemaLocation', sprintf('%s %s', $ns, $schema));
         $root->appendChild($this->buildDom($doc));
         $doc->appendChild($root);
 

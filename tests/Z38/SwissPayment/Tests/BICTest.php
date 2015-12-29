@@ -48,7 +48,7 @@ class BICTest extends TestCase
         return array(
             array('AABAFI22'),
             array('HANDFIHH'),
-            array('DEUTDEFF500')
+            array('DEUTDEFF500'),
         );
     }
 

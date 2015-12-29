@@ -26,6 +26,7 @@ class BankCreditTransfer extends CreditTransfer
 
     /**
      * {@inheritdoc}
+     *
      * @param IBAN   $creditorIBAN  IBAN of the creditor
      * @param BC|BIC $creditorAgent BC or BIC of the creditor's financial institution
      */

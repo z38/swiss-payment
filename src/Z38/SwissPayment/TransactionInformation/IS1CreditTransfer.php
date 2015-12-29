@@ -18,6 +18,7 @@ class IS1CreditTransfer extends CreditTransfer
 
     /**
      * {@inheritdoc}
+     *
      * @param PostalAccount $creditorAccount Postal account of the creditor
      */
     public function __construct($instructionId, $endToEndId, Money\CHF $amount, $creditorName, PostalAddress $creditorAddress, PostalAccount $creditorAccount)
