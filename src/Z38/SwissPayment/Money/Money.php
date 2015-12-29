@@ -25,7 +25,7 @@ abstract class Money
     /**
      * Gets the currency code
      *
-     * @return string An ISO 4217 currency code
+     * @return string|null An ISO 4217 currency code or null if currency is not known
      */
     abstract public function getCurrency();
 
@@ -70,7 +70,7 @@ abstract class Money
      */
     public function plus(Money $addend)
     {
-        if ($this->getCurrency() != $addend->getCurrency()) {
+        if ($this->getCurrency() !== $addend->getCurrency()) {
             throw new \InvalidArgumentException('Can not add different currencies');
         }
 
@@ -88,7 +88,7 @@ abstract class Money
      */
     public function minus(Money $subtrahend)
     {
-        if ($this->getCurrency() != $subtrahend->getCurrency()) {
+        if ($this->getCurrency() !== $subtrahend->getCurrency()) {
             throw new \InvalidArgumentException('Can not subtract different currencies');
         }
 
@@ -106,7 +106,7 @@ abstract class Money
      */
     public function compareTo(Money $b)
     {
-        if ($this->getCurrency() != $b->getCurrency()) {
+        if ($this->getCurrency() !== $b->getCurrency()) {
             throw new \InvalidArgumentException('Can not compare different currencies');
         }
 
@@ -132,7 +132,7 @@ abstract class Money
             return false;
         }
 
-        if ($this->getCurrency() != $obj->getCurrency()) {
+        if ($this->getCurrency() !== $obj->getCurrency()) {
             return false;
         }
 

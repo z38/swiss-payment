@@ -84,7 +84,7 @@ class CustomerCreditTransfer extends AbstractMessage
     protected function buildDom(\DOMDocument $doc)
     {
         $transactionCount = 0;
-        $transactionSum = new Money\CHF(0);
+        $transactionSum = new Money\Mixed(0);
         foreach ($this->payments as $payment) {
             $transactionCount += $payment->getTransactionCount();
             $transactionSum = $transactionSum->plus($payment->getTransactionSum());
