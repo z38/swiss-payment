@@ -8,7 +8,7 @@ use Z38\SwissPayment\Tests\TestCase;
 class MixedTest extends TestCase
 {
     /**
-     * @covers \Z38\SwissPayment\Money\Mixed::add
+     * @covers \Z38\SwissPayment\Money\Mixed::plus
      */
     public function testAdd()
     {
