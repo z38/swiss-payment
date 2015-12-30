@@ -4,9 +4,9 @@ namespace Z38\SwissPayment\PaymentInformation;
 
 use Z38\SwissPayment\BC;
 use Z38\SwissPayment\BIC;
+use Z38\SwissPayment\FinancialInstitutionInterface;
 use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\Money;
-use Z38\SwissPayment\FinancialInstitutionInterface;
 use Z38\SwissPayment\TransactionInformation\CreditTransfer;
 
 /**

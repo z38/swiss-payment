@@ -6,8 +6,8 @@ use Z38\SwissPayment\BC;
 use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\FinancialInstitutionInterface;
 use Z38\SwissPayment\IBAN;
-use Z38\SwissPayment\PostalAddressInterface;
 use Z38\SwissPayment\Money;
+use Z38\SwissPayment\PostalAddressInterface;
 
 /**
  * BankCreditTransfer contains all the information about a type 3 transaction.

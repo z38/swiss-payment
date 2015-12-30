@@ -3,9 +3,9 @@
 namespace Z38\SwissPayment\TransactionInformation;
 
 use Z38\SwissPayment\IBAN;
-use Z38\SwissPayment\PostalAddressInterface;
-use Z38\SwissPayment\PostalAccount;
 use Z38\SwissPayment\Money;
+use Z38\SwissPayment\PostalAccount;
+use Z38\SwissPayment\PostalAddressInterface;
 
 /**
  * IS2CreditTransfer contains all the information about a IS 2-stage (type 2.2) transaction.

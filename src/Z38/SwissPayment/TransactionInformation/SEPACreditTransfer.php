@@ -4,8 +4,8 @@ namespace Z38\SwissPayment\TransactionInformation;
 
 use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\IBAN;
-use Z38\SwissPayment\PostalAddressInterface;
 use Z38\SwissPayment\Money;
+use Z38\SwissPayment\PostalAddressInterface;
 
 /**
  * SEPACreditTransfer contains all the information about a foreign SEPA (type 5) transaction.

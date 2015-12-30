@@ -2,9 +2,9 @@
 
 namespace Z38\SwissPayment\TransactionInformation;
 
-use Z38\SwissPayment\PostalAddressInterface;
-use Z38\SwissPayment\PostalAccount;
 use Z38\SwissPayment\Money;
+use Z38\SwissPayment\PostalAccount;
+use Z38\SwissPayment\PostalAddressInterface;
 
 /**
  * IS1CreditTransfer contains all the information about a IS 1-stage (type 2.1) transaction.

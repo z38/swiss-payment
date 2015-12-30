@@ -2,8 +2,8 @@
 
 namespace Z38\SwissPayment\Tests;
 
-use Z38\SwissPayment\PaymentInformation\PaymentInformation;
 use Z38\SwissPayment\IBAN;
+use Z38\SwissPayment\PaymentInformation\PaymentInformation;
 
 /**
  * @coversDefaultClass \Z38\SwissPayment\PaymentInformation\PaymentInformation
