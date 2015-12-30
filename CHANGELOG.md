@@ -3,6 +3,7 @@
 ## 0.3.0
 
   * Added support for SEPA payments.
+  * Renamed `Z38\SwissPayment\PostalAddress` to `Z38\SwissPayment\StructuredPostalAddress`.
 
 ## 0.2.0 (2015-03-09)
 
