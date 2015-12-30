@@ -22,7 +22,7 @@ interface MoneyInterface
     /**
      * Returns the amount of money in cents
      *
-     * @return string The amount in cents
+     * @return int The amount in cents
      */
     public function getAmount();
 

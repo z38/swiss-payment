@@ -12,6 +12,7 @@ use Z38\SwissPayment\PostalAccount;
 use Z38\SwissPayment\StructuredPostalAddress;
 use Z38\SwissPayment\Tests\TestCase;
 use Z38\SwissPayment\TransactionInformation\BankCreditTransfer;
+use Z38\SwissPayment\TransactionInformation\ForeignCreditTransfer;
 use Z38\SwissPayment\TransactionInformation\IS1CreditTransfer;
 use Z38\SwissPayment\TransactionInformation\IS2CreditTransfer;
 use Z38\SwissPayment\TransactionInformation\SEPACreditTransfer;
@@ -76,6 +77,17 @@ class CustomerCreditTransferTest extends TestCase
             new BIC('COBADEFFXXX')
         );
 
+        $iban6 = new IBAN('GB29 NWBK 6016 1331 9268 19');
+        $transaction6 = new ForeignCreditTransfer(
+            'instr-006',
+            'e2e-006',
+            new Money\GBP(6500), // GBP 65.00
+            'Muster Immo AG',
+            new UnstructuredPostalAddress('Musterstraße 35', '80333 München', 'DE'),
+            $iban6,
+            new BIC('NWBKGB2L')
+        );
+
         $payment = new PaymentInformation('payment-001', 'InnoMuster AG', new BIC('ZKBKCHZZ80A'), new IBAN('CH6600700110000204481'));
         $payment->addTransaction($transaction);
         $payment->addTransaction($transaction2);
@@ -84,6 +96,7 @@ class CustomerCreditTransferTest extends TestCase
 
         $payment2 = new PaymentInformation('payment-002', 'InnoMuster AG', new BIC('POFICHBEXXX'), new IBAN('CH6309000000250097798'));
         $payment2->addTransaction($transaction5);
+        $payment2->addTransaction($transaction6);
 
         $message = new CustomerCreditTransfer('message-001', 'InnoMuster AG');
         $message->addPayment($payment);
@@ -102,10 +115,10 @@ class CustomerCreditTransferTest extends TestCase
         $xpath->registerNamespace('pain001', self::NS_URI_ROOT.self::SCHEMA);
 
         $nbOfTxs = $xpath->query('//pain001:GrpHdr/pain001:NbOfTxs');
-        $this->assertEquals('5', $nbOfTxs->item(0)->textContent);
+        $this->assertEquals('6', $nbOfTxs->item(0)->textContent);
 
         $ctrlSum = $xpath->query('//pain001:GrpHdr/pain001:CtrlSum');
-        $this->assertEquals('2800.00', $ctrlSum->item(0)->textContent);
+        $this->assertEquals('2865.00', $ctrlSum->item(0)->textContent);
     }
 
     public function testSchemaValidation()

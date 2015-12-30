@@ -62,7 +62,7 @@ abstract class Money implements MoneyInterface
             throw new \InvalidArgumentException('Can not add different currencies');
         }
 
-        return new static($this->cents + $addend->cents);
+        return new static($this->cents + $addend->getAmount());
     }
 
     /**
@@ -74,7 +74,7 @@ abstract class Money implements MoneyInterface
             throw new \InvalidArgumentException('Can not subtract different currencies');
         }
 
-        return new static($this->cents - $subtrahend->cents);
+        return new static($this->cents - $subtrahend->getAmount());
     }
 
     /**
