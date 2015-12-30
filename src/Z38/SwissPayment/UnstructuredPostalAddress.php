@@ -8,14 +8,9 @@ namespace Z38\SwissPayment;
 class UnstructuredPostalAddress implements PostalAddressInterface
 {
     /**
-     * @var string
+     * @var array
      */
-    protected $adrLine1;
-
-    /**
-     * @var string
-     */
-    protected $adrLine2;
+    protected $addressLines;
 
     /**
      * @var string
@@ -25,14 +20,19 @@ class UnstructuredPostalAddress implements PostalAddressInterface
     /**
      * Constructor
      *
-     * @param string    $adrLine1   Street name and house number
-     * @param string    $ardLine2   Postcode and town
-     * @param string    $country    Country code (ISO 3166-1 alpha-2)
+     * @param string $addressLine1 Street name and house number
+     * @param string $addressLine2 Postcode and town
+     * @param string $country      Country code (ISO 3166-1 alpha-2)
      */
-    public function __construct($adrLine1 = null, $ardLine2, $country = 'CH')
+    public function __construct($addressLine1 = null, $addressLine2 = null, $country = 'CH')
     {
-        $this->adrLine1 = $adrLine1;
-        $this->adrLine2 = $ardLine2;
+        $this->addressLines = array();
+        if ($addressLine1 !== null) {
+            $this->addressLines[] = $addressLine1;
+        }
+        if ($addressLine2 !== null) {
+            $this->addressLines[] = $addressLine2;
+        }
         $this->country = (string) $country;
     }
 
@@ -44,10 +44,9 @@ class UnstructuredPostalAddress implements PostalAddressInterface
         $root = $doc->createElement('PstlAdr');
 
         $root->appendChild($doc->createElement('Ctry', $this->country));
-        if (null !== $this->adrLine1) {
-            $root->appendChild($doc->createElement('AdrLine', $this->adrLine1));
+        foreach ($this->addressLines as $line) {
+            $root->appendChild($doc->createElement('AdrLine', $line));
         }
-        $root->appendChild($doc->createElement('AdrLine', $this->adrLine2));
 
         return $root;
     }
