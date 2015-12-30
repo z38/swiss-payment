@@ -37,11 +37,7 @@ class UnstructuredPostalAddress implements PostalAddressInterface
     }
 
     /**
-     * Returns a DOM element
-     *
-     * @param \DOMDocument $doc
-     *
-     * @return \DOMElement
+     * {@inheritdoc}
      */
     public function asDom(\DOMDocument $doc)
     {
