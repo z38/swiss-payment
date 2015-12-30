@@ -82,8 +82,8 @@ class CustomerCreditTransferTest extends TestCase
             'instr-006',
             'e2e-006',
             new Money\GBP(6500), // GBP 65.00
-            'Muster Immo AG',
-            new UnstructuredPostalAddress('Musterstraße 35', '80333 München', 'DE'),
+            'United Development Ltd',
+            new UnstructuredPostalAddress('George Street', 'BA1 2FJ Bath', 'UK'),
             $iban6,
             new BIC('NWBKGB2L')
         );
