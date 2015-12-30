@@ -29,7 +29,7 @@ class UnstructuredPostalAddress implements PostalAddressInterface
      * @param string    $ardLine2   Postcode and town
      * @param string    $country    Country code (ISO 3166-1 alpha-2)
      */
-    public function __construct($adrLine1, $ardLine2, $country = 'CH')
+    public function __construct($adrLine1 = null, $ardLine2, $country = 'CH')
     {
         $this->adrLine1 = $adrLine1;
         $this->adrLine2 = $ardLine2;
@@ -48,7 +48,9 @@ class UnstructuredPostalAddress implements PostalAddressInterface
         $root = $doc->createElement('PstlAdr');
 
         $root->appendChild($doc->createElement('Ctry', $this->country));
-        $root->appendChild($doc->createElement('AdrLine', $this->adrLine1));
+        if (null !== $this->adrLine1) {
+            $root->appendChild($doc->createElement('AdrLine', $this->adrLine1));
+        }
         $root->appendChild($doc->createElement('AdrLine', $this->adrLine2));
 
         return $root;
