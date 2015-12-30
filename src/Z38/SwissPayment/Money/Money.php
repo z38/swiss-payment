@@ -5,7 +5,7 @@ namespace Z38\SwissPayment\Money;
 /**
  * Base class for all currencies.
  */
-abstract class Money
+abstract class Money implements MoneyInterface
 {
     /**
      * @var int
@@ -23,9 +23,7 @@ abstract class Money
     }
 
     /**
-     * Gets the currency code
-     *
-     * @return string|null An ISO 4217 currency code or null if currency is not known
+     * {@inheritdoc}
      */
     abstract public function getCurrency();
 
@@ -37,9 +35,7 @@ abstract class Money
     abstract protected function getDecimals();
 
     /**
-     * Returns a formatted string (e.g. 15.560)
-     *
-     * @return string The formatted value
+     * {@inheritdoc}
      */
     public function format()
     {
@@ -50,9 +46,7 @@ abstract class Money
     }
 
     /**
-     * Returns the amount of money in cents
-     *
-     * @return string The amount in cents
+     * {@inheritdoc}
      */
     public function getAmount()
     {
@@ -60,15 +54,9 @@ abstract class Money
     }
 
     /**
-     * Returns the sum of this and an other amount of money
-     *
-     * @param Money $addend The addend
-     *
-     * @return Money The sum
-     *
-     * @throws \InvalidArgumentException When the currencies do not match
+     * {@inheritdoc}
      */
-    public function plus(Money $addend)
+    public function plus(MoneyInterface $addend)
     {
         if ($this->getCurrency() !== $addend->getCurrency()) {
             throw new \InvalidArgumentException('Can not add different currencies');
@@ -78,15 +66,9 @@ abstract class Money
     }
 
     /**
-     * Returns the subtraction of this and an other amount of money
-     *
-     * @param Money $subtrahend The subtrahend
-     *
-     * @return Money The difference
-     *
-     * @throws \InvalidArgumentException When the currencies do not match
+     * {@inheritdoc}
      */
-    public function minus(Money $subtrahend)
+    public function minus(MoneyInterface $subtrahend)
     {
         if ($this->getCurrency() !== $subtrahend->getCurrency()) {
             throw new \InvalidArgumentException('Can not subtract different currencies');
@@ -96,15 +78,9 @@ abstract class Money
     }
 
     /**
-     * Compares this instance with an other instance.
-     *
-     * @param Money $b The instance to which this instance is to be compared.
-     *
-     * @return int -1, 0 or 1 as this instance is less than, equal to, or greater than $b
-     *
-     * @throws \InvalidArgumentException When the currencies do not match
+     * {@inheritdoc}
      */
-    public function compareTo(Money $b)
+    public function compareTo(MoneyInterface $b)
     {
         if ($this->getCurrency() !== $b->getCurrency()) {
             throw new \InvalidArgumentException('Can not compare different currencies');
@@ -120,11 +96,7 @@ abstract class Money
     }
 
     /**
-     * Returns true if the argument contains the same amount and the same currency.
-     *
-     * @param object $obj
-     *
-     * @return bool True if $obj is equal to this instance
+     * {@inheritdoc}
      */
     public function equals($obj)
     {

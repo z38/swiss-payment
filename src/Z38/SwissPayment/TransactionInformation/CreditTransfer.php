@@ -3,6 +3,7 @@
 namespace Z38\SwissPayment\TransactionInformation;
 
 use Z38\SwissPayment\Money\Money;
+use Z38\SwissPayment\Money\MoneyInterface;
 use Z38\SwissPayment\PostalAddressInterface;
 
 /**
@@ -45,11 +46,11 @@ abstract class CreditTransfer
      *
      * @param string                 $instructionId   Identifier of the instruction (should be unique within the message)
      * @param string                 $endToEndId      End-To-End Identifier of the instruction (passed unchanged along the complete processing chain)
-     * @param Money                  $amount          Amount of money to be transferred
+     * @param MoneyInterface         $amount          Amount of money to be transferred
      * @param string                 $creditorName    Name of the creditor
      * @param PostalAddressInterface $creditorAddress Address of the creditor
      */
-    public function __construct($instructionId, $endToEndId, Money $amount, $creditorName, PostalAddressInterface $creditorAddress)
+    public function __construct($instructionId, $endToEndId, MoneyInterface $amount, $creditorName, PostalAddressInterface $creditorAddress)
     {
         $this->instructionId = (string) $instructionId;
         $this->endToEndId = (string) $endToEndId;
