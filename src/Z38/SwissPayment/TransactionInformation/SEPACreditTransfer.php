@@ -4,7 +4,7 @@ namespace Z38\SwissPayment\TransactionInformation;
 
 use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\IBAN;
-use Z38\SwissPayment\PostalAddress;
+use Z38\SwissPayment\PostalAddressInterface;
 use Z38\SwissPayment\Money;
 
 /**
@@ -28,7 +28,7 @@ class SEPACreditTransfer extends CreditTransfer
      * @param IBAN $creditorIBAN     IBAN of the creditor
      * @param BIC  $creditorAgentBIC BIC of the creditor's financial institution
      */
-    public function __construct($instructionId, $endToEndId, Money\EUR $amount, $creditorName, PostalAddress $creditorAddress, IBAN $creditorIBAN, BIC $creditorAgentBIC)
+    public function __construct($instructionId, $endToEndId, Money\EUR $amount, $creditorName, PostalAddressInterface $creditorAddress, IBAN $creditorIBAN, BIC $creditorAgentBIC)
     {
         parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress);
 

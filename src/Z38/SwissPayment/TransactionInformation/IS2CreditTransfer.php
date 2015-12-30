@@ -3,7 +3,7 @@
 namespace Z38\SwissPayment\TransactionInformation;
 
 use Z38\SwissPayment\IBAN;
-use Z38\SwissPayment\PostalAddress;
+use Z38\SwissPayment\PostalAddressInterface;
 use Z38\SwissPayment\PostalAccount;
 use Z38\SwissPayment\Money;
 
@@ -34,7 +34,7 @@ class IS2CreditTransfer extends CreditTransfer
      * @param string        $creditorAgentName   Name of the creditor's financial institution
      * @param PostalAccount $creditorAgentPostal Postal account of the creditor's financial institution
      */
-    public function __construct($instructionId, $endToEndId, Money\CHF $amount, $creditorName, PostalAddress $creditorAddress, IBAN $creditorIBAN, $creditorAgentName, PostalAccount $creditorAgentPostal)
+    public function __construct($instructionId, $endToEndId, Money\CHF $amount, $creditorName, PostalAddressInterface $creditorAddress, IBAN $creditorIBAN, $creditorAgentName, PostalAccount $creditorAgentPostal)
     {
         parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress);
 

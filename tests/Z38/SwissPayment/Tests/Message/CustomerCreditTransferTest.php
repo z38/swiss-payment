@@ -12,9 +12,10 @@ use Z38\SwissPayment\BC;
 use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\Money;
-use Z38\SwissPayment\PostalAddress;
+use Z38\SwissPayment\StructuredPostalAddress;
 use Z38\SwissPayment\PostalAccount;
 use Z38\SwissPayment\Tests\TestCase;
+use Z38\SwissPayment\UnstructuredPostalAddress;
 
 class CustomerCreditTransferTest extends TestCase
 {
@@ -28,7 +29,7 @@ class CustomerCreditTransferTest extends TestCase
             'e2e-001',
             new Money\CHF(130000), // CHF 1300.00
             'Muster Transport AG',
-            new PostalAddress('Wiesenweg', '14b', '8058', 'Zürich-Flughafen'),
+            new StructuredPostalAddress('Wiesenweg', '14b', '8058', 'Zürich-Flughafen'),
             new IBAN('CH51 0022 5225 9529 1301 C'),
             new BIC('UBSWCHZH80A')
         );
@@ -38,7 +39,7 @@ class CustomerCreditTransferTest extends TestCase
             'e2e-002',
             new Money\CHF(30000), // CHF 300.00
             'Finanzverwaltung Stadt Musterhausen',
-            new PostalAddress('Altstadt', '1a', '4998', 'Muserhausen'),
+            new StructuredPostalAddress('Altstadt', '1a', '4998', 'Muserhausen'),
             new PostalAccount('80-151-4')
         );
 
@@ -47,7 +48,7 @@ class CustomerCreditTransferTest extends TestCase
             'e2e-003',
             new Money\CHF(20000), // CHF 200.00
             'Druckerei Muster GmbH',
-            new PostalAddress('Gartenstrasse', '61', '3000', 'Bern'),
+            new StructuredPostalAddress('Gartenstrasse', '61', '3000', 'Bern'),
             new IBAN('CH03 0900 0000 3054 1118 8'),
             'Musterbank AG',
             new PostalAccount('80-5928-4')
@@ -59,7 +60,7 @@ class CustomerCreditTransferTest extends TestCase
             'e2e-004',
             new Money\CHF(30000), // CHF 300.00
             'Muster Transport AG',
-            new PostalAddress('Wiesenweg', '14b', '8058', 'Zürich-Flughafen'),
+            new StructuredPostalAddress('Wiesenweg', '14b', '8058', 'Zürich-Flughafen'),
             $iban4,
             BC::fromIBAN($iban4)
         );
@@ -70,7 +71,7 @@ class CustomerCreditTransferTest extends TestCase
             'e2e-005',
             new Money\EUR(70000), // EUR 700.00
             'Muster Immo AG',
-            new PostalAddress('Musterstraße', '35', '80333', 'München'),
+            new UnstructuredPostalAddress('Musterstraße 35', '80333 München', 'DE'),
             $iban5,
             new BIC('COBADEFFXXX')
         );
