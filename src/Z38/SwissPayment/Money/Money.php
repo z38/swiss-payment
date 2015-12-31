@@ -23,7 +23,9 @@ abstract class Money
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the currency code
+     *
+     * @return string|null An ISO 4217 currency code or null if currency is not known
      */
     abstract public function getCurrency();
 
@@ -35,7 +37,9 @@ abstract class Money
     abstract protected function getDecimals();
 
     /**
-     * {@inheritdoc}
+     * Returns a formatted string (e.g. 15.560)
+     *
+     * @return string The formatted value
      */
     public function format()
     {
@@ -46,7 +50,9 @@ abstract class Money
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the amount of money in cents
+     *
+     * @return int The amount in cents
      */
     public function getAmount()
     {
@@ -54,7 +60,13 @@ abstract class Money
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the sum of this and an other amount of money
+     *
+     * @param Money $addend The addend
+     *
+     * @return Money The sum
+     *
+     * @throws \InvalidArgumentException When the currencies do not match
      */
     public function plus(Money $addend)
     {
@@ -66,7 +78,13 @@ abstract class Money
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the subtraction of this and an other amount of money
+     *
+     * @param Money $subtrahend The subtrahend
+     *
+     * @return Money The difference
+     *
+     * @throws \InvalidArgumentException When the currencies do not match
      */
     public function minus(Money $subtrahend)
     {
@@ -78,7 +96,13 @@ abstract class Money
     }
 
     /**
-     * {@inheritdoc}
+     * Compares this instance with an other instance.
+     *
+     * @param Money $b The instance to which this instance is to be compared.
+     *
+     * @return int -1, 0 or 1 as this instance is less than, equal to, or greater than $b
+     *
+     * @throws \InvalidArgumentException When the currencies do not match
      */
     public function compareTo(Money $b)
     {
@@ -96,7 +120,11 @@ abstract class Money
     }
 
     /**
-     * {@inheritdoc}
+     * Returns true if the argument contains the same amount and the same currency.
+     *
+     * @param object $obj
+     *
+     * @return bool True if $obj is equal to this instance
      */
     public function equals($obj)
     {
