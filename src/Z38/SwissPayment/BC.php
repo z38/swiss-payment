@@ -17,7 +17,7 @@ class BC implements FinancialInstitutionInterface
     /**
      * Constructor
      *
-     * @param string $bic
+     * @param string $bc
      *
      * @throws \InvalidArgumentException When the BC does contain invalid characters or the length does not match.
      */
