@@ -3,16 +3,16 @@
 namespace Z38\SwissPayment\Money;
 
 /**
- * Sum of money in pound sterling
+ * Sum of money in Japanese yen
  */
-class GBP extends Money
+class JPY extends Money
 {
     /**
      * {@inheritdoc}
      */
     final public function getCurrency()
     {
-        return 'GBP';
+        return 'JPY';
     }
 
     /**
@@ -20,6 +20,6 @@ class GBP extends Money
      */
     final protected function getDecimals()
     {
-        return 2;
+        return 0;
     }
 }

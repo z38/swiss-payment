@@ -8,6 +8,23 @@ namespace Z38\SwissPayment\Money;
 class Mixed extends Money
 {
     /**
+     * @var int
+     */
+    protected $decimals;
+
+    /**
+     * Constructor
+     *
+     * @param int $cents    Amount of money in cents
+     * @param int $decimals Number of minor units
+     */
+    public function __construct($cents, $decimals = 0)
+    {
+        parent::__construct($cents);
+        $this->decimals = $decimals;
+    }
+
+    /**
      * {@inheritdoc}
      */
     final public function getCurrency()
@@ -20,7 +37,7 @@ class Mixed extends Money
      */
     final protected function getDecimals()
     {
-        return 2;
+        return $this->decimals;
     }
 
     /**
@@ -32,7 +49,9 @@ class Mixed extends Money
      */
     public function plus(Money $addend)
     {
-        return new static($this->cents + $addend->cents);
+        list($thisCents, $addendCents, $decimals) = self::normalizeDecimals($this, $addend);
+
+        return new static($thisCents + $addendCents, $decimals);
     }
 
     /**
@@ -44,6 +63,29 @@ class Mixed extends Money
      */
     public function minus(Money $subtrahend)
     {
-        return new static($this->cents - $subtrahend->cents);
+        list($thisCents, $subtrahendCents, $decimals) = self::normalizeDecimals($this, $subtrahend);
+
+        return new static($thisCents - $subtrahendCents, $decimals);
+    }
+
+    /**
+     * Normalizes two amounts such that they have the same number of decimals
+     *
+     * @param Money $a
+     * @param Money $b
+     *
+     * @return array An array containing the two amounts and number of decimals
+     */
+    protected static function normalizeDecimals(Money $a, Money $b)
+    {
+        $decimalsDiff = ($a->getDecimals() - $b->getDecimals());
+        $decimalsMax = max($a->getDecimals(), $b->getDecimals());
+        if ($decimalsDiff > 0) {
+            return array($a->getAmount(), pow(10, $decimalsDiff) * $b->getAmount(), $decimalsMax);
+        } elseif ($decimalsDiff < 0) {
+            return array(pow(10, -$decimalsDiff) * $a->getAmount(), $b->getAmount(), $decimalsMax);
+        } else {
+            return array($a->getAmount(), $b->getAmount(), $decimalsMax);
+        }
     }
 }

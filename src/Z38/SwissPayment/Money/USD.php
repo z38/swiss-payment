@@ -3,16 +3,16 @@
 namespace Z38\SwissPayment\Money;
 
 /**
- * Sum of money in pound sterling
+ * Sum of money in U.S. dollars
  */
-class GBP extends Money
+class USD extends Money
 {
     /**
      * {@inheritdoc}
      */
     final public function getCurrency()
     {
-        return 'GBP';
+        return 'USD';
     }
 
     /**

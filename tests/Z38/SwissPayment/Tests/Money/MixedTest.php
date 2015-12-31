@@ -10,13 +10,14 @@ class MixedTest extends TestCase
     /**
      * @covers \Z38\SwissPayment\Money\Mixed::plus
      */
-    public function testAdd()
+    public function testPlus()
     {
         $sum = new Money\Mixed(0);
-        $sum = $sum->plus(new Money\CHF(4300));
-        $sum = $sum->plus(new Money\EUR(1200));
+        $sum = $sum->plus(new Money\CHF(2456));
+        $sum = $sum->plus(new Money\CHF(1000));
+        $sum = $sum->plus(new Money\JPY(1200));
 
-        $this->assertEquals('55.00', $sum->format());
+        $this->assertEquals('1234.56', $sum->format());
     }
 
     /**
@@ -24,10 +25,11 @@ class MixedTest extends TestCase
      */
     public function testMinus()
     {
-        $sum = new Money\Mixed(10000);
+        $sum = new Money\Mixed(100);
         $sum = $sum->minus(new Money\CHF(5000));
-        $sum = $sum->minus(new Money\EUR(300));
+        $sum = $sum->minus(new Money\CHF(99));
+        $sum = $sum->minus(new Money\JPY(300));
 
-        $this->assertEquals('47.00', $sum->format());
+        $this->assertEquals('-250.99', $sum->format());
     }
 }

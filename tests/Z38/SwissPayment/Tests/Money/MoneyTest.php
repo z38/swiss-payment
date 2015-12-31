@@ -8,6 +8,39 @@ use Z38\SwissPayment\Tests\TestCase;
 class MoneyTest extends TestCase
 {
     /**
+     * @covers \Z38\SwissPayment\Money\Money::format
+     */
+    public function testFormatWithDecimals()
+    {
+        $zero = new Money\CHF(0);
+        $this->assertEquals('0.00', $zero->format());
+
+        $money = new Money\CHF(1234567);
+        $this->assertEquals('12345.67', $money->format());
+
+        $money = new Money\CHF(-1234567);
+        $this->assertEquals('-12345.67', $money->format());
+
+        $money = new Money\CHF(-2);
+        $this->assertEquals('-0.02', $money->format());
+    }
+
+    /**
+     * @covers \Z38\SwissPayment\Money\Money::format
+     */
+    public function testFormatWithoutDecimals()
+    {
+        $zero = new Money\JPY(0);
+        $this->assertEquals('0', $zero->format());
+
+        $money = new Money\JPY(123);
+        $this->assertEquals('123', $money->format());
+
+        $money = new Money\JPY(-1123);
+        $this->assertEquals('-1123', $money->format());
+    }
+
+    /**
      * @covers \Z38\SwissPayment\Money\Money::getAmount
      */
     public function testGetAmount()

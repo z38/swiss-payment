@@ -3,7 +3,7 @@
 namespace Z38\SwissPayment\Money;
 
 /**
- * Base class for all currencies.
+ * Base class for all currencies
  */
 abstract class Money
 {
@@ -13,9 +13,9 @@ abstract class Money
     protected $cents;
 
     /**
-     * Constructor.
+     * Constructor
      *
-     * @param int $cents Amount of money in cents.
+     * @param int $cents Amount of money in cents
      */
     public function __construct($cents)
     {
@@ -43,10 +43,14 @@ abstract class Money
      */
     public function format()
     {
-        $base = pow(10, $this->getDecimals());
-        $sign = ($this->cents < 0 ? '-' : '');
+        if ($this->getDecimals() > 0) {
+            $sign = ($this->cents < 0 ? '-' : '');
+            $base = pow(10, $this->getDecimals());
 
-        return sprintf('%s%d.%0'.$this->getDecimals().'d', $sign, intval(abs($this->cents) / $base), abs($this->cents) % $base);
+            return sprintf('%s%d.%0'.$this->getDecimals().'d', $sign, intval(abs($this->cents) / $base), abs($this->cents) % $base);
+        } else {
+            return sprintf('%d', intval($this->cents));
+        }
     }
 
     /**
