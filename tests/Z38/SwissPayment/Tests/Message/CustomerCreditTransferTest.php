@@ -84,7 +84,7 @@ class CustomerCreditTransferTest extends TestCase
             'e2e-006',
             new Money\GBP(6500), // GBP 65.00
             'United Development Ltd',
-            new UnstructuredPostalAddress('George Street', 'BA1 2FJ Bath', 'UK'),
+            new UnstructuredPostalAddress('George Street', 'BA1 2FJ Bath', 'GB'),
             $iban6,
             new BIC('NWBKGB2L')
         );
