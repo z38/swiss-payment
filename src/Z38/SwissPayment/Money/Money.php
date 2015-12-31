@@ -52,7 +52,7 @@ abstract class Money
     /**
      * Returns the amount of money in cents
      *
-     * @return string The amount in cents
+     * @return int The amount in cents
      */
     public function getAmount()
     {
@@ -74,7 +74,7 @@ abstract class Money
             throw new \InvalidArgumentException('Can not add different currencies');
         }
 
-        return new static($this->cents + $addend->cents);
+        return new static($this->cents + $addend->getAmount());
     }
 
     /**
@@ -92,7 +92,7 @@ abstract class Money
             throw new \InvalidArgumentException('Can not subtract different currencies');
         }
 
-        return new static($this->cents - $subtrahend->cents);
+        return new static($this->cents - $subtrahend->getAmount());
     }
 
     /**
