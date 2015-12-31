@@ -2,7 +2,8 @@
 
 ## 0.3.0
 
-  * Added support for SEPA payments.
+  * Added support for foreign and SEPA payments.
+  * Added support for GBP, USD and JPY.
   * Renamed `Z38\SwissPayment\PostalAddress` to `Z38\SwissPayment\StructuredPostalAddress`.
 
 ## 0.2.0 (2015-03-09)
