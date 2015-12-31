@@ -5,7 +5,7 @@ namespace Z38\SwissPayment\Money;
 /**
  * Base class for all currencies.
  */
-abstract class Money implements MoneyInterface
+abstract class Money
 {
     /**
      * @var int
@@ -56,7 +56,7 @@ abstract class Money implements MoneyInterface
     /**
      * {@inheritdoc}
      */
-    public function plus(MoneyInterface $addend)
+    public function plus(Money $addend)
     {
         if ($this->getCurrency() !== $addend->getCurrency()) {
             throw new \InvalidArgumentException('Can not add different currencies');
@@ -68,7 +68,7 @@ abstract class Money implements MoneyInterface
     /**
      * {@inheritdoc}
      */
-    public function minus(MoneyInterface $subtrahend)
+    public function minus(Money $subtrahend)
     {
         if ($this->getCurrency() !== $subtrahend->getCurrency()) {
             throw new \InvalidArgumentException('Can not subtract different currencies');
@@ -80,7 +80,7 @@ abstract class Money implements MoneyInterface
     /**
      * {@inheritdoc}
      */
-    public function compareTo(MoneyInterface $b)
+    public function compareTo(Money $b)
     {
         if ($this->getCurrency() !== $b->getCurrency()) {
             throw new \InvalidArgumentException('Can not compare different currencies');

@@ -26,11 +26,11 @@ class Mixed extends Money
     /**
      * Returns the sum of this and an other amount of money
      *
-     * @param MoneyInterface $addend The addend
+     * @param Money $addend The addend
      *
-     * @return MoneyInterface The sum
+     * @return Money The sum
      */
-    public function plus(MoneyInterface $addend)
+    public function plus(Money $addend)
     {
         return new static($this->cents + $addend->cents);
     }
@@ -38,11 +38,11 @@ class Mixed extends Money
     /**
      * Returns the subtraction of this and an other amount of money
      *
-     * @param MoneyInterface $subtrahend The subtrahend
+     * @param Money $subtrahend The subtrahend
      *
-     * @return MoneyInterface The difference
+     * @return Money The difference
      */
-    public function minus(MoneyInterface $subtrahend)
+    public function minus(Money $subtrahend)
     {
         return new static($this->cents - $subtrahend->cents);
     }

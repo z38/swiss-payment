@@ -4,7 +4,7 @@ namespace Z38\SwissPayment\TransactionInformation;
 
 use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\IBAN;
-use Z38\SwissPayment\Money;
+use Z38\SwissPayment\Money\Money;
 use Z38\SwissPayment\PostalAddressInterface;
 
 /**
@@ -28,7 +28,7 @@ class ForeignCreditTransfer extends CreditTransfer
      * @param IBAN $creditorIBAN     IBAN of the creditor
      * @param BIC  $creditorAgentBIC BIC of the creditor's financial institution
      */
-    public function __construct($instructionId, $endToEndId, Money\MoneyInterface $amount, $creditorName, PostalAddressInterface $creditorAddress, IBAN $creditorIBAN, BIC $creditorAgentBIC)
+    public function __construct($instructionId, $endToEndId, Money $amount, $creditorName, PostalAddressInterface $creditorAddress, IBAN $creditorIBAN, BIC $creditorAgentBIC)
     {
         parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress);
 
