@@ -1,6 +1,6 @@
 # SwissPayment Changelog
 
-## 0.3.0
+## 0.3.0 (2016-01-01)
 
   * Added support for foreign and SEPA payments.
   * Added support for GBP, USD and JPY.
