@@ -4,6 +4,7 @@ namespace Z38\SwissPayment\TransactionInformation;
 
 use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\Money;
+use Z38\SwissPayment\PaymentInformation\PaymentInformation;
 use Z38\SwissPayment\PostalAccount;
 use Z38\SwissPayment\PostalAddressInterface;
 
@@ -46,9 +47,9 @@ class IS2CreditTransfer extends CreditTransfer
     /**
      * {@inheritdoc}
      */
-    public function asDom(\DOMDocument $doc)
+    public function asDom(\DOMDocument $doc, PaymentInformation $paymentInformation)
     {
-        $root = $this->buildHeader($doc, 'CH03');
+        $root = $this->buildHeader($doc, $paymentInformation, 'CH03');
 
         $creditorAgent = $doc->createElement('CdtrAgt');
         $creditorAgentId = $doc->createElement('FinInstnId');

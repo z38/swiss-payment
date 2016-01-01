@@ -5,6 +5,7 @@ namespace Z38\SwissPayment\TransactionInformation;
 use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\Money;
+use Z38\SwissPayment\PaymentInformation\PaymentInformation;
 use Z38\SwissPayment\PostalAddressInterface;
 
 /**
@@ -39,9 +40,9 @@ class SEPACreditTransfer extends CreditTransfer
     /**
      * {@inheritdoc}
      */
-    public function asDom(\DOMDocument $doc)
+    public function asDom(\DOMDocument $doc, PaymentInformation $paymentInformation)
     {
-        $root = $this->buildHeader($doc, null, 'SEPA');
+        $root = $this->buildHeader($doc, $paymentInformation, null, 'SEPA');
 
         $creditorAgent = $doc->createElement('CdtrAgt');
 

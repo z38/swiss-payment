@@ -2,6 +2,7 @@
 
 namespace Z38\SwissPayment\Tests;
 
+use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
 
@@ -24,5 +25,20 @@ class PaymentInformationTest extends TestCase
             $debtorAgent,
             new IBAN('CH31 8123 9000 0012 4568 9')
         );
+    }
+
+    /**
+     * @covers ::hasPaymentTypeInformation
+     */
+    public function testHasPaymentTypeInformation()
+    {
+        $payment = new PaymentInformation(
+            'id000',
+            'name',
+            new BIC('POFICHBEXXX'),
+            new IBAN('CH31 8123 9000 0012 4568 9')
+        );
+
+        $this->assertFalse($payment->hasPaymentTypeInformation());
     }
 }

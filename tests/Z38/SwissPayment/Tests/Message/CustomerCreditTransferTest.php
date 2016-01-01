@@ -9,6 +9,7 @@ use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\Message\CustomerCreditTransfer;
 use Z38\SwissPayment\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
+use Z38\SwissPayment\PaymentInformation\SEPAPaymentInformation;
 use Z38\SwissPayment\PostalAccount;
 use Z38\SwissPayment\StructuredPostalAddress;
 use Z38\SwissPayment\Tests\TestCase;
@@ -67,37 +68,44 @@ class CustomerCreditTransferTest extends TestCase
             BC::fromIBAN($iban4)
         );
 
-        $iban5 = new IBAN('DE89 3704 0044 0532 0130 00');
         $transaction5 = new SEPACreditTransfer(
             'instr-005',
             'e2e-005',
             new Money\EUR(70000), // EUR 700.00
             'Muster Immo AG',
             new UnstructuredPostalAddress('Musterstraße 35', '80333 München', 'DE'),
-            $iban5,
+            new IBAN('DE89 3704 0044 0532 0130 00'),
             new BIC('COBADEFFXXX')
         );
 
-        $iban6 = new IBAN('GB29 NWBK 6016 1331 9268 19');
         $transaction6 = new ForeignCreditTransfer(
             'instr-006',
             'e2e-006',
             new Money\GBP(6500), // GBP 65.00
             'United Development Ltd',
             new UnstructuredPostalAddress('George Street', 'BA1 2FJ Bath', 'GB'),
-            $iban6,
+            new IBAN('GB29 NWBK 6016 1331 9268 19'),
             new BIC('NWBKGB2L')
         );
 
-        $iban7 = new IBAN('BR97 0036 0305 0000 1000 9795 493P 1');
         $transaction7 = new ForeignCreditTransfer(
             'instr-007',
             'e2e-007',
             new Money\GBP(30000), // GBP 300.00
             'United Development Brazil Ltda.',
             new UnstructuredPostalAddress('Rua do Castelino, 1650', '41610-480 Salvador-BA', 'BR'),
-            $iban6,
+            new IBAN('BR97 0036 0305 0000 1000 9795 493P 1'),
             new FinancialInstitutionAddress('Caixa Economica Federal', new UnstructuredPostalAddress('Rua Sao Valentim, 620', '03446-040 Sao Paulo-SP', 'BR'))
+        );
+
+        $transaction8 = new SEPACreditTransfer(
+            'instr-008',
+            'e2e-008',
+            new Money\EUR(10000), // EUR 100.00
+            'Bau Muster AG',
+            new UnstructuredPostalAddress('Musterallee 11', '10115 Berlin', 'DE'),
+            new IBAN('DE22 2665 0001 9311 6826 12'),
+            new BIC('NOLADE21EMS')
         );
 
         $payment = new PaymentInformation('payment-001', 'InnoMuster AG', new BIC('ZKBKCHZZ80A'), new IBAN('CH6600700110000204481'));
@@ -111,9 +119,13 @@ class CustomerCreditTransferTest extends TestCase
         $payment2->addTransaction($transaction6);
         $payment2->addTransaction($transaction7);
 
+        $payment3 = new SEPAPaymentInformation('payment-003', 'InnoMuster AG', new BIC('POFICHBEXXX'), new IBAN('CH6309000000250097798'));
+        $payment3->addTransaction($transaction8);
+
         $message = new CustomerCreditTransfer('message-001', 'InnoMuster AG');
         $message->addPayment($payment);
         $message->addPayment($payment2);
+        $message->addPayment($payment3);
 
         return $message;
     }
@@ -127,11 +139,11 @@ class CustomerCreditTransferTest extends TestCase
         $xpath = new \DOMXPath($doc);
         $xpath->registerNamespace('pain001', self::NS_URI_ROOT.self::SCHEMA);
 
-        $nbOfTxs = $xpath->query('//pain001:GrpHdr/pain001:NbOfTxs');
-        $this->assertEquals('7', $nbOfTxs->item(0)->textContent);
+        $nbOfTxs = $xpath->evaluate('string(//pain001:GrpHdr/pain001:NbOfTxs)');
+        $this->assertEquals('8', $nbOfTxs);
 
-        $ctrlSum = $xpath->query('//pain001:GrpHdr/pain001:CtrlSum');
-        $this->assertEquals('3165.00', $ctrlSum->item(0)->textContent);
+        $ctrlSum = $xpath->evaluate('string(//pain001:GrpHdr/pain001:CtrlSum)');
+        $this->assertEquals('3265.00', $ctrlSum);
     }
 
     public function testSchemaValidation()

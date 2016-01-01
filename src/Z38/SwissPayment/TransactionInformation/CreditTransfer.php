@@ -3,6 +3,7 @@
 namespace Z38\SwissPayment\TransactionInformation;
 
 use Z38\SwissPayment\Money\Money;
+use Z38\SwissPayment\PaymentInformation\PaymentInformation;
 use Z38\SwissPayment\PostalAddressInterface;
 
 /**
@@ -86,22 +87,24 @@ abstract class CreditTransfer
     /**
      * Builds a DOM tree of this transaction
      *
-     * @param \DOMDocument $doc
+     * @param \DOMDocument       $doc
+     * @param PaymentInformation $paymentInformation Information on B-level
      *
      * @return \DOMElement The built DOM tree
      */
-    abstract public function asDom(\DOMDocument $doc);
+    abstract public function asDom(\DOMDocument $doc, PaymentInformation $paymentInformation);
 
     /**
      * Builds a DOM tree of this transaction and adds header nodes
      *
-     * @param \DOMDocument $doc
-     * @param string|null  $localInstrument Local Instrument
-     * @param string|null  $serviceLevel
+     * @param \DOMDocument       $doc
+     * @param PaymentInformation $paymentInformation The corresponding B-level element
+     * @param string|null        $localInstrument    Local instrument
+     * @param string|null        $serviceLevel       Service level
      *
      * @return \DOMNode The built DOM node
      */
-    protected function buildHeader(\DOMDocument $doc, $localInstrument = null, $serviceLevel = null)
+    protected function buildHeader(\DOMDocument $doc, PaymentInformation $paymentInformation, $localInstrument = null, $serviceLevel = null)
     {
         $root = $doc->createElement('CdtTrfTxInf');
 
@@ -110,7 +113,14 @@ abstract class CreditTransfer
         $id->appendChild($doc->createElement('EndToEndId', $this->endToEndId));
         $root->appendChild($id);
 
-        if (!empty($localInstrument) || !empty($serviceLevel)) {
+        if ($paymentInformation->hasPaymentTypeInformation()) {
+            if ($paymentInformation->getLocalInstrument() !== $localInstrument) {
+                throw new \LogicException('You can not set the local instrument on B- and C-level.');
+            }
+            if ($paymentInformation->getServiceLevel() !== $serviceLevel) {
+                throw new \LogicException('You can not set the service level on B- and C-level.');
+            }
+        } elseif (!empty($localInstrument) || !empty($serviceLevel)) {
             $paymentType = $doc->createElement('PmtTpInf');
             if (!empty($localInstrument)) {
                 $localInstrumentNode = $doc->createElement('LclInstrm');

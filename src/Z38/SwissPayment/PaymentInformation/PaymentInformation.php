@@ -30,6 +30,16 @@ class PaymentInformation
     protected $batchBooking;
 
     /**
+     * @var string|null
+     */
+    protected $serviceLevel;
+
+    /**
+     * @var string|null
+     */
+    protected $localInstrument;
+
+    /**
      * @var \DateTime
      */
     protected $executionDate;
@@ -143,6 +153,36 @@ class PaymentInformation
     }
 
     /**
+     * Checks whether the payment type information is included on B- or C-level
+     *
+     * @return bool true if it is included on B-level
+     */
+    public function hasPaymentTypeInformation()
+    {
+        return ($this->localInstrument !== null || $this->serviceLevel !== null);
+    }
+
+    /**
+     * Gets the local instrument
+     *
+     * @return string|null The local instrument
+     */
+    public function getLocalInstrument()
+    {
+        return $this->localInstrument;
+    }
+
+    /**
+     * Gets the service level
+     *
+     * @return string|null The service level
+     */
+    public function getServiceLevel()
+    {
+        return $this->serviceLevel;
+    }
+
+    /**
      * Builds a DOM tree of this payment instruction
      *
      * @param \DOMDocument $doc
@@ -156,6 +196,22 @@ class PaymentInformation
         $root->appendChild($doc->createElement('PmtInfId', $this->id));
         $root->appendChild($doc->createElement('PmtMtd', 'TRF'));
         $root->appendChild($doc->createElement('BtchBookg', ($this->batchBooking ? 'true' : 'false')));
+
+        if ($this->hasPaymentTypeInformation()) {
+            $paymentType = $doc->createElement('PmtTpInf');
+            if ($this->localInstrument !== null) {
+                $localInstrumentNode = $doc->createElement('LclInstrm');
+                $localInstrumentNode->appendChild($doc->createElement('Prtry', $this->localInstrument));
+                $paymentType->appendChild($localInstrumentNode);
+            }
+            if ($this->serviceLevel !== null) {
+                $serviceLevelNode = $doc->createElement('SvcLvl');
+                $serviceLevelNode->appendChild($doc->createElement('Cd', $this->serviceLevel));
+                $paymentType->appendChild($serviceLevelNode);
+            }
+            $root->appendChild($paymentType);
+        }
+
         $root->appendChild($doc->createElement('ReqdExctnDt', $this->executionDate->format('Y-m-d')));
 
         $debtor = $doc->createElement('Dbtr');
@@ -173,7 +229,7 @@ class PaymentInformation
         $root->appendChild($debtorAgent);
 
         foreach ($this->transactions as $transaction) {
-            $root->appendChild($transaction->asDom($doc));
+            $root->appendChild($transaction->asDom($doc, $this));
         }
 
         return $root;
