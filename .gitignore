@@ -4,3 +4,4 @@ composer.phar
 autoload.php
 php-cs-fixer.phar
 /vendor/
+.idea/
