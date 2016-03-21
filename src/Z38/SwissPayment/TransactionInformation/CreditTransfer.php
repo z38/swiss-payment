@@ -65,7 +65,9 @@ abstract class CreditTransfer
         $this->creditorName = (string) $creditorName;
         $this->creditorAddress = $creditorAddress;
         $this->remittanceInformation = null;
-        $this->intermediarySwift = $intermediarySwift;
+        if ($intermediarySwift) {
+            $this->setIntermediarySwift($intermediarySwift);
+        }
     }
 
     /**
@@ -197,5 +199,21 @@ abstract class CreditTransfer
         } else {
             throw new \LogicException('Can not build node without data.');
         }
+    }
+
+    /**
+     * @return IntermediarySwift
+     */
+    public function getIntermediarySwift()
+    {
+        return $this->intermediarySwift;
+    }
+
+    /**
+     * @param IntermediarySwift $intermediarySwift
+     */
+    public function setIntermediarySwift(IntermediarySwift $intermediarySwift)
+    {
+        $this->intermediarySwift = $intermediarySwift;
     }
 }

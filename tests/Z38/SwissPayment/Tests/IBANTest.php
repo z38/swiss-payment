@@ -83,12 +83,8 @@ class IBANTest extends TestCase
 
     protected function check($iban, $valid)
     {
-        $exception = false;
-        try {
-            $temp = new IBAN($iban);
-        } catch (\InvalidArgumentException $e) {
-            $exception = true;
-        }
-        $this->assertTrue($exception != $valid);
+        $temp = new IBAN($iban);
+
+        $this->assertTrue($valid == $temp->isValidIban());
     }
 }
