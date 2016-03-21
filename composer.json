@@ -1,5 +1,5 @@
 {
-    "name": "spikeo/swiss-payment",
+    "name": "z38/swiss-payment",
     "type": "library",
     "license": "MIT",
     "description": "PHP library to generate Swiss pain.001 messages (complies with ISO-20022)",
