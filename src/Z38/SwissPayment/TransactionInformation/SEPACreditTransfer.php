@@ -28,10 +28,11 @@ class SEPACreditTransfer extends CreditTransfer
      *
      * @param IBAN $creditorIBAN     IBAN of the creditor
      * @param BIC  $creditorAgentBIC BIC of the creditor's financial institution
+     * @param IntermediarySwift $intermediarySwift
      */
-    public function __construct($instructionId, $endToEndId, Money\EUR $amount, $creditorName, PostalAddressInterface $creditorAddress, IBAN $creditorIBAN, BIC $creditorAgentBIC)
+    public function __construct($instructionId, $endToEndId, Money\EUR $amount, $creditorName, PostalAddressInterface $creditorAddress, IBAN $creditorIBAN, BIC $creditorAgentBIC, $intermediarySwift = null)
     {
-        parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress);
+        parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress, $intermediarySwift);
 
         $this->creditorIBAN = $creditorIBAN;
         $this->creditorAgentBIC = $creditorAgentBIC;
@@ -45,11 +46,15 @@ class SEPACreditTransfer extends CreditTransfer
         $root = $this->buildHeader($doc, $paymentInformation, null, 'SEPA');
 
         $creditorAgent = $doc->createElement('CdtrAgt');
-
         $creditorAgent->appendChild($this->creditorAgentBIC->asDom($doc));
         $root->appendChild($creditorAgent);
-
         $root->appendChild($this->buildCreditor($doc));
+
+        if ($this->intermediarySwift) {
+            $intermediary = $doc->createElement('IntrmyAgt1');
+            $intermediary->appendChild($this->intermediarySwift->asDom($doc));
+            $root->appendChild($intermediary);
+        }
 
         $creditorAccount = $doc->createElement('CdtrAcct');
         $creditorAccountId = $doc->createElement('Id');
