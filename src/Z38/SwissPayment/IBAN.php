@@ -126,4 +126,19 @@ class IBAN
     {
         return $this->validIban;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function asDom(\DOMDocument $doc)
+    {
+        if ($this->isValidIban()) {
+            $xml = $doc->createElement('IBAN', $this->normalize());
+        } else {
+            $xml = $doc->createElement('Othr');
+            $xml->appendChild($doc->createElement('Id', $this->normalize()));
+        }
+
+        return $xml;
+    }
 }

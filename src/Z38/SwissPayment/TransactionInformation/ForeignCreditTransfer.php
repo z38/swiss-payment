@@ -66,7 +66,7 @@ class ForeignCreditTransfer extends CreditTransfer
 
         $creditorAccount = $doc->createElement('CdtrAcct');
         $creditorAccountId = $doc->createElement('Id');
-        $creditorAccountId->appendChild($doc->createElement($this->creditorIBAN->getElementName(), $this->creditorIBAN->normalize()));
+        $creditorAccountId->appendChild($this->creditorIBAN->asDom($doc));
         $creditorAccount->appendChild($creditorAccountId);
         $root->appendChild($creditorAccount);
 
