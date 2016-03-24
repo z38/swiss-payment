@@ -164,7 +164,7 @@ abstract class CreditTransfer
     protected function buildCreditor(\DOMDocument $doc)
     {
         $creditor = $doc->createElement('Cdtr');
-        $creditor->appendChild($doc->createElement('Nm', htmlentities($this->creditorName)));
+        $creditor->appendChild($doc->createElement('Nm', $this->creditorName));
         $creditor->appendChild($this->creditorAddress->asDom($doc));
 
         return $creditor;
