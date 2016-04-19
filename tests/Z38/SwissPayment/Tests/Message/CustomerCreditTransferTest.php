@@ -108,6 +108,7 @@ class CustomerCreditTransferTest extends TestCase
             new GeneralAccount('123-4567890-78'),
             new FinancialInstitutionAddress('Belfius Bank', new UnstructuredPostalAddress('Pachecolaan 44', '1000 Brussel', 'BE'))
         );
+        $transaction8->setIntermediaryAgent(new BIC('SWHQBEBB'));
 
         $transaction9 = new SEPACreditTransfer(
             'instr-009',

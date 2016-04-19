@@ -27,6 +27,11 @@ class ForeignCreditTransfer extends CreditTransfer
     protected $creditorAgent;
 
     /**
+     * @var BIC
+     */
+    protected $intermediaryAgent;
+
+    /**
      * {@inheritdoc}
      *
      * @param AccountInterface                $creditorAccount Account of the creditor
@@ -45,11 +50,27 @@ class ForeignCreditTransfer extends CreditTransfer
     }
 
     /**
+     * Set the intermediary agent of the transaction.
+     *
+     * @param BIC $intermediaryAgent BIC of the intmediary agent
+     */
+    public function setIntermediaryAgent(BIC $intermediaryAgent)
+    {
+        $this->intermediaryAgent = $intermediaryAgent;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function asDom(DOMDocument $doc, PaymentInformation $paymentInformation)
     {
         $root = $this->buildHeader($doc, $paymentInformation);
+
+        if ($this->intermediaryAgent !== null) {
+            $intermediaryAgent = $doc->createElement('IntrmyAgt1');
+            $intermediaryAgent->appendChild($this->intermediaryAgent->asDom($doc));
+            $root->appendChild($intermediaryAgent);
+        }
 
         $creditorAgent = $doc->createElement('CdtrAgt');
         $creditorAgent->appendChild($this->creditorAgent->asDom($doc));

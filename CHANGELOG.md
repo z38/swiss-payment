@@ -3,6 +3,7 @@
 ## 0.X.X (2016-XX-XX)
 
   * Added support for general account identifiers.
+  * Added support for intermediary transaction agents.
 
 ## 0.3.0 (2016-01-01)
 
