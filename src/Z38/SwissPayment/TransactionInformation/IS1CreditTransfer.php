@@ -2,6 +2,7 @@
 
 namespace Z38\SwissPayment\TransactionInformation;
 
+use DOMDocument;
 use Z38\SwissPayment\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
 use Z38\SwissPayment\PostalAccount;
@@ -32,18 +33,14 @@ class IS1CreditTransfer extends CreditTransfer
     /**
      * {@inheritdoc}
      */
-    public function asDom(\DOMDocument $doc, PaymentInformation $paymentInformation)
+    public function asDom(DOMDocument $doc, PaymentInformation $paymentInformation)
     {
         $root = $this->buildHeader($doc, $paymentInformation, 'CH02');
 
         $root->appendChild($this->buildCreditor($doc));
 
         $creditorAccount = $doc->createElement('CdtrAcct');
-        $creditorAccountId = $doc->createElement('Id');
-        $creditorAccountIdOther = $doc->createElement('Othr');
-        $creditorAccountIdOther->appendChild($doc->createElement('Id', $this->creditorAccount->format()));
-        $creditorAccountId->appendChild($creditorAccountIdOther);
-        $creditorAccount->appendChild($creditorAccountId);
+        $creditorAccount->appendChild($this->creditorAccount->asDom($doc));
         $root->appendChild($creditorAccount);
 
         if ($this->hasRemittanceInformation()) {

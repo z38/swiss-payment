@@ -5,6 +5,7 @@ namespace Z38\SwissPayment\Tests\Message;
 use Z38\SwissPayment\BC;
 use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\FinancialInstitutionAddress;
+use Z38\SwissPayment\GeneralAccount;
 use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\Message\CustomerCreditTransfer;
 use Z38\SwissPayment\Money;
@@ -98,9 +99,19 @@ class CustomerCreditTransferTest extends TestCase
             new FinancialInstitutionAddress('Caixa Economica Federal', new UnstructuredPostalAddress('Rua Sao Valentim, 620', '03446-040 Sao Paulo-SP', 'BR'))
         );
 
-        $transaction8 = new SEPACreditTransfer(
+        $transaction8 = new ForeignCreditTransfer(
             'instr-008',
             'e2e-008',
+            new Money\GBP(4500), // GBP 45.00
+            'United Development Belgium SA/NV',
+            new UnstructuredPostalAddress('Oostjachtpark 187', '6743 Buzenol', 'BE'),
+            new GeneralAccount('123-4567890-78'),
+            new FinancialInstitutionAddress('Belfius Bank', new UnstructuredPostalAddress('Pachecolaan 44', '1000 Brussel', 'BE'))
+        );
+
+        $transaction9 = new SEPACreditTransfer(
+            'instr-009',
+            'e2e-009',
             new Money\EUR(10000), // EUR 100.00
             'Bau Muster AG',
             new UnstructuredPostalAddress('Musterallee 11', '10115 Berlin', 'DE'),
@@ -118,9 +129,10 @@ class CustomerCreditTransferTest extends TestCase
         $payment2->addTransaction($transaction5);
         $payment2->addTransaction($transaction6);
         $payment2->addTransaction($transaction7);
+        $payment2->addTransaction($transaction8);
 
         $payment3 = new SEPAPaymentInformation('payment-003', 'InnoMuster AG', new BIC('POFICHBEXXX'), new IBAN('CH6309000000250097798'));
-        $payment3->addTransaction($transaction8);
+        $payment3->addTransaction($transaction9);
 
         $message = new CustomerCreditTransfer('message-001', 'InnoMuster AG');
         $message->addPayment($payment);
@@ -140,10 +152,10 @@ class CustomerCreditTransferTest extends TestCase
         $xpath->registerNamespace('pain001', self::NS_URI_ROOT.self::SCHEMA);
 
         $nbOfTxs = $xpath->evaluate('string(//pain001:GrpHdr/pain001:NbOfTxs)');
-        $this->assertEquals('8', $nbOfTxs);
+        $this->assertEquals('9', $nbOfTxs);
 
         $ctrlSum = $xpath->evaluate('string(//pain001:GrpHdr/pain001:CtrlSum)');
-        $this->assertEquals('3265.00', $ctrlSum);
+        $this->assertEquals('3310.00', $ctrlSum);
     }
 
     public function testSchemaValidation()

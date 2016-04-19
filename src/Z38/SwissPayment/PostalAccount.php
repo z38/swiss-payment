@@ -2,10 +2,12 @@
 
 namespace Z38\SwissPayment;
 
+use DOMDocument;
+
 /**
  * PostalAccount holds details about a PostFinance account
  */
-class PostalAccount
+class PostalAccount implements AccountInterface
 {
     const PATTERN = '/^[0-9]{2}-[1-9][0-9]{0,5}-[0-9]$/';
 
@@ -55,6 +57,19 @@ class PostalAccount
     public function format()
     {
         return sprintf('%d-%d-%d', $this->prefix, $this->number, $this->checkDigit);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function asDom(DOMDocument $doc)
+    {
+        $root = $doc->createElement('Id');
+        $other = $doc->createElement('Othr');
+        $other->appendChild($doc->createElement('Id', $this->format()));
+        $root->appendChild($other);
+
+        return $root;
     }
 
     /**

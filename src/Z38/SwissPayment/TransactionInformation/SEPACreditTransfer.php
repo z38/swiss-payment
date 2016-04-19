@@ -2,6 +2,7 @@
 
 namespace Z38\SwissPayment\TransactionInformation;
 
+use DOMDocument;
 use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\Money;
@@ -40,7 +41,7 @@ class SEPACreditTransfer extends CreditTransfer
     /**
      * {@inheritdoc}
      */
-    public function asDom(\DOMDocument $doc, PaymentInformation $paymentInformation)
+    public function asDom(DOMDocument $doc, PaymentInformation $paymentInformation)
     {
         $root = $this->buildHeader($doc, $paymentInformation, null, 'SEPA');
 
@@ -52,9 +53,7 @@ class SEPACreditTransfer extends CreditTransfer
         $root->appendChild($this->buildCreditor($doc));
 
         $creditorAccount = $doc->createElement('CdtrAcct');
-        $creditorAccountId = $doc->createElement('Id');
-        $creditorAccountId->appendChild($doc->createElement('IBAN', $this->creditorIBAN->normalize()));
-        $creditorAccount->appendChild($creditorAccountId);
+        $creditorAccount->appendChild($this->creditorIBAN->asDom($doc));
         $root->appendChild($creditorAccount);
 
         if ($this->hasRemittanceInformation()) {

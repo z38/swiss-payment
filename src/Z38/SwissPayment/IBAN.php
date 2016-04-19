@@ -2,10 +2,12 @@
 
 namespace Z38\SwissPayment;
 
+use DOMDocument;
+
 /**
  * IBAN
  */
-class IBAN
+class IBAN implements AccountInterface
 {
     const MAX_LENGTH = 34;
     const PATTERN = '/^[A-Z]{2,2}[0-9]{2,2}[A-Z0-9]{1,30}$/';
@@ -98,6 +100,17 @@ class IBAN
         }
 
         return ($r == 1);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function asDom(DOMDocument $doc)
+    {
+        $xml = $doc->createElement('Id');
+        $xml->appendChild($doc->createElement('IBAN', $this->normalize()));
+
+        return $xml;
     }
 
     /**

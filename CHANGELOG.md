@@ -1,5 +1,9 @@
 # SwissPayment Changelog
 
+## 0.X.X (2016-XX-XX)
+
+  * Added support for general account identifiers.
+
 ## 0.3.0 (2016-01-01)
 
   * Added support for foreign and SEPA payments.

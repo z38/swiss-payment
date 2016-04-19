@@ -2,10 +2,11 @@
 
 namespace Z38\SwissPayment\TransactionInformation;
 
+use DOMDocument;
+use Z38\SwissPayment\AccountInterface;
 use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\FinancialInstitutionAddress;
 use Z38\SwissPayment\FinancialInstitutionInterface;
-use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\Money\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
 use Z38\SwissPayment\PostalAddressInterface;
@@ -16,9 +17,9 @@ use Z38\SwissPayment\PostalAddressInterface;
 class ForeignCreditTransfer extends CreditTransfer
 {
     /**
-     * @var IBAN
+     * @var AccountInterface
      */
-    protected $creditorIBAN;
+    protected $creditorAccount;
 
     /**
      * @var BIC|FinancialInstitutionAddress
@@ -28,10 +29,10 @@ class ForeignCreditTransfer extends CreditTransfer
     /**
      * {@inheritdoc}
      *
-     * @param IBAN                            $creditorIBAN  IBAN of the creditor
-     * @param BIC|FinancialInstitutionAddress $creditorAgent BIC or address of the creditor's financial institution
+     * @param AccountInterface                $creditorAccount Account of the creditor
+     * @param BIC|FinancialInstitutionAddress $creditorAgent   BIC or address of the creditor's financial institution
      */
-    public function __construct($instructionId, $endToEndId, Money $amount, $creditorName, PostalAddressInterface $creditorAddress, IBAN $creditorIBAN, FinancialInstitutionInterface $creditorAgent)
+    public function __construct($instructionId, $endToEndId, Money $amount, $creditorName, PostalAddressInterface $creditorAddress, AccountInterface $creditorAccount, FinancialInstitutionInterface $creditorAgent)
     {
         parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress);
 
@@ -39,28 +40,25 @@ class ForeignCreditTransfer extends CreditTransfer
             throw new \InvalidArgumentException('The creditor agent must be an instance of BIC or FinancialInstitutionAddress.');
         }
 
-        $this->creditorIBAN = $creditorIBAN;
+        $this->creditorAccount = $creditorAccount;
         $this->creditorAgent = $creditorAgent;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function asDom(\DOMDocument $doc, PaymentInformation $paymentInformation)
+    public function asDom(DOMDocument $doc, PaymentInformation $paymentInformation)
     {
         $root = $this->buildHeader($doc, $paymentInformation);
 
         $creditorAgent = $doc->createElement('CdtrAgt');
-
         $creditorAgent->appendChild($this->creditorAgent->asDom($doc));
         $root->appendChild($creditorAgent);
 
         $root->appendChild($this->buildCreditor($doc));
 
         $creditorAccount = $doc->createElement('CdtrAcct');
-        $creditorAccountId = $doc->createElement('Id');
-        $creditorAccountId->appendChild($doc->createElement('IBAN', $this->creditorIBAN->normalize()));
-        $creditorAccount->appendChild($creditorAccountId);
+        $creditorAccount->appendChild($this->creditorAccount->asDom($doc));
         $root->appendChild($creditorAccount);
 
         if ($this->hasRemittanceInformation()) {
