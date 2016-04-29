@@ -75,7 +75,7 @@ class CustomerCreditTransfer extends AbstractMessage
      */
     protected function getSchemaName()
     {
-        return 'pain.001.001.03.ch.02.xsd';
+        return 'pain.001.001.03';
     }
 
     /**
