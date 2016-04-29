@@ -7,7 +7,7 @@ namespace Z38\SwissPayment\Message;
  */
 abstract class AbstractMessage implements MessageInterface
 {
-    const SCHEMA_LOCATION = 'http://www.six-interbank-clearing.com/de/%s';
+    const SCHEMA_LOCATION = 'urn:iso:std:iso:20022:tech:xsd:%s';
 
     /**
      * Builds the DOM of the actual message
@@ -40,7 +40,6 @@ abstract class AbstractMessage implements MessageInterface
         $root = $doc->createElement('Document');
         $root->setAttribute('xmlns', $ns);
         $root->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
-        $root->setAttribute('xsi:schemaLocation', sprintf('%s %s', $ns, $schema));
         $root->appendChild($this->buildDom($doc));
         $doc->appendChild($root);
 

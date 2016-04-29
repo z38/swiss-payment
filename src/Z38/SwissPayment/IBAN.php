@@ -7,13 +7,16 @@ namespace Z38\SwissPayment;
  */
 class IBAN
 {
-    const MAX_LENGTH = 34;
     const PATTERN = '/^[A-Z]{2,2}[0-9]{2,2}[A-Z0-9]{1,30}$/';
 
     /**
      * @var string
      */
     protected $iban;
+    /**
+     * @var boolean
+     */
+    private $validIban = false;
 
     /**
      * Constructor
@@ -25,11 +28,8 @@ class IBAN
     public function __construct($iban)
     {
         $cleanedIban = str_replace(' ', '', strtoupper($iban));
-        if (!preg_match(self::PATTERN, $cleanedIban)) {
-            throw new \InvalidArgumentException('IBAN is not properly formatted.');
-        }
-        if (!self::check($cleanedIban)) {
-            throw new \InvalidArgumentException('IBAN has an invalid checksum.');
+        if (preg_match(self::PATTERN, $cleanedIban) && self::check($cleanedIban)) {
+            $this->validIban = true;
         }
 
         $this->iban = $cleanedIban;
@@ -108,5 +108,37 @@ class IBAN
     public function __toString()
     {
         return $this->format();
+    }
+
+    public function getElementName()
+    {
+        if ($this->isValidIban()) {
+            return 'IBAN';
+        }
+
+        return 'Othr';
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isValidIban()
+    {
+        return $this->validIban;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function asDom(\DOMDocument $doc)
+    {
+        if ($this->isValidIban()) {
+            $xml = $doc->createElement('IBAN', $this->normalize());
+        } else {
+            $xml = $doc->createElement('Othr');
+            $xml->appendChild($doc->createElement('Id', $this->normalize()));
+        }
+
+        return $xml;
     }
 }

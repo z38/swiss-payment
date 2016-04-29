@@ -6,6 +6,7 @@ use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\FinancialInstitutionAddress;
 use Z38\SwissPayment\FinancialInstitutionInterface;
 use Z38\SwissPayment\IBAN;
+use Z38\SwissPayment\IntermediarySwift;
 use Z38\SwissPayment\Money\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
 use Z38\SwissPayment\PostalAddressInterface;
@@ -28,12 +29,13 @@ class ForeignCreditTransfer extends CreditTransfer
     /**
      * {@inheritdoc}
      *
-     * @param IBAN                            $creditorIBAN  IBAN of the creditor
-     * @param BIC|FinancialInstitutionAddress $creditorAgent BIC or address of the creditor's financial institution
+     * @param IBAN                              $creditorIBAN  IBAN of the creditor
+     * @param BIC|FinancialInstitutionAddress   $creditorAgent BIC or address of the creditor's financial institution
+     * @param IntermediarySwift|null            $intermediarySwift IntermediarySwift
      */
-    public function __construct($instructionId, $endToEndId, Money $amount, $creditorName, PostalAddressInterface $creditorAddress, IBAN $creditorIBAN, FinancialInstitutionInterface $creditorAgent)
+    public function __construct($instructionId, $endToEndId, Money $amount, $creditorName, PostalAddressInterface $creditorAddress, IBAN $creditorIBAN, FinancialInstitutionInterface $creditorAgent, $intermediarySwift = null)
     {
-        parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress);
+        parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress, $intermediarySwift);
 
         if (!$creditorAgent instanceof BIC && !$creditorAgent instanceof FinancialInstitutionAddress) {
             throw new \InvalidArgumentException('The creditor agent must be an instance of BIC or FinancialInstitutionAddress.');
@@ -51,15 +53,20 @@ class ForeignCreditTransfer extends CreditTransfer
         $root = $this->buildHeader($doc, $paymentInformation);
 
         $creditorAgent = $doc->createElement('CdtrAgt');
-
         $creditorAgent->appendChild($this->creditorAgent->asDom($doc));
         $root->appendChild($creditorAgent);
+
+        if ($this->intermediarySwift) {
+            $intermediary = $doc->createElement('IntrmyAgt1');
+            $intermediary->appendChild($this->intermediarySwift->asDom($doc));
+            $root->appendChild($intermediary);
+        }
 
         $root->appendChild($this->buildCreditor($doc));
 
         $creditorAccount = $doc->createElement('CdtrAcct');
         $creditorAccountId = $doc->createElement('Id');
-        $creditorAccountId->appendChild($doc->createElement('IBAN', $this->creditorIBAN->normalize()));
+        $creditorAccountId->appendChild($this->creditorIBAN->asDom($doc));
         $creditorAccount->appendChild($creditorAccountId);
         $root->appendChild($creditorAccount);
 

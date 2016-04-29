@@ -2,6 +2,7 @@
 
 namespace Z38\SwissPayment\TransactionInformation;
 
+use Z38\SwissPayment\IntermediarySwift;
 use Z38\SwissPayment\Money\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
 use Z38\SwissPayment\PostalAddressInterface;
@@ -42,6 +43,11 @@ abstract class CreditTransfer
     protected $remittanceInformation;
 
     /**
+     * @var IntermediarySwift
+     */
+    protected $intermediarySwift;
+
+    /**
      * Constructor
      *
      * @param string                 $instructionId   Identifier of the instruction (should be unique within the message)
@@ -49,8 +55,9 @@ abstract class CreditTransfer
      * @param Money                  $amount          Amount of money to be transferred
      * @param string                 $creditorName    Name of the creditor
      * @param PostalAddressInterface $creditorAddress Address of the creditor
+     * @param IntermediarySwift      $intermediarySwift
      */
-    public function __construct($instructionId, $endToEndId, Money $amount, $creditorName, PostalAddressInterface $creditorAddress)
+    public function __construct($instructionId, $endToEndId, Money $amount, $creditorName, PostalAddressInterface $creditorAddress, $intermediarySwift = null)
     {
         $this->instructionId = (string) $instructionId;
         $this->endToEndId = (string) $endToEndId;
@@ -58,6 +65,9 @@ abstract class CreditTransfer
         $this->creditorName = (string) $creditorName;
         $this->creditorAddress = $creditorAddress;
         $this->remittanceInformation = null;
+        if ($intermediarySwift) {
+            $this->setIntermediarySwift($intermediarySwift);
+        }
     }
 
     /**
@@ -189,5 +199,21 @@ abstract class CreditTransfer
         } else {
             throw new \LogicException('Can not build node without data.');
         }
+    }
+
+    /**
+     * @return IntermediarySwift
+     */
+    public function getIntermediarySwift()
+    {
+        return $this->intermediarySwift;
+    }
+
+    /**
+     * @param IntermediarySwift $intermediarySwift
+     */
+    public function setIntermediarySwift(IntermediarySwift $intermediarySwift)
+    {
+        $this->intermediarySwift = $intermediarySwift;
     }
 }
