@@ -4,10 +4,10 @@ namespace Z38\SwissPayment\TransactionInformation;
 
 use DOMDocument;
 use InvalidArgumentException;
-use Z38\SwissPayment\BC;
 use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\FinancialInstitutionInterface;
 use Z38\SwissPayment\IBAN;
+use Z38\SwissPayment\IID;
 use Z38\SwissPayment\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
 use Z38\SwissPayment\PostalAddressInterface;
@@ -30,10 +30,10 @@ class BankCreditTransfer extends CreditTransfer
     /**
      * {@inheritdoc}
      *
-     * @param IBAN   $creditorIBAN  IBAN of the creditor
-     * @param BC|BIC $creditorAgent BC or BIC of the creditor's financial institution
+     * @param IBAN    $creditorIBAN  IBAN of the creditor
+     * @param BIC|IID $creditorAgent BIC or IID of the creditor's financial institution
      *
-     * @throws \InvalidArgumentException When the amount is not in EUR or CHF or when the creditor agent is not BC or BIC.
+     * @throws \InvalidArgumentException When the amount is not in EUR or CHF or when the creditor agent is not BIC or IID.
      */
     public function __construct($instructionId, $endToEndId, Money\Money $amount, $creditorName, PostalAddressInterface $creditorAddress, IBAN $creditorIBAN, FinancialInstitutionInterface $creditorAgent)
     {
@@ -44,8 +44,8 @@ class BankCreditTransfer extends CreditTransfer
             ));
         }
 
-        if (!$creditorAgent instanceof BC && !$creditorAgent instanceof BIC) {
-            throw new InvalidArgumentException('The creditor agent must be an instance of BC or BIC.');
+        if (!$creditorAgent instanceof BIC && !$creditorAgent instanceof IID) {
+            throw new InvalidArgumentException('The creditor agent must be an instance of BIC or IID.');
         }
 
         parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress);

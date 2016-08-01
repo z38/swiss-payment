@@ -4,6 +4,7 @@
 
   * Added support for general account identifiers.
   * Added support for intermediary transaction agents.
+  * Deprecate `Z38\SwissPayment\BC` in favor of `Z38\SwissPayment\IID`.
 
 ## 0.3.0 (2016-01-01)
 

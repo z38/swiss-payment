@@ -2,10 +2,10 @@
 
 namespace Z38\SwissPayment\PaymentInformation;
 
-use Z38\SwissPayment\BC;
 use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\FinancialInstitutionInterface;
 use Z38\SwissPayment\IBAN;
+use Z38\SwissPayment\IID;
 use Z38\SwissPayment\Money;
 use Z38\SwissPayment\TransactionInformation\CreditTransfer;
 
@@ -62,15 +62,15 @@ class PaymentInformation
     /**
      * Constructor
      *
-     * @param string $id          Identifier of this group (should be unique within a message)
-     * @param string $debtorName  Name of the debtor
-     * @param BC|BIC $debtorAgent BC or BIC of the debtor's financial institution
-     * @param IBAN   $debtorIBAN  IBAN of the debtor's account
+     * @param string  $id          Identifier of this group (should be unique within a message)
+     * @param string  $debtorName  Name of the debtor
+     * @param BIC|IID $debtorAgent BIC or IID of the debtor's financial institution
+     * @param IBAN    $debtorIBAN  IBAN of the debtor's account
      */
     public function __construct($id, $debtorName, FinancialInstitutionInterface $debtorAgent, IBAN $debtorIBAN)
     {
-        if (!$debtorAgent instanceof BC && !$debtorAgent instanceof BIC) {
-            throw new \InvalidArgumentException('The debtor agent must be an instance of BC or BIC.');
+        if (!$debtorAgent instanceof BIC && !$debtorAgent instanceof IID) {
+            throw new \InvalidArgumentException('The debtor agent must be an instance of BIC or IID.');
         }
 
         $this->id = (string) $id;

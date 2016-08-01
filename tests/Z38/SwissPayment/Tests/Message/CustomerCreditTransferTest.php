@@ -2,11 +2,11 @@
 
 namespace Z38\SwissPayment\Tests\Message;
 
-use Z38\SwissPayment\BC;
 use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\FinancialInstitutionAddress;
 use Z38\SwissPayment\GeneralAccount;
 use Z38\SwissPayment\IBAN;
+use Z38\SwissPayment\IID;
 use Z38\SwissPayment\Message\CustomerCreditTransfer;
 use Z38\SwissPayment\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
@@ -66,7 +66,7 @@ class CustomerCreditTransferTest extends TestCase
             'Muster Transport AG',
             new StructuredPostalAddress('Wiesenweg', '14b', '8058', 'Zürich-Flughafen'),
             $iban4,
-            BC::fromIBAN($iban4)
+            IID::fromIBAN($iban4)
         );
 
         $transaction5 = new SEPACreditTransfer(
