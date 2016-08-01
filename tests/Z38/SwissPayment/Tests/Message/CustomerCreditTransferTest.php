@@ -7,6 +7,7 @@ use Z38\SwissPayment\FinancialInstitutionAddress;
 use Z38\SwissPayment\GeneralAccount;
 use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\IID;
+use Z38\SwissPayment\ISRParticipant;
 use Z38\SwissPayment\Message\CustomerCreditTransfer;
 use Z38\SwissPayment\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
@@ -111,22 +112,22 @@ class CustomerCreditTransferTest extends TestCase
         );
         $transaction8->setIntermediaryAgent(new BIC('SWHQBEBB'));
 
-        $transaction9 = new ISRCreditTransfer(
+        $transaction9 = new SEPACreditTransfer(
             'instr-009',
             'e2e-009',
-            new Money\CHF(20000), // CHF 200.00
-            new PostalAccount('80-5928-4'),
-            '210000000003139471430009017'
-        );
-
-        $transaction10 = new SEPACreditTransfer(
-            'instr-010',
-            'e2e-010',
             new Money\EUR(10000), // EUR 100.00
             'Bau Muster AG',
             new UnstructuredPostalAddress('Musterallee 11', '10115 Berlin', 'DE'),
             new IBAN('DE22 2665 0001 9311 6826 12'),
             new BIC('NOLADE21EMS')
+        );
+
+        $transaction10 = new ISRCreditTransfer(
+            'instr-010',
+            'e2e-010',
+            new Money\CHF(20000), // CHF 200.00
+            new ISRParticipant('80-5928-4'),
+            '210000000003139471430009017'
         );
 
         $payment = new PaymentInformation('payment-001', 'InnoMuster AG', new BIC('ZKBKCHZZ80A'), new IBAN('CH6600700110000204481'));
@@ -140,15 +141,18 @@ class CustomerCreditTransferTest extends TestCase
         $payment2->addTransaction($transaction6);
         $payment2->addTransaction($transaction7);
         $payment2->addTransaction($transaction8);
-        $payment->addTransaction($transaction9);
 
         $payment3 = new SEPAPaymentInformation('payment-003', 'InnoMuster AG', new BIC('POFICHBEXXX'), new IBAN('CH6309000000250097798'));
-        $payment3->addTransaction($transaction10);
+        $payment3->addTransaction($transaction9);
+
+        $payment4 = new PaymentInformation('payment-004', 'InnoMuster AG', new BIC('POFICHBEXXX'), new IBAN('CH6309000000250097798'));
+        $payment4->addTransaction($transaction10);
 
         $message = new CustomerCreditTransfer('message-001', 'InnoMuster AG');
         $message->addPayment($payment);
         $message->addPayment($payment2);
         $message->addPayment($payment3);
+        $message->addPayment($payment4);
 
         return $message;
     }
