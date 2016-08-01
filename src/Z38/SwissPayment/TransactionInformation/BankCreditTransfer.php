@@ -31,9 +31,20 @@ class BankCreditTransfer extends CreditTransfer
      *
      * @param IBAN   $creditorIBAN  IBAN of the creditor
      * @param BC|BIC $creditorAgent BC or BIC of the creditor's financial institution
+     *
+     * @throws \InvalidArgumentException.
+     *     An InvalidArgumentException is thrown if amount is not EUR or CHF
+     *     or if creditorAgent is not BC or BIC
      */
-    public function __construct($instructionId, $endToEndId, Money\CHF $amount, $creditorName, PostalAddressInterface $creditorAddress, IBAN $creditorIBAN, FinancialInstitutionInterface $creditorAgent)
+    public function __construct($instructionId, $endToEndId, Money\Money $amount, $creditorName, PostalAddressInterface $creditorAddress, IBAN $creditorIBAN, FinancialInstitutionInterface $creditorAgent)
     {
+        if (false === $amount instanceof Money\EUR && false === $amount instanceof Money\CHF) {
+            throw new \InvalidArgumentException(sprintf(
+                'Amount must be an instance of Z38\SwissPayment\Money\EUR or Z38\SwissPayment\Money\CHF. Instance of %s given.',
+                get_class($amount)
+            ));
+        }
+
         parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress);
 
         if (!$creditorAgent instanceof BC && !$creditorAgent instanceof BIC) {
