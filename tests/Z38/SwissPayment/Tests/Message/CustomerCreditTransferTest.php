@@ -18,6 +18,7 @@ use Z38\SwissPayment\TransactionInformation\BankCreditTransfer;
 use Z38\SwissPayment\TransactionInformation\ForeignCreditTransfer;
 use Z38\SwissPayment\TransactionInformation\IS1CreditTransfer;
 use Z38\SwissPayment\TransactionInformation\IS2CreditTransfer;
+use Z38\SwissPayment\TransactionInformation\ISRCreditTransfer;
 use Z38\SwissPayment\TransactionInformation\SEPACreditTransfer;
 use Z38\SwissPayment\UnstructuredPostalAddress;
 
@@ -110,9 +111,17 @@ class CustomerCreditTransferTest extends TestCase
         );
         $transaction8->setIntermediaryAgent(new BIC('SWHQBEBB'));
 
-        $transaction9 = new SEPACreditTransfer(
+        $transaction9 = new ISRCreditTransfer(
             'instr-009',
             'e2e-009',
+            new Money\CHF(20000), // CHF 200.00
+            new PostalAccount('80-5928-4'),
+            '210000000003139471430009017'
+        );
+
+        $transaction10 = new SEPACreditTransfer(
+            'instr-010',
+            'e2e-010',
             new Money\EUR(10000), // EUR 100.00
             'Bau Muster AG',
             new UnstructuredPostalAddress('Musterallee 11', '10115 Berlin', 'DE'),
@@ -131,9 +140,10 @@ class CustomerCreditTransferTest extends TestCase
         $payment2->addTransaction($transaction6);
         $payment2->addTransaction($transaction7);
         $payment2->addTransaction($transaction8);
+        $payment->addTransaction($transaction9);
 
         $payment3 = new SEPAPaymentInformation('payment-003', 'InnoMuster AG', new BIC('POFICHBEXXX'), new IBAN('CH6309000000250097798'));
-        $payment3->addTransaction($transaction9);
+        $payment3->addTransaction($transaction10);
 
         $message = new CustomerCreditTransfer('message-001', 'InnoMuster AG');
         $message->addPayment($payment);
@@ -153,10 +163,10 @@ class CustomerCreditTransferTest extends TestCase
         $xpath->registerNamespace('pain001', self::NS_URI_ROOT.self::SCHEMA);
 
         $nbOfTxs = $xpath->evaluate('string(//pain001:GrpHdr/pain001:NbOfTxs)');
-        $this->assertEquals('9', $nbOfTxs);
+        $this->assertEquals('10', $nbOfTxs);
 
         $ctrlSum = $xpath->evaluate('string(//pain001:GrpHdr/pain001:CtrlSum)');
-        $this->assertEquals('3310.00', $ctrlSum);
+        $this->assertEquals('3510.00', $ctrlSum);
     }
 
     public function testSchemaValidation()
