@@ -35,9 +35,18 @@ class IS2CreditTransfer extends CreditTransfer
      * @param IBAN          $creditorIBAN        IBAN of the creditor
      * @param string        $creditorAgentName   Name of the creditor's financial institution
      * @param PostalAccount $creditorAgentPostal Postal account of the creditor's financial institution
+     *
+     * @throws \InvalidArgumentException. An InvalidArgumentException is thrown if amount is not EUR or CHF
      */
-    public function __construct($instructionId, $endToEndId, Money\CHF $amount, $creditorName, PostalAddressInterface $creditorAddress, IBAN $creditorIBAN, $creditorAgentName, PostalAccount $creditorAgentPostal)
+    public function __construct($instructionId, $endToEndId, Money\Money $amount, $creditorName, PostalAddressInterface $creditorAddress, IBAN $creditorIBAN, $creditorAgentName, PostalAccount $creditorAgentPostal)
     {
+        if (false === $amount instanceof Money\EUR && false === $amount instanceof Money\CHF) {
+            throw new \InvalidArgumentException(sprintf(
+                'Amount must be an instance of Z38\SwissPayment\Money\EUR or Z38\SwissPayment\Money\CHF. Instance of %s given.',
+                get_class($amount)
+            ));
+        }
+
         parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress);
 
         $this->creditorIBAN = $creditorIBAN;
