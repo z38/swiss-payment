@@ -16,7 +16,7 @@ Have a look at `Z38\SwissPayment\Tests\Message\CustomerCreditTransferTest` on ho
 ## Caveats
 
 - Not all business rules and recommendations are enforced, consult the documentation and **validate the resulting transaction file in cooperation with your bank**.
-- At the moment ISR and cheque transfers are not supported (for details consult chapter 2.2 of the Implementation Guidelines)
+- At the moment cheque transfers are not supported (for details consult chapter 2.2 of the Implementation Guidelines)
 - The whole project is still under development and therefore BC breaks can occur. Please contact me if you need a stable code base.
 
 ## Contributing
