@@ -3,6 +3,7 @@
 namespace Z38\SwissPayment\TransactionInformation;
 
 use DOMDocument;
+use LogicException;
 use Z38\SwissPayment\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
 use Z38\SwissPayment\PostalAccount;
@@ -43,7 +44,15 @@ class ISRCreditTransfer extends CreditTransfer
         $this->endToEndId = (string) $endToEndId;
         $this->amount = $amount;
         $this->creditorAccount = $creditorAccount;
-        $this->creditorReference = $creditorReference;
+        $this->creditorReference = (string) $creditorReference;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setRemittanceInformation($remittanceInformation)
+    {
+        throw new LogicException('ISR payments are not able to store unstructured remittance information.');
     }
 
     /**
@@ -56,36 +65,35 @@ class ISRCreditTransfer extends CreditTransfer
         $creditorAccount = $doc->createElement('CdtrAcct');
         $creditorAccount->appendChild($this->creditorAccount->asDom($doc));
         $root->appendChild($creditorAccount);
+
         $root->appendChild($this->buildRemittanceInformation($doc));
 
         return $root;
     }
 
     /**
-     * Builds a DOM node of the Remittance Information field
-     *
-     * @param \DOMDocument $doc
-     *
-     * @return \DOMNode The built DOM node
-     *
-     * @throws \LogicException When no remittance information is set
+     * {@inheritdoc}
      */
     protected function buildRemittanceInformation(\DOMDocument $doc)
     {
-        if ($this->creditorReference) {
-            $remittanceInformation = $doc->createElement('RmtInf');
+        $remittanceInformation = $doc->createElement('RmtInf');
 
-            $structured = $doc->createElement('Strd');
-            $remittanceInformation->appendChild($structured);
+        $structured = $doc->createElement('Strd');
+        $remittanceInformation->appendChild($structured);
 
-            $creditorReferenceInformation = $doc->createElement('CdtrRefInf');
-            $structured->appendChild($creditorReferenceInformation);
+        $creditorReferenceInformation = $doc->createElement('CdtrRefInf');
+        $structured->appendChild($creditorReferenceInformation);
 
-            $creditorReferenceInformation->appendChild($doc->createElement('Ref', $this->creditorReference));
+        $creditorReferenceInformation->appendChild($doc->createElement('Ref', $this->creditorReference));
 
-            return $remittanceInformation;
-        } else {
-            throw new \LogicException('Can not build node without data.');
-        }
+        return $remittanceInformation;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function hasRemittanceInformation()
+    {
+        return true;
     }
 }
