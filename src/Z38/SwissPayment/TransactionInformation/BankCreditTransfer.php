@@ -3,6 +3,7 @@
 namespace Z38\SwissPayment\TransactionInformation;
 
 use DOMDocument;
+use InvalidArgumentException;
 use Z38\SwissPayment\BC;
 use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\FinancialInstitutionInterface;
@@ -32,24 +33,22 @@ class BankCreditTransfer extends CreditTransfer
      * @param IBAN   $creditorIBAN  IBAN of the creditor
      * @param BC|BIC $creditorAgent BC or BIC of the creditor's financial institution
      *
-     * @throws \InvalidArgumentException.
-     *     An InvalidArgumentException is thrown if amount is not EUR or CHF
-     *     or if creditorAgent is not BC or BIC
+     * @throws \InvalidArgumentException When the amount is not in EUR or CHF or when the creditor agent is not BC or BIC.
      */
     public function __construct($instructionId, $endToEndId, Money\Money $amount, $creditorName, PostalAddressInterface $creditorAddress, IBAN $creditorIBAN, FinancialInstitutionInterface $creditorAgent)
     {
-        if (false === $amount instanceof Money\EUR && false === $amount instanceof Money\CHF) {
-            throw new \InvalidArgumentException(sprintf(
-                'Amount must be an instance of Z38\SwissPayment\Money\EUR or Z38\SwissPayment\Money\CHF. Instance of %s given.',
+        if (!$amount instanceof Money\EUR && !$amount instanceof Money\CHF) {
+            throw new InvalidArgumentException(sprintf(
+                'The amount must be an instance of Z38\SwissPayment\Money\EUR or Z38\SwissPayment\Money\CHF (instance of %s given).',
                 get_class($amount)
             ));
         }
 
-        parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress);
-
         if (!$creditorAgent instanceof BC && !$creditorAgent instanceof BIC) {
-            throw new \InvalidArgumentException('The creditor agent must be an instance of BC or BIC.');
+            throw new InvalidArgumentException('The creditor agent must be an instance of BC or BIC.');
         }
+
+        parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress);
 
         $this->creditorIBAN = $creditorIBAN;
         $this->creditorAgent = $creditorAgent;

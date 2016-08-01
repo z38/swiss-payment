@@ -3,6 +3,7 @@
 namespace Z38\SwissPayment\TransactionInformation;
 
 use DOMDocument;
+use InvalidArgumentException;
 use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
@@ -36,13 +37,13 @@ class IS2CreditTransfer extends CreditTransfer
      * @param string        $creditorAgentName   Name of the creditor's financial institution
      * @param PostalAccount $creditorAgentPostal Postal account of the creditor's financial institution
      *
-     * @throws \InvalidArgumentException. An InvalidArgumentException is thrown if amount is not EUR or CHF
+     * @throws \InvalidArgumentException When the amount is not in EUR or CHF.
      */
     public function __construct($instructionId, $endToEndId, Money\Money $amount, $creditorName, PostalAddressInterface $creditorAddress, IBAN $creditorIBAN, $creditorAgentName, PostalAccount $creditorAgentPostal)
     {
-        if (false === $amount instanceof Money\EUR && false === $amount instanceof Money\CHF) {
-            throw new \InvalidArgumentException(sprintf(
-                'Amount must be an instance of Z38\SwissPayment\Money\EUR or Z38\SwissPayment\Money\CHF. Instance of %s given.',
+        if (!$amount instanceof Money\EUR && !$amount instanceof Money\CHF) {
+            throw new InvalidArgumentException(sprintf(
+                'The amount must be an instance of Z38\SwissPayment\Money\EUR or Z38\SwissPayment\Money\CHF (instance of %s given).',
                 get_class($amount)
             ));
         }

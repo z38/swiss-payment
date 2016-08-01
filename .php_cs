@@ -6,6 +6,6 @@ $finder = Symfony\CS\Finder\DefaultFinder::create()
 ;
 
 return Symfony\CS\Config\Config::create()
-    ->fixers(array('-phpdoc_short_description', '-empty_return', '-pre_increment', 'ordered_use'))
+    ->fixers(array('-phpdoc_short_description', '-empty_return', '-pre_increment', '-unneeded_control_parentheses', 'ordered_use'))
     ->finder($finder)
 ;

@@ -1,10 +1,11 @@
 <?php
 
-namespace Z38\SwissPayment\Tests;
+namespace Z38\SwissPayment\Tests\PaymentInformation;
 
 use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
+use Z38\SwissPayment\Tests\TestCase;
 
 /**
  * @coversDefaultClass \Z38\SwissPayment\PaymentInformation\PaymentInformation
