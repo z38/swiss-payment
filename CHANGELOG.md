@@ -4,6 +4,7 @@
 
   * Added support for general account identifiers.
   * Added support for intermediary transaction agents.
+  * Allow transfers in Euro for payment types 2 and 3.
   * Deprecate `Z38\SwissPayment\BC` in favor of `Z38\SwissPayment\IID`.
 
 ## 0.3.0 (2016-01-01)
