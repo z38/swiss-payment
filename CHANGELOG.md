@@ -1,6 +1,6 @@
 # SwissPayment Changelog
 
-## 0.X.X (2016-XX-XX)
+## 0.4.0 (2016-08-28)
 
   * Added support for general account identifiers.
   * Added support for intermediary transaction agents.
