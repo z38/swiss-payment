@@ -48,9 +48,9 @@ class IID implements FinancialInstitutionInterface
     }
 
     /**
-     * Returns a formatted representation of the BIC
+     * Returns a formatted representation of the IID
      *
-     * @return string The formatted BIC
+     * @return string The formatted IID
      */
     public function format()
     {
