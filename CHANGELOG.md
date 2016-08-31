@@ -1,6 +1,6 @@
 # SwissPayment Changelog
 
-## 0.X.X (XXXX-XX-XX)
+## 0.4.1 (2016-08-31)
 
   * Write IID without leading zeroes (for legacy systems)
 
