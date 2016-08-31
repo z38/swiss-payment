@@ -2,6 +2,7 @@
 
 namespace Z38\SwissPayment;
 
+use DOMDocument;
 use InvalidArgumentException;
 
 /**
@@ -60,14 +61,14 @@ class IID implements FinancialInstitutionInterface
     /**
      * {@inheritdoc}
      */
-    public function asDom(\DOMDocument $doc)
+    public function asDom(DOMDocument $doc)
     {
         $xml = $doc->createElement('FinInstnId');
         $clearingSystem = $doc->createElement('ClrSysMmbId');
         $clearingSystemId = $doc->createElement('ClrSysId');
         $clearingSystemId->appendChild($doc->createElement('Cd', 'CHBCC'));
         $clearingSystem->appendChild($clearingSystemId);
-        $clearingSystem->appendChild($doc->createElement('MmbId', $this->format()));
+        $clearingSystem->appendChild($doc->createElement('MmbId', ltrim($this->iid, '0'))); // strip zeroes for legacy systems
         $xml->appendChild($clearingSystem);
 
         return $xml;

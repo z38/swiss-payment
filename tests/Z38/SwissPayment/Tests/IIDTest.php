@@ -2,6 +2,8 @@
 
 namespace Z38\SwissPayment\Tests;
 
+use DOMDocument;
+use DOMXPath;
 use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\IID;
 
@@ -73,5 +75,19 @@ class IIDTest extends TestCase
     public function testFromIBANForeign()
     {
         IID::fromIBAN(new IBAN('GB29 NWBK 6016 1331 9268 19'));
+    }
+
+    /**
+     * @cover ::asDom
+     */
+    public function testAsDom()
+    {
+        $doc = new DOMDocument();
+        $iid = new IID('09000');
+
+        $xml = $iid->asDom($doc);
+
+        $xpath = new DOMXPath($doc);
+        $this->assertSame('9000', $xpath->evaluate('string(.//MmbId)', $xml));
     }
 }

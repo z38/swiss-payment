@@ -1,5 +1,9 @@
 # SwissPayment Changelog
 
+## 0.X.X (XXXX-XX-XX)
+
+  * Write IID without leading zeroes (for legacy systems)
+
 ## 0.4.0 (2016-08-28)
 
   * Added support for general account identifiers.
