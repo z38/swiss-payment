@@ -2,67 +2,85 @@
 
 namespace Z38\SwissPayment\Tests;
 
+use InvalidArgumentException;
 use Z38\SwissPayment\PostalAccount;
 
+/**
+ * @coversDefaultClass \Z38\SwissPayment\PostalAccount
+ */
 class PostalAccountTest extends TestCase
 {
     /**
      * @dataProvider validSamples
-     * @covers \Z38\SwissPayment\PostalAccount::__construct
+     * @covers ::__construct
      */
     public function testValid($postalAccount)
     {
-        $this->check($postalAccount, true);
+        $this->assertInstanceOf('Z38\SwissPayment\PostalAccount', new PostalAccount($postalAccount));
+    }
+
+    public function validSamples()
+    {
+        return [
+            ['01-1613-8'],
+            ['01-200099-8'],
+            ['30-38112-0'],
+            ['61-662139-8'],
+            ['80-2-2'],
+            ['80-470-3'],
+            ['87-344666-2'],
+        ];
     }
 
     /**
-     * @covers \Z38\SwissPayment\PostalAccount::__construct
+     * @dataProvider invalidFormatSamples
+     * @covers ::__construct
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Postal account number is not properly formatted.
      */
-    public function testInvalidFormat()
+    public function testInvalidFormat($postalAccount)
     {
-        $this->check('4032138', false);
-        $this->check('40.3213.8', false);
-        $this->check('40-003213-8', false);
-        $this->check('40-3213-28', false);
+        new PostalAccount($postalAccount);
+    }
+
+    public function invalidFormatSamples()
+    {
+        return [
+            ['1-1613-8'],
+            ['4032138'],
+            ['40.3213.8'],
+            ['40-003213-8'],
+            ['40-3213-28'],
+        ];
     }
 
     /**
-     * @covers \Z38\SwissPayment\PostalAccount::__construct
+     * @dataProvider invalidCheckDigitSamples
+     * @covers ::__construct
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Postal account number has an invalid check digit.
      */
-    public function testInvalidPrefix()
+    public function testInvalidCheckDigit($postalAccount)
     {
-        $this->check('21-423332-2', false);
-        $this->check('99-4332-2', false);
+        new PostalAccount($postalAccount);
+    }
+
+    public function invalidCheckDigitSamples()
+    {
+        return [
+            ['01-1613-1'],
+            ['30-38112-1'],
+            ['80-2-1'],
+        ];
     }
 
     /**
      * @dataProvider validSamples
-     * @covers \Z38\SwissPayment\PostalAccount::format
+     * @covers ::format
      */
     public function testFormat($postalAccount)
     {
         $instance = new PostalAccount($postalAccount);
         $this->assertEquals($postalAccount, $instance->format());
-    }
-
-    public function validSamples()
-    {
-        return array(
-            array('80-2-2'),
-            array('80-470-3'),
-            array('40-3213-8'),
-            array('87-344666-2'),
-        );
-    }
-
-    protected function check($postalAccount, $valid)
-    {
-        $exception = false;
-        try {
-            $temp = new PostalAccount($postalAccount);
-        } catch (\InvalidArgumentException $e) {
-            $exception = true;
-        }
-        $this->assertTrue($exception != $valid);
     }
 }

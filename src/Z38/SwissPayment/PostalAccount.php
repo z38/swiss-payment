@@ -3,6 +3,7 @@
 namespace Z38\SwissPayment;
 
 use DOMDocument;
+use InvalidArgumentException;
 
 /**
  * PostalAccount holds details about a PostFinance account
@@ -31,17 +32,17 @@ class PostalAccount implements AccountInterface
      *
      * @param string $postalAccount
      *
-     * @throws \InvalidArgumentException When the account number is not valid (check digit is not being tested).
+     * @throws InvalidArgumentException When the account number is not valid.
      */
     public function __construct($postalAccount)
     {
         if (!preg_match(self::PATTERN, $postalAccount)) {
-            throw new \InvalidArgumentException('Postal account number is not properly formatted.');
+            throw new InvalidArgumentException('Postal account number is not properly formatted.');
         }
 
         $parts = explode('-', $postalAccount);
-        if (!self::checkPrefix($parts[0])) {
-            throw new \InvalidArgumentException('Postal account number has an invalid prefix.');
+        if (self::calculateCheckDigit(sprintf('%02s%06s', $parts[0], $parts[1])) !== (int) $parts[2]) {
+            throw new InvalidArgumentException('Postal account number has an invalid check digit.');
         }
 
         $this->prefix = (int) $parts[0];
@@ -56,7 +57,7 @@ class PostalAccount implements AccountInterface
      */
     public function format()
     {
-        return sprintf('%d-%d-%d', $this->prefix, $this->number, $this->checkDigit);
+        return sprintf('%02d-%d-%d', $this->prefix, $this->number, $this->checkDigit);
     }
 
     /**
@@ -72,22 +73,14 @@ class PostalAccount implements AccountInterface
         return $root;
     }
 
-    /**
-     * Checks whether a given prefix is valid
-     *
-     * @param int $prefix The prefix to be checked
-     *
-     * @return bool True if the prefix is valid
-     */
-    private static function checkPrefix($prefix)
+    private static function calculateCheckDigit($number)
     {
-        return in_array($prefix, array(
-            10, 12, 17, 18, 19,
-            20, 23, 25, 30, 34,
-            40, 45, 46, 49, 50,
-            60, 65, 69, 70, 80,
-            82, 84, 85, 87, 90,
-            91, 92,
-        ));
+        $lookup = array(0, 9, 4, 6, 8, 2, 7, 1, 3, 5);
+        $carry = 0;
+        for ($i = 0; $i < strlen($number); $i++) {
+            $carry = $lookup[($carry + $number[$i]) % 10];
+        }
+
+        return (10 - $carry) % 10;
     }
 }
