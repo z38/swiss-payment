@@ -39,6 +39,21 @@ abstract class CreditTransfer
     /**
      * @var string|null
      */
+    protected $localInstrument;
+
+    /**
+     * @var string|null
+     */
+    protected $serviceLevel;
+
+    /**
+     * @var PurposeCode|null
+     */
+    protected $purpose;
+
+    /**
+     * @var string|null
+     */
     protected $remittanceInformation;
 
     /**
@@ -57,7 +72,40 @@ abstract class CreditTransfer
         $this->amount = $amount;
         $this->creditorName = (string) $creditorName;
         $this->creditorAddress = $creditorAddress;
-        $this->remittanceInformation = null;
+    }
+
+    /**
+     * Gets the local instrument
+     *
+     * @return string|null The local instrument
+     */
+    public function getLocalInstrument()
+    {
+        return $this->localInstrument;
+    }
+
+    /**
+     * Gets the service level
+     *
+     * @return string|null The service level
+     */
+    public function getServiceLevel()
+    {
+        return $this->serviceLevel;
+    }
+
+    /**
+     * Sets the purpose of the payment
+     *
+     * @param PurposeCode $purpose The purpose
+     *
+     * @return CreditTransfer This credit transfer
+     */
+    public function setPurpose(PurposeCode $purpose)
+    {
+        $this->purpose = $purpose;
+
+        return $this;
     }
 
     /**
@@ -99,12 +147,10 @@ abstract class CreditTransfer
      *
      * @param \DOMDocument       $doc
      * @param PaymentInformation $paymentInformation The corresponding B-level element
-     * @param string|null        $localInstrument    Local instrument
-     * @param string|null        $serviceLevel       Service level
      *
      * @return \DOMNode The built DOM node
      */
-    protected function buildHeader(\DOMDocument $doc, PaymentInformation $paymentInformation, $localInstrument = null, $serviceLevel = null)
+    protected function buildHeader(\DOMDocument $doc, PaymentInformation $paymentInformation)
     {
         $root = $doc->createElement('CdtTrfTxInf');
 
@@ -113,23 +159,16 @@ abstract class CreditTransfer
         $id->appendChild($doc->createElement('EndToEndId', $this->endToEndId));
         $root->appendChild($id);
 
-        if ($paymentInformation->hasPaymentTypeInformation()) {
-            if ($paymentInformation->getLocalInstrument() !== $localInstrument) {
-                throw new \LogicException('You can not set the local instrument on B- and C-level.');
-            }
-            if ($paymentInformation->getServiceLevel() !== $serviceLevel) {
-                throw new \LogicException('You can not set the service level on B- and C-level.');
-            }
-        } elseif (!empty($localInstrument) || !empty($serviceLevel)) {
+        if (!$paymentInformation->hasPaymentTypeInformation() && ($this->localInstrument !== null || $this->serviceLevel !== null)) {
             $paymentType = $doc->createElement('PmtTpInf');
-            if (!empty($localInstrument)) {
+            if ($this->localInstrument !== null) {
                 $localInstrumentNode = $doc->createElement('LclInstrm');
-                $localInstrumentNode->appendChild($doc->createElement('Prtry', $localInstrument));
+                $localInstrumentNode->appendChild($doc->createElement('Prtry', $this->localInstrument));
                 $paymentType->appendChild($localInstrumentNode);
             }
-            if (!empty($serviceLevel)) {
+            if ($this->serviceLevel !== null) {
                 $serviceLevelNode = $doc->createElement('SvcLvl');
-                $serviceLevelNode->appendChild($doc->createElement('Cd', $serviceLevel));
+                $serviceLevelNode->appendChild($doc->createElement('Cd', $this->serviceLevel));
                 $paymentType->appendChild($serviceLevelNode);
             }
             $root->appendChild($paymentType);
@@ -161,33 +200,32 @@ abstract class CreditTransfer
     }
 
     /**
-     * Indicates whether remittance information is set
+     * Appends the purpose to the transaction
      *
-     * @return bool true if remittance information is set
+     * @param \DOMDocument $doc
+     * @param \DOMElement  $transaction
      */
-    protected function hasRemittanceInformation()
+    protected function appendPurpose(\DOMDocument $doc, \DOMElement $transaction)
     {
-        return !empty($this->remittanceInformation);
+        if ($this->purpose !== null) {
+            $purposeNode = $doc->createElement('Purp');
+            $purposeNode->appendChild($this->purpose->asDom($doc));
+            $transaction->appendChild($purposeNode);
+        }
     }
 
     /**
-     * Builds a DOM node of the Remittance Information field
+     * Appends the remittance information to the transaction
      *
      * @param \DOMDocument $doc
-     *
-     * @return \DOMNode The built DOM node
-     *
-     * @throws \LogicException When no remittance information is set
+     * @param \DOMElement  $transaction
      */
-    protected function buildRemittanceInformation(\DOMDocument $doc)
+    protected function appendRemittanceInformation(\DOMDocument $doc, \DOMElement $transaction)
     {
-        if ($this->hasRemittanceInformation()) {
-            $remittance = $doc->createElement('RmtInf');
-            $remittance->appendChild($doc->createElement('Ustrd', $this->remittanceInformation));
-
-            return $remittance;
-        } else {
-            throw new \LogicException('Can not build node without data.');
+        if (!empty($this->remittanceInformation)) {
+            $remittanceNode = $doc->createElement('RmtInf');
+            $remittanceNode->appendChild($doc->createElement('Ustrd', $this->remittanceInformation));
+            $transaction->appendChild($remittanceNode);
         }
     }
 }

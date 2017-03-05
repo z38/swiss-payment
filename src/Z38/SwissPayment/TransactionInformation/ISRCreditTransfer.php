@@ -46,6 +46,7 @@ class ISRCreditTransfer extends CreditTransfer
         $this->amount = $amount;
         $this->creditorAccount = $creditorAccount;
         $this->creditorReference = (string) $creditorReference;
+        $this->localInstrument = 'CH01';
     }
 
     /**
@@ -61,13 +62,15 @@ class ISRCreditTransfer extends CreditTransfer
      */
     public function asDom(DOMDocument $doc, PaymentInformation $paymentInformation)
     {
-        $root = $this->buildHeader($doc, $paymentInformation, 'CH01');
+        $root = $this->buildHeader($doc, $paymentInformation);
 
         $creditorAccount = $doc->createElement('CdtrAcct');
         $creditorAccount->appendChild($this->creditorAccount->asDom($doc));
         $root->appendChild($creditorAccount);
 
-        $root->appendChild($this->buildRemittanceInformation($doc));
+        $this->appendPurpose($doc, $root);
+
+        $this->appendRemittanceInformation($doc, $root);
 
         return $root;
     }
@@ -75,7 +78,7 @@ class ISRCreditTransfer extends CreditTransfer
     /**
      * {@inheritdoc}
      */
-    protected function buildRemittanceInformation(\DOMDocument $doc)
+    protected function appendRemittanceInformation(\DOMDocument $doc, \DOMElement $transaction)
     {
         $remittanceInformation = $doc->createElement('RmtInf');
 
@@ -87,14 +90,6 @@ class ISRCreditTransfer extends CreditTransfer
 
         $creditorReferenceInformation->appendChild($doc->createElement('Ref', $this->creditorReference));
 
-        return $remittanceInformation;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function hasRemittanceInformation()
-    {
-        return true;
+        $transaction->appendChild($remittanceInformation);
     }
 }

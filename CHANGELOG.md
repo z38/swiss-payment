@@ -1,5 +1,9 @@
 # SwissPayment Changelog
 
+## 0.X.X (2017-XX-XX)
+
+  * Added support for transaction purposes.
+
 ## 0.4.1 (2016-08-31)
 
   * Write IID without leading zeroes (for legacy systems)

@@ -40,6 +40,11 @@ class PaymentInformation
     protected $localInstrument;
 
     /**
+     * @var CategoryPurposeCode|null
+     */
+    protected $categoryPurpose;
+
+    /**
      * @var \DateTime
      */
     protected $executionDate;
@@ -159,7 +164,7 @@ class PaymentInformation
      */
     public function hasPaymentTypeInformation()
     {
-        return ($this->localInstrument !== null || $this->serviceLevel !== null);
+        return ($this->localInstrument !== null || $this->serviceLevel !== null || $this->categoryPurpose !== null);
     }
 
     /**
@@ -183,6 +188,20 @@ class PaymentInformation
     }
 
     /**
+     * Sets the category purpose
+     *
+     * @param CategoryPurposeCode $categoryPurpose The category purpose
+     *
+     * @return PaymentInformation This payment instruction
+     */
+    public function setCategoryPurpose(CategoryPurposeCode $categoryPurpose)
+    {
+        $this->categoryPurpose = $categoryPurpose;
+
+        return $this;
+    }
+
+    /**
      * Builds a DOM tree of this payment instruction
      *
      * @param \DOMDocument $doc
@@ -199,15 +218,22 @@ class PaymentInformation
 
         if ($this->hasPaymentTypeInformation()) {
             $paymentType = $doc->createElement('PmtTpInf');
-            if ($this->localInstrument !== null) {
+            $localInstrument = $this->localInstrument ?: $this->inferLocalInstrument();
+            if ($localInstrument !== null) {
                 $localInstrumentNode = $doc->createElement('LclInstrm');
-                $localInstrumentNode->appendChild($doc->createElement('Prtry', $this->localInstrument));
+                $localInstrumentNode->appendChild($doc->createElement('Prtry', $localInstrument));
                 $paymentType->appendChild($localInstrumentNode);
             }
-            if ($this->serviceLevel !== null) {
+            $serviceLevel = $this->serviceLevel ?: $this->inferServiceLevel();
+            if ($serviceLevel !== null) {
                 $serviceLevelNode = $doc->createElement('SvcLvl');
-                $serviceLevelNode->appendChild($doc->createElement('Cd', $this->serviceLevel));
+                $serviceLevelNode->appendChild($doc->createElement('Cd', $serviceLevel));
                 $paymentType->appendChild($serviceLevelNode);
+            }
+            if ($this->categoryPurpose !== null) {
+                $categoryPurposeNode = $doc->createElement('CtgyPurp');
+                $categoryPurposeNode->appendChild($this->categoryPurpose->asDom($doc));
+                $paymentType->appendChild($categoryPurposeNode);
             }
             $root->appendChild($paymentType);
         }
@@ -229,9 +255,35 @@ class PaymentInformation
         $root->appendChild($debtorAgent);
 
         foreach ($this->transactions as $transaction) {
+            if ($this->hasPaymentTypeInformation()) {
+                if ($transaction->getLocalInstrument() !== $localInstrument) {
+                    throw new \LogicException('You can not set the local instrument on B- and C-level.');
+                }
+                if ($transaction->getServiceLevel() !== $serviceLevel) {
+                    throw new \LogicException('You can not set the service level on B- and C-level.');
+                }
+            }
             $root->appendChild($transaction->asDom($doc, $this));
         }
 
         return $root;
+    }
+
+    private function inferServiceLevel()
+    {
+        if (!count($this->transactions)) {
+            return null;
+        }
+
+        return $this->transactions[0]->getServiceLevel();
+    }
+
+    private function inferLocalInstrument()
+    {
+        if (!count($this->transactions)) {
+            return null;
+        }
+
+        return $this->transactions[0]->getLocalInstrument();
     }
 }

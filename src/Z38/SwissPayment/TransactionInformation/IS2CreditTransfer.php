@@ -53,6 +53,7 @@ class IS2CreditTransfer extends CreditTransfer
         $this->creditorIBAN = $creditorIBAN;
         $this->creditorAgentName = (string) $creditorAgentName;
         $this->creditorAgentPostal = $creditorAgentPostal;
+        $this->localInstrument = 'CH03';
     }
 
     /**
@@ -60,7 +61,7 @@ class IS2CreditTransfer extends CreditTransfer
      */
     public function asDom(DOMDocument $doc, PaymentInformation $paymentInformation)
     {
-        $root = $this->buildHeader($doc, $paymentInformation, 'CH03');
+        $root = $this->buildHeader($doc, $paymentInformation);
 
         $creditorAgent = $doc->createElement('CdtrAgt');
         $creditorAgentId = $doc->createElement('FinInstnId');
@@ -77,9 +78,9 @@ class IS2CreditTransfer extends CreditTransfer
         $creditorAccount->appendChild($this->creditorIBAN->asDom($doc));
         $root->appendChild($creditorAccount);
 
-        if ($this->hasRemittanceInformation()) {
-            $root->appendChild($this->buildRemittanceInformation($doc));
-        }
+        $this->appendPurpose($doc, $root);
+
+        $this->appendRemittanceInformation($doc, $root);
 
         return $root;
     }

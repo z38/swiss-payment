@@ -82,9 +82,9 @@ class ForeignCreditTransfer extends CreditTransfer
         $creditorAccount->appendChild($this->creditorAccount->asDom($doc));
         $root->appendChild($creditorAccount);
 
-        if ($this->hasRemittanceInformation()) {
-            $root->appendChild($this->buildRemittanceInformation($doc));
-        }
+        $this->appendPurpose($doc, $root);
+
+        $this->appendRemittanceInformation($doc, $root);
 
         return $root;
     }

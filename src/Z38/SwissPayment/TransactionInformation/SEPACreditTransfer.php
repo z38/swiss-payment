@@ -35,6 +35,7 @@ class SEPACreditTransfer extends CreditTransfer
         parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress);
 
         $this->creditorIBAN = $creditorIBAN;
+        $this->serviceLevel = 'SEPA';
 
         if ($creditorAgentBIC !== null) {
             @trigger_error('Setting the creditor agent BIC of SEPA payments is deprecated. The execution of the payment will be based on the IBAN.', E_USER_DEPRECATED);
@@ -47,7 +48,7 @@ class SEPACreditTransfer extends CreditTransfer
      */
     public function asDom(DOMDocument $doc, PaymentInformation $paymentInformation)
     {
-        $root = $this->buildHeader($doc, $paymentInformation, null, 'SEPA');
+        $root = $this->buildHeader($doc, $paymentInformation);
 
         if ($this->creditorAgentBIC !== null) {
             $creditorAgent = $doc->createElement('CdtrAgt');
@@ -61,9 +62,9 @@ class SEPACreditTransfer extends CreditTransfer
         $creditorAccount->appendChild($this->creditorIBAN->asDom($doc));
         $root->appendChild($creditorAccount);
 
-        if ($this->hasRemittanceInformation()) {
-            $root->appendChild($this->buildRemittanceInformation($doc));
-        }
+        $this->appendPurpose($doc, $root);
+
+        $this->appendRemittanceInformation($doc, $root);
 
         return $root;
     }

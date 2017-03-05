@@ -38,6 +38,7 @@ class IS1CreditTransfer extends CreditTransfer
         parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress);
 
         $this->creditorAccount = $creditorAccount;
+        $this->localInstrument = 'CH02';
     }
 
     /**
@@ -45,7 +46,7 @@ class IS1CreditTransfer extends CreditTransfer
      */
     public function asDom(DOMDocument $doc, PaymentInformation $paymentInformation)
     {
-        $root = $this->buildHeader($doc, $paymentInformation, 'CH02');
+        $root = $this->buildHeader($doc, $paymentInformation);
 
         $root->appendChild($this->buildCreditor($doc));
 
@@ -53,9 +54,9 @@ class IS1CreditTransfer extends CreditTransfer
         $creditorAccount->appendChild($this->creditorAccount->asDom($doc));
         $root->appendChild($creditorAccount);
 
-        if ($this->hasRemittanceInformation()) {
-            $root->appendChild($this->buildRemittanceInformation($doc));
-        }
+        $this->appendPurpose($doc, $root);
+
+        $this->appendRemittanceInformation($doc, $root);
 
         return $root;
     }
