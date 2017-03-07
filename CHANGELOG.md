@@ -1,8 +1,9 @@
 # SwissPayment Changelog
 
-## 0.X.X (2017-XX-XX)
+## 0.5.0 (2017-03-07)
 
   * Added support for transaction purposes.
+  * Improved validation of postal account numbers.
 
 ## 0.4.1 (2016-08-31)
 
