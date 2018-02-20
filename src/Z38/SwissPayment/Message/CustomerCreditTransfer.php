@@ -33,15 +33,16 @@ class CustomerCreditTransfer extends AbstractMessage
     /**
      * Constructor
      *
-     * @param string $id              Identifier of the message (should usually be unique over a period of at least 90 days)
+     * @param string $id              Identifier of the message (should usually be unique over a period of at least 90
+     *                                days)
      * @param string $initiatingParty Name of the initiating party
      */
     public function __construct($id, $initiatingParty)
     {
-        $this->id = (string) $id;
+        $this->id              = (string) $id;
         $this->initiatingParty = (string) $initiatingParty;
-        $this->payments = array();
-        $this->creationTime = new \DateTime();
+        $this->payments        = [];
+        $this->creationTime    = new \DateTime();
     }
 
     /**
@@ -68,6 +69,8 @@ class CustomerCreditTransfer extends AbstractMessage
     public function addPayment(PaymentInformation $payment)
     {
         $this->payments[] = $payment;
+
+        return $this;
     }
 
     /**
@@ -84,18 +87,20 @@ class CustomerCreditTransfer extends AbstractMessage
     protected function buildDom(\DOMDocument $doc)
     {
         $transactionCount = 0;
-        $transactionSum = new Money\Mixed(0);
+        $transactionSum   = new Money\Mixed(0);
         foreach ($this->payments as $payment) {
             $transactionCount += $payment->getTransactionCount();
-            $transactionSum = $transactionSum->plus($payment->getTransactionSum());
+            $transactionSum   = $transactionSum->plus($payment->getTransactionSum());
         }
 
-        $root = $doc->createElement('CstmrCdtTrfInitn');
+        $root   = $doc->createElement('CstmrCdtTrfInitn');
         $header = $doc->createElement('GrpHdr');
+
         $header->appendChild($doc->createElement('MsgId', $this->id));
         $header->appendChild($doc->createElement('CreDtTm', $this->creationTime->format('Y-m-d\TH:i:sP')));
         $header->appendChild($doc->createElement('NbOfTxs', $transactionCount));
         $header->appendChild($doc->createElement('CtrlSum', $transactionSum->format()));
+
         $initgParty = $doc->createElement('InitgPty');
         $initgParty->appendChild($doc->createElement('Nm', $this->initiatingParty));
         $initgParty->appendChild($this->buildContactDetails($doc));
