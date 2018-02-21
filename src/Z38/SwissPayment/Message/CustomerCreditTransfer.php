@@ -68,6 +68,8 @@ class CustomerCreditTransfer extends AbstractMessage
     public function addPayment(PaymentInformation $payment)
     {
         $this->payments[] = $payment;
+
+        return $this;
     }
 
     /**
