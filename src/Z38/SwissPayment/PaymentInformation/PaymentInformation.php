@@ -79,7 +79,7 @@ class PaymentInformation
         }
 
         $this->id = (string) $id;
-        $this->transactions = array();
+        $this->transactions = [];
         $this->batchBooking = true;
         $this->executionDate = new \DateTime();
         $this->debtorName = (string) $debtorName;

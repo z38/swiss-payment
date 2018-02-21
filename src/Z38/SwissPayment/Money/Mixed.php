@@ -81,11 +81,11 @@ class Mixed extends Money
         $decimalsDiff = ($a->getDecimals() - $b->getDecimals());
         $decimalsMax = max($a->getDecimals(), $b->getDecimals());
         if ($decimalsDiff > 0) {
-            return array($a->getAmount(), pow(10, $decimalsDiff) * $b->getAmount(), $decimalsMax);
+            return [$a->getAmount(), pow(10, $decimalsDiff) * $b->getAmount(), $decimalsMax];
         } elseif ($decimalsDiff < 0) {
-            return array(pow(10, -$decimalsDiff) * $a->getAmount(), $b->getAmount(), $decimalsMax);
+            return [pow(10, -$decimalsDiff) * $a->getAmount(), $b->getAmount(), $decimalsMax];
         } else {
-            return array($a->getAmount(), $b->getAmount(), $decimalsMax);
+            return [$a->getAmount(), $b->getAmount(), $decimalsMax];
         }
     }
 }

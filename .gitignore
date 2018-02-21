@@ -1,6 +1,7 @@
+.php_cs
+.php_cs.cache
+
 phpunit.xml
+
 composer.lock
-composer.phar
-autoload.php
-php-cs-fixer.phar
 /vendor/

@@ -39,20 +39,20 @@ class ISRParticipantTest extends TestCase
 
     public function validSamples()
     {
-        return array(
-            array('80-2-2'),
-            array('80-0470-3'),
-            array('123456789'),
-        );
+        return [
+            ['80-2-2'],
+            ['80-0470-3'],
+            ['123456789'],
+        ];
     }
 
     public function invalidSamples()
     {
-        return array(
-            array('01-7777777-2'),
-            array('80-470-3-1'),
-            array('12345678'),
-            array('1234567890'),
-        );
+        return [
+            ['01-7777777-2'],
+            ['80-470-3-1'],
+            ['12345678'],
+            ['1234567890'],
+        ];
     }
 }

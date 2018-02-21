@@ -1,0 +1,21 @@
+<?php
+
+$finder = PhpCsFixer\Finder::create()
+    ->in('src')
+    ->in('tests')
+;
+
+return PhpCsFixer\Config::create()
+    ->setRules([
+        '@Symfony' => true,
+        'array_syntax' => ['syntax' => 'short'],
+        'increment_style' => ['style' => 'post'],
+        'no_unneeded_control_parentheses' => null,
+        'ordered_imports' => true,
+        'phpdoc_annotation_without_dot' => null,
+        'phpdoc_summary' => null,
+        'php_unit_fqcn_annotation' => null,
+        'yoda_style' => null,
+    ])
+    ->setFinder($finder)
+;

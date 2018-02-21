@@ -26,7 +26,7 @@ class UnstructuredPostalAddress implements PostalAddressInterface
      */
     public function __construct($addressLine1 = null, $addressLine2 = null, $country = 'CH')
     {
-        $this->addressLines = array();
+        $this->addressLines = [];
         if ($addressLine1 !== null) {
             $this->addressLines[] = $addressLine1;
         }

@@ -45,11 +45,11 @@ class BICTest extends TestCase
 
     public function validSamples()
     {
-        return array(
-            array('AABAFI22'),
-            array('HANDFIHH'),
-            array('DEUTDEFF500'),
-        );
+        return [
+            ['AABAFI22'],
+            ['HANDFIHH'],
+            ['DEUTDEFF500'],
+        ];
     }
 
     protected function check($iban, $valid)

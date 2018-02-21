@@ -75,7 +75,7 @@ class PostalAccount implements AccountInterface
 
     private static function calculateCheckDigit($number)
     {
-        $lookup = array(0, 9, 4, 6, 8, 2, 7, 1, 3, 5);
+        $lookup = [0, 9, 4, 6, 8, 2, 7, 1, 3, 5];
         $carry = 0;
         for ($i = 0; $i < strlen($number); $i++) {
             $carry = $lookup[($carry + $number[$i]) % 10];

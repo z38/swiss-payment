@@ -74,11 +74,11 @@ class IBANTest extends TestCase
 
     public function samplesValid()
     {
-        return array(
-            array('AZ21 NABZ 0000 0000 1370 1000 1944', 'AZ'),
-            array('FR14 2004 1010 0505 0001 3M02 606', 'FR'),
-            array('ch930076201162385295 7', 'CH'),
-        );
+        return [
+            ['AZ21 NABZ 0000 0000 1370 1000 1944', 'AZ'],
+            ['FR14 2004 1010 0505 0001 3M02 606', 'FR'],
+            ['ch930076201162385295 7', 'CH'],
+        ];
     }
 
     protected function check($iban, $valid)

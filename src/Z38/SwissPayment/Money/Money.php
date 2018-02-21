@@ -72,7 +72,7 @@ abstract class Money
      *
      * @throws \InvalidArgumentException When the currencies do not match
      */
-    public function plus(Money $addend)
+    public function plus(self $addend)
     {
         if ($this->getCurrency() !== $addend->getCurrency()) {
             throw new \InvalidArgumentException('Can not add different currencies');
@@ -90,7 +90,7 @@ abstract class Money
      *
      * @throws \InvalidArgumentException When the currencies do not match
      */
-    public function minus(Money $subtrahend)
+    public function minus(self $subtrahend)
     {
         if ($this->getCurrency() !== $subtrahend->getCurrency()) {
             throw new \InvalidArgumentException('Can not subtract different currencies');
@@ -108,7 +108,7 @@ abstract class Money
      *
      * @throws \InvalidArgumentException When the currencies do not match
      */
-    public function compareTo(Money $b)
+    public function compareTo(self $b)
     {
         if ($this->getCurrency() !== $b->getCurrency()) {
             throw new \InvalidArgumentException('Can not compare different currencies');

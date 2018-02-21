@@ -117,18 +117,18 @@ class MoneyTest extends TestCase
 
     public function validSamplePairs()
     {
-        return array(
-            array(new Money\CHF(17400), new Money\CHF(19635), new Money\CHF(37035), new Money\CHF(-2235), -1),
-            array(new Money\CHF(17400), new Money\CHF(4391), new Money\CHF(21791), new Money\CHF(13009), 1),
-            array(new Money\CHF(400), new Money\CHF(-400), new Money\CHF(0), new Money\CHF(800), 1),
-            array(new Money\CHF(400), new Money\CHF(400), new Money\CHF(800), new Money\CHF(0), 0),
-        );
+        return [
+            [new Money\CHF(17400), new Money\CHF(19635), new Money\CHF(37035), new Money\CHF(-2235), -1],
+            [new Money\CHF(17400), new Money\CHF(4391), new Money\CHF(21791), new Money\CHF(13009), 1],
+            [new Money\CHF(400), new Money\CHF(-400), new Money\CHF(0), new Money\CHF(800), 1],
+            [new Money\CHF(400), new Money\CHF(400), new Money\CHF(800), new Money\CHF(0), 0],
+        ];
     }
 
     public function invalidSamplePairs()
     {
-        return array(
-            array(new Money\CHF(17400), new Money\EUR(19635)),
-        );
+        return [
+            [new Money\CHF(17400), new Money\EUR(19635)],
+        ];
     }
 }
