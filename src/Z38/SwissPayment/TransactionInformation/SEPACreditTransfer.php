@@ -50,6 +50,8 @@ class SEPACreditTransfer extends CreditTransfer
     {
         $root = $this->buildHeader($doc, $paymentInformation);
 
+        $root->appendChild($doc->createElement('ChrgBr', 'SLEV'));
+
         if ($this->creditorAgentBIC !== null) {
             $creditorAgent = $doc->createElement('CdtrAgt');
             $creditorAgent->appendChild($this->creditorAgentBIC->asDom($doc));
