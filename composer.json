@@ -22,5 +22,10 @@
         "psr-0": {
             "Z38\\SwissPayment": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-0": {
+            "Z38\\SwissPayment\\Tests": "tests/"
+        }
     }
 }
