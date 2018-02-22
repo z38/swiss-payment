@@ -24,6 +24,7 @@ use Z38\SwissPayment\Message\CustomerCreditTransfer;
 use Z38\SwissPayment\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
 use Z38\SwissPayment\PostalAccount;
+use Z38\SwissPayment\QRCode;
 use Z38\SwissPayment\StructuredPostalAddress;
 use Z38\SwissPayment\TransactionInformation\BankCreditTransfer;
 use Z38\SwissPayment\TransactionInformation\IS1CreditTransfer;
@@ -38,9 +39,15 @@ $transaction1 = new BankCreditTransfer(
     new BIC('UBSWCHZH80A')
 );
 
-$transaction2 = new IS1CreditTransfer(
+$transaction2 = BankCreditTransfer::fromQRCode(
     'instr-002',
     'e2e-002',
+    new QRCode('SPC...')
+);
+
+$transaction3 = new IS1CreditTransfer(
+    'instr-003',
+    'e2e-003',
     new Money\CHF(30000), // CHF 300.00
     'Finanzverwaltung Stadt Musterhausen',
     new StructuredPostalAddress('Altstadt', '1a', '4998', 'Muserhausen'),
@@ -55,6 +62,7 @@ $payment = new PaymentInformation(
 );
 $payment->addTransaction($transaction1);
 $payment->addTransaction($transaction2);
+$payment->addTransaction($transaction3);
 
 $message = new CustomerCreditTransfer('message-001', 'InnoMuster AG');
 $message->addPayment($payment);

@@ -4,6 +4,7 @@ namespace Z38\SwissPayment\Tests\TransactionInformation;
 
 use Z38\SwissPayment\ISRParticipant;
 use Z38\SwissPayment\Money;
+use Z38\SwissPayment\RemittanceInformation\UnstructuredInformation;
 use Z38\SwissPayment\Tests\TestCase;
 use Z38\SwissPayment\TransactionInformation\ISRCreditTransfer;
 
@@ -41,6 +42,6 @@ class ISRCreditTransferTest extends TestCase
             '120000000000234478943216899'
         );
 
-        $transfer->setRemittanceInformation('not allowed');
+        $transfer->setRemittanceInformation(new UnstructuredInformation('not allowed'));
     }
 }

@@ -8,6 +8,8 @@ use LogicException;
 use Z38\SwissPayment\ISRParticipant;
 use Z38\SwissPayment\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
+use Z38\SwissPayment\RemittanceInformation\ISRReferenceInformation;
+use Z38\SwissPayment\RemittanceInformation\RemittanceInformation;
 
 /**
  * ISRCreditTransfer contains all the information about a ISR (type 1) transaction.
@@ -18,11 +20,6 @@ class ISRCreditTransfer extends CreditTransfer
      * @var ISRParticipant
      */
     protected $creditorAccount;
-
-    /**
-     * @var string
-     */
-    protected $creditorReference;
 
     /**
      * {@inheritdoc}
@@ -45,16 +42,17 @@ class ISRCreditTransfer extends CreditTransfer
         $this->endToEndId = (string) $endToEndId;
         $this->amount = $amount;
         $this->creditorAccount = $creditorAccount;
-        $this->creditorReference = (string) $creditorReference;
         $this->localInstrument = 'CH01';
+
+        parent::setRemittanceInformation(new ISRReferenceInformation($creditorReference));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setRemittanceInformation($remittanceInformation)
+    public function setRemittanceInformation(RemittanceInformation $remittanceInformation)
     {
-        throw new LogicException('ISR payments are not able to store unstructured remittance information.');
+        throw new LogicException('ISR payments are not able to store additional remittance information.');
     }
 
     /**
@@ -73,23 +71,5 @@ class ISRCreditTransfer extends CreditTransfer
         $this->appendRemittanceInformation($doc, $root);
 
         return $root;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function appendRemittanceInformation(\DOMDocument $doc, \DOMElement $transaction)
-    {
-        $remittanceInformation = $doc->createElement('RmtInf');
-
-        $structured = $doc->createElement('Strd');
-        $remittanceInformation->appendChild($structured);
-
-        $creditorReferenceInformation = $doc->createElement('CdtrRefInf');
-        $structured->appendChild($creditorReferenceInformation);
-
-        $creditorReferenceInformation->appendChild($doc->createElement('Ref', $this->creditorReference));
-
-        $transaction->appendChild($remittanceInformation);
     }
 }

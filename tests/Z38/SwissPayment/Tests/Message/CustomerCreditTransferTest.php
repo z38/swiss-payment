@@ -14,7 +14,9 @@ use Z38\SwissPayment\PaymentInformation\CategoryPurposeCode;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
 use Z38\SwissPayment\PaymentInformation\SEPAPaymentInformation;
 use Z38\SwissPayment\PostalAccount;
+use Z38\SwissPayment\QRCode;
 use Z38\SwissPayment\StructuredPostalAddress;
+use Z38\SwissPayment\Tests\QRCodeTest;
 use Z38\SwissPayment\Tests\TestCase;
 use Z38\SwissPayment\TransactionInformation\BankCreditTransfer;
 use Z38\SwissPayment\TransactionInformation\ForeignCreditTransfer;
@@ -142,6 +144,12 @@ class CustomerCreditTransferTest extends TestCase
             new PostalAccount('60-9-9')
         );
 
+        $transaction12 = BankCreditTransfer::fromQRCode('instr-012', 'e2e-012', new QRCode(QRCodeTest::SAMPLE_FULL));
+
+        $transaction13 = BankCreditTransfer::fromQRCode('instr-013', 'e2e-013', new QRCode(QRCodeTest::SAMPLE_DONATION), new Money\CHF(10000));
+
+        $transaction14 = BankCreditTransfer::fromQRCode('instr-014', 'e2e-014', new QRCode(QRCodeTest::SAMPLE_REFERENCE));
+
         $payment = new PaymentInformation('payment-001', 'InnoMuster AG', new BIC('ZKBKCHZZ80A'), new IBAN('CH6600700110000204481'));
         $payment->addTransaction($transaction);
         $payment->addTransaction($transaction2);
@@ -164,12 +172,18 @@ class CustomerCreditTransferTest extends TestCase
         $payment5->setCategoryPurpose(new CategoryPurposeCode('SALA'));
         $payment5->addTransaction($transaction11);
 
+        $payment6 = new PaymentInformation('payment-006', 'InnoMuster AG', new BIC('ZKBKCHZZ80A'), new IBAN('CH6600700110000204481'));
+        $payment6->addTransaction($transaction12);
+        $payment6->addTransaction($transaction13);
+        $payment6->addTransaction($transaction14);
+
         $message = new CustomerCreditTransfer('message-001', 'InnoMuster AG');
         $message->addPayment($payment);
         $message->addPayment($payment2);
         $message->addPayment($payment3);
         $message->addPayment($payment4);
         $message->addPayment($payment5);
+        $message->addPayment($payment6);
 
         return $message;
     }
@@ -184,10 +198,10 @@ class CustomerCreditTransferTest extends TestCase
         $xpath->registerNamespace('pain001', self::NS_URI_ROOT.self::SCHEMA);
 
         $nbOfTxs = $xpath->evaluate('string(//pain001:GrpHdr/pain001:NbOfTxs)');
-        $this->assertEquals('11', $nbOfTxs);
+        $this->assertEquals('14', $nbOfTxs);
 
         $ctrlSum = $xpath->evaluate('string(//pain001:GrpHdr/pain001:CtrlSum)');
-        $this->assertEquals('4010.00', $ctrlSum);
+        $this->assertEquals('128259.70', $ctrlSum);
     }
 
     public function testSchemaValidation()

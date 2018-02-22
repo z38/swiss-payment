@@ -5,6 +5,7 @@ namespace Z38\SwissPayment\TransactionInformation;
 use Z38\SwissPayment\Money\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
 use Z38\SwissPayment\PostalAddressInterface;
+use Z38\SwissPayment\RemittanceInformation\RemittanceInformation;
 
 /**
  * CreditTransfer contains all the information about the beneficiary and further information about the transaction.
@@ -39,6 +40,16 @@ abstract class CreditTransfer
     /**
      * @var string|null
      */
+    protected $ultimateDebtorName;
+
+    /**
+     * @var PostalAddressInterface|null
+     */
+    protected $ultimateDebtorAddress;
+
+    /**
+     * @var string|null
+     */
     protected $localInstrument;
 
     /**
@@ -52,7 +63,7 @@ abstract class CreditTransfer
     protected $purpose;
 
     /**
-     * @var string|null
+     * @var RemittanceInformation|null
      */
     protected $remittanceInformation;
 
@@ -109,13 +120,51 @@ abstract class CreditTransfer
     }
 
     /**
-     * Sets the unstructured remittance information
+     * Gets the charge bearer
      *
-     * @param string|null $remittanceInformation
-     *
-     * @return CreditTransfer This credit transfer
+     * @return string|null The charge bearer
      */
-    public function setRemittanceInformation($remittanceInformation)
+    public function getChargeBearer()
+    {
+        return null;
+    }
+
+    /**
+     * Sets the ultimate debtor's name
+     *
+     * @param string|null $name
+     *
+     * @return self
+     */
+    public function setUltimateDebtorName($name)
+    {
+        $this->ultimateDebtorName = $name;
+
+        return $this;
+    }
+
+    /**
+     * Sets the ultimate debtor's address
+     *
+     * @param PostalAddressInterface|null $address
+     *
+     * @return self
+     */
+    public function setUltimateDebtorAddress(PostalAddressInterface $address)
+    {
+        $this->ultimateDebtorAddress = $address;
+
+        return $this;
+    }
+
+    /**
+     * Sets the remittance information
+     *
+     * @param RemittanceInformation|null $remittanceInformation
+     *
+     * @return self
+     */
+    public function setRemittanceInformation(RemittanceInformation $remittanceInformation)
     {
         $this->remittanceInformation = $remittanceInformation;
 
@@ -150,7 +199,7 @@ abstract class CreditTransfer
      *
      * @return \DOMNode The built DOM node
      */
-    protected function buildHeader(\DOMDocument $doc, PaymentInformation $paymentInformation)
+    protected function buildHeader(\DOMDocument $doc, PaymentInformation $paymentInformation, $chargeBearer = null)
     {
         $root = $doc->createElement('CdtTrfTxInf');
 
@@ -179,6 +228,21 @@ abstract class CreditTransfer
         $instdAmount->setAttribute('Ccy', $this->amount->getCurrency());
         $amount->appendChild($instdAmount);
         $root->appendChild($amount);
+
+        if ($chargeBearer = $this->getChargeBearer()) {
+            $root->appendChild($doc->createElement('ChrgBr', $chargeBearer));
+        }
+
+        if (strlen($this->ultimateDebtorName) || $this->ultimateDebtorAddress !== null) {
+            $ultimateDebtor = $doc->createElement('UltmtDbtr');
+            if (strlen($this->ultimateDebtorName)) {
+                $ultimateDebtor->appendChild($doc->createElement('Nm', $this->ultimateDebtorName));
+            }
+            if ($this->ultimateDebtorAddress !== null) {
+                $ultimateDebtor->appendChild($this->ultimateDebtorAddress->asDom($doc));
+            }
+            $root->appendChild($ultimateDebtor);
+        }
 
         return $root;
     }
@@ -222,10 +286,10 @@ abstract class CreditTransfer
      */
     protected function appendRemittanceInformation(\DOMDocument $doc, \DOMElement $transaction)
     {
-        if (!empty($this->remittanceInformation)) {
-            $remittanceNode = $doc->createElement('RmtInf');
-            $remittanceNode->appendChild($doc->createElement('Ustrd', $this->remittanceInformation));
-            $transaction->appendChild($remittanceNode);
+        if ($this->remittanceInformation !== null) {
+            $remittanceInformation = $doc->createElement('RmtInf');
+            $remittanceInformation->appendChild($this->remittanceInformation->asDom($doc));
+            $transaction->appendChild($remittanceInformation);
         }
     }
 }
