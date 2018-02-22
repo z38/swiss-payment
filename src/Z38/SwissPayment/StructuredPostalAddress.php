@@ -13,7 +13,7 @@ class StructuredPostalAddress implements PostalAddressInterface
     protected $street;
 
     /**
-     * @var string|null
+     * @var string
      */
     protected $buildingNo;
 
@@ -35,7 +35,7 @@ class StructuredPostalAddress implements PostalAddressInterface
     /**
      * Constructor
      *
-     * @param string      $street     Street name
+     * @param string|null $street     Street name or null
      * @param string|null $buildingNo Building number or null
      * @param string      $postCode   Postal code
      * @param string      $town       Town name
@@ -44,7 +44,7 @@ class StructuredPostalAddress implements PostalAddressInterface
     public function __construct($street, $buildingNo, $postCode, $town, $country = 'CH')
     {
         $this->street = (string) $street;
-        $this->buildingNo = $buildingNo;
+        $this->buildingNo = (string) $buildingNo;
         $this->postCode = (string) $postCode;
         $this->town = (string) $town;
         $this->country = (string) $country;
@@ -57,8 +57,10 @@ class StructuredPostalAddress implements PostalAddressInterface
     {
         $root = $doc->createElement('PstlAdr');
 
-        $root->appendChild($doc->createElement('StrtNm', $this->street));
-        if (!empty($this->buildingNo)) {
+        if (!strlen($this->street)) {
+            $root->appendChild($doc->createElement('StrtNm', $this->street));
+        }
+        if (!strlen($this->buildingNo)) {
             $root->appendChild($doc->createElement('BldgNb', $this->buildingNo));
         }
         $root->appendChild($doc->createElement('PstCd', $this->postCode));
