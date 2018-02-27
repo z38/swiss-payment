@@ -29,6 +29,21 @@ class ISRCreditTransferTest extends TestCase
     }
 
     /**
+     * @covers ::__construct
+     * @expectedException \InvalidArgumentException
+     */
+    public function testInvalidCreditorReference()
+    {
+        $transfer = new ISRCreditTransfer(
+            'id000',
+            'name',
+            new Money\CHF(100),
+            new ISRParticipant('01-25083-7'),
+            '120000000000234478943216891'
+        );
+    }
+
+    /**
      * @covers ::setRemittanceInformation
      * @expectedException \LogicException
      */
@@ -38,7 +53,7 @@ class ISRCreditTransferTest extends TestCase
             'id000',
             'name',
             new Money\CHF(100),
-            new ISRParticipant('10-2424-4'),
+            new ISRParticipant('01-25083-7'),
             '120000000000234478943216899'
         );
 

@@ -42,6 +42,10 @@ class ISRCreditTransfer extends CreditTransfer
             ));
         }
 
+        if (self::modulo10(substr($creditorReference, 0, -1)) != (int) substr($creditorReference, -1)) {
+            throw new InvalidArgumentException('Invalid ISR creditor reference.');
+        }
+
         $this->instructionId = (string) $instructionId;
         $this->endToEndId = (string) $endToEndId;
         $this->amount = $amount;
@@ -108,5 +112,24 @@ class ISRCreditTransfer extends CreditTransfer
     {
         $this->creditorName = $creditorName;
         $this->creditorAddress = $creditorAddress;
+    }
+
+    /**
+     * Creates Modulo10 recursive check digit
+     *
+     * @param string $number Number to create recursive check digit off.
+     *
+     * @return int Recursive check digit.
+     */
+    private static function modulo10(string $number)
+    {
+        $moduloTable = [0, 9, 4, 6, 8, 2, 7, 1, 3, 5];
+
+        $next = 0;
+        for ($i = 0; $i < strlen($number); $i++) {
+            $next = $moduloTable[($next + intval(substr($number, $i, 1))) % 10];
+        }
+
+        return (int) (10 - $next) % 10;
     }
 }

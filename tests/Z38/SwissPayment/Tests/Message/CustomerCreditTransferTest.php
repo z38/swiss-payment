@@ -147,7 +147,7 @@ class CustomerCreditTransferTest extends TestCase
             'e2e-010',
             new Money\CHF(20000), // CHF 200.00
             new ISRParticipant('01-95106-8'),
-            '210000000003139471430009017'
+            '6019701803969733825'
         );
         $transaction12->setCreditorDetails(
             'Fritz Bischof',
