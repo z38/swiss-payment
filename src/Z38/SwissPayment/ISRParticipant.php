@@ -31,6 +31,15 @@ class ISRParticipant implements AccountInterface
         } else {
             throw new InvalidArgumentException('ISR participant number is not properly formatted.');
         }
+
+        if (substr($this->number, 0, 2) !== '01'
+                && substr($this->number, 0, 2) !== '03') {
+            throw new InvalidArgumentException('ISR participant number must start by 01 [CHF] or 03 [EURO].');
+        }
+
+        if (PostalAccount::calculateCheckDigit(substr($this->number, 0, 8)) !== (int) substr($this->number, -1)) {
+            throw new InvalidArgumentException('Postal account number has an invalid check digit.');
+        }
     }
 
     /**

@@ -73,7 +73,7 @@ class PostalAccount implements AccountInterface
         return $root;
     }
 
-    private static function calculateCheckDigit($number)
+    public static function calculateCheckDigit($number)
     {
         $lookup = [0, 9, 4, 6, 8, 2, 7, 1, 3, 5];
         $carry = 0;
