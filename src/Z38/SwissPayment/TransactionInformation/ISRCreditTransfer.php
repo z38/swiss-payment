@@ -121,7 +121,7 @@ class ISRCreditTransfer extends CreditTransfer
      *
      * @return int Recursive check digit.
      */
-    private static function modulo10(string $number)
+    private static function modulo10($number)
     {
         $moduloTable = [0, 9, 4, 6, 8, 2, 7, 1, 3, 5];
 
