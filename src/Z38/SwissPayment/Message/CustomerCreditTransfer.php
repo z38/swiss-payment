@@ -73,6 +73,16 @@ class CustomerCreditTransfer extends AbstractMessage
     }
 
     /**
+     * Gets the number of payments
+     *
+     * @return int Number of payments
+     */
+    public function getPaymentCount()
+    {
+        return count($this->payments);
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getSchemaName()

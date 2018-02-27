@@ -171,6 +171,8 @@ class CustomerCreditTransferTest extends TestCase
         $message->addPayment($payment4);
         $message->addPayment($payment5);
 
+        $this->assertEquals('5', $message->getPaymentCount());
+
         return $message;
     }
 
