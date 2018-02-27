@@ -142,6 +142,18 @@ class CustomerCreditTransferTest extends TestCase
             new PostalAccount('60-9-9')
         );
 
+        $transaction12 = new ISRCreditTransfer(
+            'instr-010',
+            'e2e-010',
+            new Money\CHF(20000), // CHF 200.00
+            new ISRParticipant('80-5928-4'),
+            '210000000003139471430009017'
+        );
+        $transaction12->setCreditorDetails(
+            'Fritz Bischof',
+            new StructuredPostalAddress('Dorfstrasse', '17', '9911', 'Musterwald')
+        );
+
         $payment = new PaymentInformation('payment-001', 'InnoMuster AG', new BIC('ZKBKCHZZ80A'), new IBAN('CH6600700110000204481'));
         $payment->addTransaction($transaction);
         $payment->addTransaction($transaction2);
@@ -159,6 +171,7 @@ class CustomerCreditTransferTest extends TestCase
 
         $payment4 = new PaymentInformation('payment-004', 'InnoMuster AG', new BIC('POFICHBEXXX'), new IBAN('CH6309000000250097798'));
         $payment4->addTransaction($transaction10);
+        $payment4->addTransaction($transaction12);
 
         $payment5 = new PaymentInformation('payment-005', 'InnoMuster AG', new BIC('POFICHBEXXX'), new IBAN('CH6309000000250097798'));
         $payment5->setCategoryPurpose(new CategoryPurposeCode('SALA'));
@@ -184,10 +197,10 @@ class CustomerCreditTransferTest extends TestCase
         $xpath->registerNamespace('pain001', self::NS_URI_ROOT.self::SCHEMA);
 
         $nbOfTxs = $xpath->evaluate('string(//pain001:GrpHdr/pain001:NbOfTxs)');
-        $this->assertEquals('11', $nbOfTxs);
+        $this->assertEquals('12', $nbOfTxs);
 
         $ctrlSum = $xpath->evaluate('string(//pain001:GrpHdr/pain001:CtrlSum)');
-        $this->assertEquals('4010.00', $ctrlSum);
+        $this->assertEquals('4210.00', $ctrlSum);
     }
 
     public function testSchemaValidation()

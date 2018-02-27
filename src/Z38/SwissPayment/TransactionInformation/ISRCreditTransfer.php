@@ -8,6 +8,7 @@ use LogicException;
 use Z38\SwissPayment\ISRParticipant;
 use Z38\SwissPayment\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
+use Z38\SwissPayment\PostalAddressInterface;
 
 /**
  * ISRCreditTransfer contains all the information about a ISR (type 1) transaction.
@@ -64,6 +65,10 @@ class ISRCreditTransfer extends CreditTransfer
     {
         $root = $this->buildHeader($doc, $paymentInformation);
 
+        if (isset($this->creditorName) && isset($this->creditorAddress)) {
+            $root->appendChild($this->buildCreditor($doc));
+        }
+
         $creditorAccount = $doc->createElement('CdtrAcct');
         $creditorAccount->appendChild($this->creditorAccount->asDom($doc));
         $root->appendChild($creditorAccount);
@@ -91,5 +96,17 @@ class ISRCreditTransfer extends CreditTransfer
         $creditorReferenceInformation->appendChild($doc->createElement('Ref', $this->creditorReference));
 
         $transaction->appendChild($remittanceInformation);
+    }
+
+    /**
+     * Permit to set optional creditor details
+     *
+     * @param string                 $creditorName
+     * @param PostalAddressInterface $creditorAddress
+     */
+    public function setCreditorDetails($creditorName, PostalAddressInterface $creditorAddress)
+    {
+        $this->creditorName = $creditorName;
+        $this->creditorAddress = $creditorAddress;
     }
 }
