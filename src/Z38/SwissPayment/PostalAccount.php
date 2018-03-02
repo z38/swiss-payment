@@ -41,7 +41,7 @@ class PostalAccount implements AccountInterface
         }
 
         $parts = explode('-', $postalAccount);
-        if (self::calculateCheckDigit(sprintf('%02s%06s', $parts[0], $parts[1])) !== (int) $parts[2]) {
+        if (!self::validateCheckDigit(sprintf('%02s%06s%s', $parts[0], $parts[1], $parts[2]))) {
             throw new InvalidArgumentException('Postal account number has an invalid check digit.');
         }
 
@@ -73,14 +73,14 @@ class PostalAccount implements AccountInterface
         return $root;
     }
 
-    private static function calculateCheckDigit($number)
+    private static function validateCheckDigit($number)
     {
         $lookup = [0, 9, 4, 6, 8, 2, 7, 1, 3, 5];
         $carry = 0;
-        for ($i = 0; $i < strlen($number); $i++) {
+        for ($i = 0; $i < strlen($number) - 1; $i++) {
             $carry = $lookup[($carry + $number[$i]) % 10];
         }
 
-        return (10 - $carry) % 10;
+        return (10 - $carry) % 10 === (int) $number[strlen($number) - 1];
     }
 }
