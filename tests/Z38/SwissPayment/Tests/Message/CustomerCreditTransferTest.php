@@ -207,4 +207,11 @@ class CustomerCreditTransferTest extends TestCase
         libxml_clear_errors();
         libxml_use_internal_errors(false);
     }
+
+    public function testGetPaymentCount()
+    {
+        $message = $this->buildMessage();
+
+        $this->assertSame(5, $message->getPaymentCount());
+    }
 }
