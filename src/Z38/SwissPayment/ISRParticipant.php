@@ -24,12 +24,15 @@ class ISRParticipant implements AccountInterface
      */
     public function __construct($number)
     {
-        if (preg_match('/^([0-9]{2})-([0-9]{1,6})-([0-9])$/', $number, $dashMatches)) {
+        if (preg_match('/^(0[13])-([0-9]{1,6})-([0-9])$/', $number, $dashMatches)) {
             $this->number = sprintf('%s%06s%s', $dashMatches[1], $dashMatches[2], $dashMatches[3]);
-        } elseif (preg_match('/^[0-9]{9}$/', $number)) {
+        } elseif (preg_match('/^0[13][0-9]{7}$/', $number)) {
             $this->number = $number;
         } else {
             throw new InvalidArgumentException('ISR participant number is not properly formatted.');
+        }
+        if (!PostalAccount::validateCheckDigit($this->number)) {
+            throw new InvalidArgumentException('ISR participant number has an invalid check digit.');
         }
     }
 

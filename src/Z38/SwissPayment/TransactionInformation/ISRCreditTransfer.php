@@ -8,6 +8,8 @@ use LogicException;
 use Z38\SwissPayment\ISRParticipant;
 use Z38\SwissPayment\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
+use Z38\SwissPayment\PostalAccount;
+use Z38\SwissPayment\PostalAddressInterface;
 
 /**
  * ISRCreditTransfer contains all the information about a ISR (type 1) transaction.
@@ -30,7 +32,7 @@ class ISRCreditTransfer extends CreditTransfer
      * @param ISRParticipant $creditorAccount   ISR participation number of the creditor
      * @param string         $creditorReference ISR reference number
      *
-     * @throws InvalidArgumentException When the amount is not in EUR or CHF.
+     * @throws InvalidArgumentException When the amount or the creditor reference is invalid.
      */
     public function __construct($instructionId, $endToEndId, Money\Money $amount, ISRParticipant $creditorAccount, $creditorReference)
     {
@@ -41,12 +43,28 @@ class ISRCreditTransfer extends CreditTransfer
             ));
         }
 
+        if (!PostalAccount::validateCheckDigit($creditorReference)) {
+            throw new InvalidArgumentException('ISR creditor reference has an invalid check digit.');
+        }
+
         $this->instructionId = (string) $instructionId;
         $this->endToEndId = (string) $endToEndId;
         $this->amount = $amount;
         $this->creditorAccount = $creditorAccount;
         $this->creditorReference = (string) $creditorReference;
         $this->localInstrument = 'CH01';
+    }
+
+    /**
+     * Sets creditor details
+     *
+     * @param string                 $creditorName
+     * @param PostalAddressInterface $creditorAddress
+     */
+    public function setCreditorDetails($creditorName, PostalAddressInterface $creditorAddress)
+    {
+        $this->creditorName = (string) $creditorName;
+        $this->creditorAddress = $creditorAddress;
     }
 
     /**
@@ -63,6 +81,10 @@ class ISRCreditTransfer extends CreditTransfer
     public function asDom(DOMDocument $doc, PaymentInformation $paymentInformation)
     {
         $root = $this->buildHeader($doc, $paymentInformation);
+
+        if (strlen($this->creditorName) && isset($this->creditorAddress)) {
+            $root->appendChild($this->buildCreditor($doc));
+        }
 
         $creditorAccount = $doc->createElement('CdtrAcct');
         $creditorAccount->appendChild($this->creditorAccount->asDom($doc));
