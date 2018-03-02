@@ -133,25 +133,25 @@ class CustomerCreditTransferTest extends TestCase
             '210000000003139471430009017'
         );
 
-        $transaction11 = new IS1CreditTransfer(
+        $transaction11 = new ISRCreditTransfer(
             'instr-011',
             'e2e-011',
-            new Money\CHF(50000), // CHF 500.00
-            'Fritz Bischof',
-            new StructuredPostalAddress('Dorfstrasse', '17', '9911', 'Musterwald'),
-            new PostalAccount('60-9-9')
-        );
-
-        $transaction12 = new ISRCreditTransfer(
-            'instr-010',
-            'e2e-010',
             new Money\CHF(20000), // CHF 200.00
             new ISRParticipant('01-95106-8'),
             '6019701803969733825'
         );
-        $transaction12->setCreditorDetails(
+        $transaction11->setCreditorDetails(
             'Fritz Bischof',
             new StructuredPostalAddress('Dorfstrasse', '17', '9911', 'Musterwald')
+        );
+
+        $transaction12 = new IS1CreditTransfer(
+            'instr-012',
+            'e2e-012',
+            new Money\CHF(50000), // CHF 500.00
+            'Fritz Bischof',
+            new StructuredPostalAddress('Dorfstrasse', '17', '9911', 'Musterwald'),
+            new PostalAccount('60-9-9')
         );
 
         $payment = new PaymentInformation('payment-001', 'InnoMuster AG', new BIC('ZKBKCHZZ80A'), new IBAN('CH6600700110000204481'));
@@ -171,11 +171,11 @@ class CustomerCreditTransferTest extends TestCase
 
         $payment4 = new PaymentInformation('payment-004', 'InnoMuster AG', new BIC('POFICHBEXXX'), new IBAN('CH6309000000250097798'));
         $payment4->addTransaction($transaction10);
-        $payment4->addTransaction($transaction12);
+        $payment4->addTransaction($transaction11);
 
         $payment5 = new PaymentInformation('payment-005', 'InnoMuster AG', new BIC('POFICHBEXXX'), new IBAN('CH6309000000250097798'));
         $payment5->setCategoryPurpose(new CategoryPurposeCode('SALA'));
-        $payment5->addTransaction($transaction11);
+        $payment5->addTransaction($transaction12);
 
         $message = new CustomerCreditTransfer('message-001', 'InnoMuster AG');
         $message->addPayment($payment);
