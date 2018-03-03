@@ -10,6 +10,7 @@ use Z38\SwissPayment\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
 use Z38\SwissPayment\PostalAccount;
 use Z38\SwissPayment\PostalAddressInterface;
+use Z38\SwissPayment\Text;
 
 /**
  * ISRCreditTransfer contains all the information about a ISR (type 1) transaction.
@@ -43,15 +44,15 @@ class ISRCreditTransfer extends CreditTransfer
             ));
         }
 
-        if (!PostalAccount::validateCheckDigit($creditorReference)) {
-            throw new InvalidArgumentException('ISR creditor reference has an invalid check digit.');
+        if (!preg_match('/^[0-9]{1,27}$/', $creditorReference) || !PostalAccount::validateCheckDigit($creditorReference)) {
+            throw new InvalidArgumentException('ISR creditor reference is invalid.');
         }
 
-        $this->instructionId = (string) $instructionId;
-        $this->endToEndId = (string) $endToEndId;
+        $this->instructionId = Text::assertIdentifier($instructionId);
+        $this->endToEndId = Text::assertIdentifier($endToEndId);
         $this->amount = $amount;
         $this->creditorAccount = $creditorAccount;
-        $this->creditorReference = (string) $creditorReference;
+        $this->creditorReference = $creditorReference;
         $this->localInstrument = 'CH01';
     }
 
@@ -63,7 +64,7 @@ class ISRCreditTransfer extends CreditTransfer
      */
     public function setCreditorDetails($creditorName, PostalAddressInterface $creditorAddress)
     {
-        $this->creditorName = (string) $creditorName;
+        $this->creditorName = Text::assert($creditorName, 70);
         $this->creditorAddress = $creditorAddress;
     }
 

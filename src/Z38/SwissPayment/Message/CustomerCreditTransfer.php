@@ -4,6 +4,7 @@ namespace Z38\SwissPayment\Message;
 
 use Z38\SwissPayment\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
+use Z38\SwissPayment\Text;
 
 /**
  * CustomerCreditTransfer represents a Customer Credit Transfer Initiation (pain.001) message
@@ -35,11 +36,13 @@ class CustomerCreditTransfer extends AbstractMessage
      *
      * @param string $id              Identifier of the message (should usually be unique over a period of at least 90 days)
      * @param string $initiatingParty Name of the initiating party
+     *
+     * @throws \InvalidArgumentException When any of the inputs contain invalid characters or are too long.
      */
     public function __construct($id, $initiatingParty)
     {
-        $this->id = (string) $id;
-        $this->initiatingParty = (string) $initiatingParty;
+        $this->id = Text::assertIdentifier($id);
+        $this->initiatingParty = Text::assert($initiatingParty, 70);
         $this->payments = [];
         $this->creationTime = new \DateTime();
     }
@@ -104,12 +107,12 @@ class CustomerCreditTransfer extends AbstractMessage
 
         $root = $doc->createElement('CstmrCdtTrfInitn');
         $header = $doc->createElement('GrpHdr');
-        $header->appendChild($doc->createElement('MsgId', $this->id));
-        $header->appendChild($doc->createElement('CreDtTm', $this->creationTime->format('Y-m-d\TH:i:sP')));
-        $header->appendChild($doc->createElement('NbOfTxs', $transactionCount));
-        $header->appendChild($doc->createElement('CtrlSum', $transactionSum->format()));
+        $header->appendChild(Text::xml($doc, 'MsgId', $this->id));
+        $header->appendChild(Text::xml($doc, 'CreDtTm', $this->creationTime->format('Y-m-d\TH:i:sP')));
+        $header->appendChild(Text::xml($doc, 'NbOfTxs', $transactionCount));
+        $header->appendChild(Text::xml($doc, 'CtrlSum', $transactionSum->format()));
         $initgParty = $doc->createElement('InitgPty');
-        $initgParty->appendChild($doc->createElement('Nm', $this->initiatingParty));
+        $initgParty->appendChild(Text::xml($doc, 'Nm', $this->initiatingParty));
         $initgParty->appendChild($this->buildContactDetails($doc));
         $header->appendChild($initgParty);
         $root->appendChild($header);

@@ -9,6 +9,7 @@ use Z38\SwissPayment\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
 use Z38\SwissPayment\PostalAccount;
 use Z38\SwissPayment\PostalAddressInterface;
+use Z38\SwissPayment\Text;
 
 /**
  * IS2CreditTransfer contains all the information about a IS 2-stage (type 2.2) transaction.
@@ -51,7 +52,7 @@ class IS2CreditTransfer extends CreditTransfer
         parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress);
 
         $this->creditorIBAN = $creditorIBAN;
-        $this->creditorAgentName = (string) $creditorAgentName;
+        $this->creditorAgentName = Text::assert($creditorAgentName, 70);
         $this->creditorAgentPostal = $creditorAgentPostal;
         $this->localInstrument = 'CH03';
     }
@@ -65,7 +66,7 @@ class IS2CreditTransfer extends CreditTransfer
 
         $creditorAgent = $doc->createElement('CdtrAgt');
         $creditorAgentId = $doc->createElement('FinInstnId');
-        $creditorAgentId->appendChild($doc->createElement('Nm', $this->creditorAgentName));
+        $creditorAgentId->appendChild(Text::xml($doc, 'Nm', $this->creditorAgentName));
         $creditorAgentIdOther = $doc->createElement('Othr');
         $creditorAgentIdOther->appendChild($doc->createElement('Id', $this->creditorAgentPostal->format()));
         $creditorAgentId->appendChild($creditorAgentIdOther);
