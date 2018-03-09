@@ -3,7 +3,7 @@
 namespace Z38\SwissPayment\Money;
 
 /**
- * Sum of money in Swiss francs
+ * Sum of money in Danish kroner
  */
 class DKK extends Money
 {
