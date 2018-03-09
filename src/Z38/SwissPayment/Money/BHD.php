@@ -20,6 +20,6 @@ class BHD extends Money
      */
     final protected function getDecimals()
     {
-        return 2;
+        return 3;
     }
 }
