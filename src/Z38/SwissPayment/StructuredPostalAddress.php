@@ -53,6 +53,28 @@ class StructuredPostalAddress implements PostalAddressInterface
     }
 
     /**
+     * Creates a new instance after sanitizing all inputs
+     *
+     * @param string|null $street     Street name or null
+     * @param string|null $buildingNo Building number or null
+     * @param string      $postCode   Postal code
+     * @param string      $town       Town name
+     * @param string      $country    Country code (ISO 3166-1 alpha-2)
+     *
+     * @return StructuredPostalAddress
+     */
+    public static function sanitize($street, $buildingNo, $postCode, $town, $country = 'CH')
+    {
+        return new self(
+            Text::sanitizeOptional($street, 70),
+            Text::sanitizeOptional($buildingNo, 16),
+            Text::sanitize($postCode, 16),
+            Text::sanitize($town, 35),
+            $country
+        );
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function asDom(\DOMDocument $doc)

@@ -65,6 +65,30 @@ class TextTest extends TestCase
         Text::assertCountryCode('ch');
     }
 
+    /**
+     * @dataProvider sanitizeSamples
+     */
+    public function testSanitize($input, $expected)
+    {
+        $this->assertSame($expected, Text::sanitize($input, 3));
+    }
+
+    public function sanitizeSamples()
+    {
+        return [
+            ["\t  \t", ''],
+            ['°¬◆😀', ''],
+            ['  中文A B中文C  ', 'A B'],
+            ["ä \nÇ \n \nz", 'ä Ç'],
+            ['äääää', 'äää'],
+        ];
+    }
+
+    public function testSanitizeOptional()
+    {
+        $this->assertSame(null, Text::sanitizeOptional(" \t ° ° \t", 100));
+    }
+
     public function testXml()
     {
         $doc = new DOMDocument();

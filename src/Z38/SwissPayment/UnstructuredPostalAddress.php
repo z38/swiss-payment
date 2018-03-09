@@ -39,6 +39,24 @@ class UnstructuredPostalAddress implements PostalAddressInterface
     }
 
     /**
+     * Creates a new instance after sanitizing all inputs
+     *
+     * @param string $addressLine1 Street name and house number
+     * @param string $addressLine2 Postcode and town
+     * @param string $country      Country code (ISO 3166-1 alpha-2)
+     *
+     * @return UnstructuredPostalAddress
+     */
+    public static function sanitize($addressLine1 = null, $addressLine2 = null, $country = 'CH')
+    {
+        return new self(
+            Text::sanitizeOptional($addressLine1, 70),
+            Text::sanitizeOptional($addressLine2, 70),
+            $country
+        );
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function asDom(\DOMDocument $doc)
