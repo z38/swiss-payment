@@ -28,15 +28,17 @@ abstract class AbstractMessage implements MessageInterface
     /**
      * Builds a DOM document of the message
      *
+     * @param bool $formatOutput Nicely formats output with indentation and extra space.
+     *
      * @return \DOMDocument
      */
-    public function asDom()
+    public function asDom($formatOutput = true)
     {
         $schema = $this->getSchemaName();
         $ns = sprintf(self::SCHEMA_LOCATION, $schema);
 
         $doc = new \DOMDocument('1.0', 'UTF-8');
-        $doc->formatOutput = true;
+        $doc->formatOutput = $formatOutput;
         $root = $doc->createElement('Document');
         $root->setAttribute('xmlns', $ns);
         $root->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
@@ -50,9 +52,9 @@ abstract class AbstractMessage implements MessageInterface
     /**
      * {@inheritdoc}
      */
-    public function asXml()
+    public function asXml($formatOutput = true)
     {
-        return $this->asDom()->saveXML();
+        return $this->asDom($formatOutput)->saveXML();
     }
 
     /**

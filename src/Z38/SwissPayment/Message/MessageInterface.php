@@ -10,7 +10,9 @@ interface MessageInterface
     /**
      * Returns a XML representation of the message
      *
+     * @param bool $formatOutput Nicely formats output with indentation and extra space.
+     *
      * @return string The XML source
      */
-    public function asXml();
+    public function asXml($formatOutput = true);
 }

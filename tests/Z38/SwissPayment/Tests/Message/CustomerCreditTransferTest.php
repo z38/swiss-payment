@@ -189,7 +189,11 @@ class CustomerCreditTransferTest extends TestCase
 
     public function testGroupHeader()
     {
-        $xml = $this->buildMessage()->asXml();
+        $formattedXml = $this->buildMessage()->asXml();
+        $this->assertGreaterThan(5, count(preg_split('/\n|\r/',$formattedXml)));
+
+        $xml = $this->buildMessage()->asXml(false);
+        $this->assertLessThan(5, count(preg_split('/\n|\r/',$xml)));
 
         $doc = new \DOMDocument();
         $doc->loadXML($xml);
