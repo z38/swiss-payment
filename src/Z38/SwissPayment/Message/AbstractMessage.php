@@ -36,7 +36,6 @@ abstract class AbstractMessage implements MessageInterface
         $ns = sprintf(self::SCHEMA_LOCATION, $schema);
 
         $doc = new \DOMDocument('1.0', 'UTF-8');
-        $doc->formatOutput = true;
         $root = $doc->createElement('Document');
         $root->setAttribute('xmlns', $ns);
         $root->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
