@@ -27,6 +27,7 @@ use Z38\SwissPayment\PostalAccount;
 use Z38\SwissPayment\StructuredPostalAddress;
 use Z38\SwissPayment\TransactionInformation\BankCreditTransfer;
 use Z38\SwissPayment\TransactionInformation\IS1CreditTransfer;
+use Z38\SwissPayment\UnstructuredPostalAddress;
 
 $transaction1 = new BankCreditTransfer(
     'instr-001',
@@ -43,7 +44,7 @@ $transaction2 = new IS1CreditTransfer(
     'e2e-002',
     new Money\CHF(30000), // CHF 300.00
     'Finanzverwaltung Stadt Musterhausen',
-    new StructuredPostalAddress('Altstadt', '1a', '4998', 'Muserhausen'),
+    UnstructuredPostalAddress::sanitize('Altstadt 1a', '4998 Musterhausen'),
     new PostalAccount('80-151-4')
 );
 
