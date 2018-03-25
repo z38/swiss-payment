@@ -1,5 +1,13 @@
 # SwissPayment Changelog
 
+## 0.6.0 (2018-03-25)
+
+  * Enforce stricter validation of inputs.
+  * Escape all inputs.
+  * Added support for sanitization of user inputs.
+  * Added support for 19 new currencies.
+  * Set charge bearer of SEPA payments.
+
 ## 0.5.0 (2017-03-07)
 
   * Added support for transaction purposes.
