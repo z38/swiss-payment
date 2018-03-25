@@ -57,10 +57,10 @@ class StructuredPostalAddress implements PostalAddressInterface
     {
         $root = $doc->createElement('PstlAdr');
 
-        if (!strlen($this->street)) {
+        if (strlen($this->street)) {
             $root->appendChild($doc->createElement('StrtNm', $this->street));
         }
-        if (!strlen($this->buildingNo)) {
+        if (strlen($this->buildingNo)) {
             $root->appendChild($doc->createElement('BldgNb', $this->buildingNo));
         }
         $root->appendChild($doc->createElement('PstCd', $this->postCode));
