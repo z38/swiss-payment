@@ -2,6 +2,8 @@
 
 namespace Z38\SwissPayment\Message;
 
+use Z38\SwissPayment\Text;
+
 /**
  * AbstractMessages eases message creation using DOM
  */
@@ -85,8 +87,8 @@ abstract class AbstractMessage implements MessageInterface
     {
         $root = $doc->createElement('CtctDtls');
 
-        $root->appendChild($doc->createElement('Nm', $this->getSoftwareName()));
-        $root->appendChild($doc->createElement('Othr', $this->getSoftwareVersion()));
+        $root->appendChild(Text::xml($doc, 'Nm', $this->getSoftwareName()));
+        $root->appendChild(Text::xml($doc, 'Othr', $this->getSoftwareVersion()));
 
         return $root;
     }

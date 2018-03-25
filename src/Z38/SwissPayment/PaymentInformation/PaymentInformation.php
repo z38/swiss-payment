@@ -7,6 +7,7 @@ use Z38\SwissPayment\FinancialInstitutionInterface;
 use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\IID;
 use Z38\SwissPayment\Money;
+use Z38\SwissPayment\Text;
 use Z38\SwissPayment\TransactionInformation\CreditTransfer;
 
 /**
@@ -71,6 +72,8 @@ class PaymentInformation
      * @param string  $debtorName  Name of the debtor
      * @param BIC|IID $debtorAgent BIC or IID of the debtor's financial institution
      * @param IBAN    $debtorIBAN  IBAN of the debtor's account
+     *
+     * @throws \InvalidArgumentException When any of the inputs contain invalid characters or are too long.
      */
     public function __construct($id, $debtorName, FinancialInstitutionInterface $debtorAgent, IBAN $debtorIBAN)
     {
@@ -78,11 +81,11 @@ class PaymentInformation
             throw new \InvalidArgumentException('The debtor agent must be an instance of BIC or IID.');
         }
 
-        $this->id = (string) $id;
+        $this->id = Text::assertIdentifier($id);
         $this->transactions = [];
         $this->batchBooking = true;
         $this->executionDate = new \DateTime();
-        $this->debtorName = (string) $debtorName;
+        $this->debtorName = Text::assert($debtorName, 70);
         $this->debtorAgent = $debtorAgent;
         $this->debtorIBAN = $debtorIBAN;
     }
@@ -212,7 +215,7 @@ class PaymentInformation
     {
         $root = $doc->createElement('PmtInf');
 
-        $root->appendChild($doc->createElement('PmtInfId', $this->id));
+        $root->appendChild(Text::xml($doc, 'PmtInfId', $this->id));
         $root->appendChild($doc->createElement('PmtMtd', 'TRF'));
         $root->appendChild($doc->createElement('BtchBookg', ($this->batchBooking ? 'true' : 'false')));
 
@@ -241,7 +244,7 @@ class PaymentInformation
         $root->appendChild($doc->createElement('ReqdExctnDt', $this->executionDate->format('Y-m-d')));
 
         $debtor = $doc->createElement('Dbtr');
-        $debtor->appendChild($doc->createElement('Nm', $this->debtorName));
+        $debtor->appendChild(Text::xml($doc, 'Nm', $this->debtorName));
         $root->appendChild($debtor);
 
         $debtorAccount = $doc->createElement('DbtrAcct');

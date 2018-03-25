@@ -8,12 +8,12 @@ namespace Z38\SwissPayment;
 class StructuredPostalAddress implements PostalAddressInterface
 {
     /**
-     * @var string
+     * @var string|null
      */
     protected $street;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $buildingNo;
 
@@ -40,14 +40,38 @@ class StructuredPostalAddress implements PostalAddressInterface
      * @param string      $postCode   Postal code
      * @param string      $town       Town name
      * @param string      $country    Country code (ISO 3166-1 alpha-2)
+     *
+     * @throws \InvalidArgumentException When the address contains invalid characters or is too long.
      */
     public function __construct($street, $buildingNo, $postCode, $town, $country = 'CH')
     {
-        $this->street = (string) $street;
-        $this->buildingNo = (string) $buildingNo;
-        $this->postCode = (string) $postCode;
-        $this->town = (string) $town;
-        $this->country = (string) $country;
+        $this->street = Text::assertOptional($street, 70);
+        $this->buildingNo = Text::assertOptional($buildingNo, 16);
+        $this->postCode = Text::assert($postCode, 16);
+        $this->town = Text::assert($town, 35);
+        $this->country = Text::assertCountryCode($country);
+    }
+
+    /**
+     * Creates a new instance after sanitizing all inputs
+     *
+     * @param string|null $street     Street name or null
+     * @param string|null $buildingNo Building number or null
+     * @param string      $postCode   Postal code
+     * @param string      $town       Town name
+     * @param string      $country    Country code (ISO 3166-1 alpha-2)
+     *
+     * @return StructuredPostalAddress
+     */
+    public static function sanitize($street, $buildingNo, $postCode, $town, $country = 'CH')
+    {
+        return new self(
+            Text::sanitizeOptional($street, 70),
+            Text::sanitizeOptional($buildingNo, 16),
+            Text::sanitize($postCode, 16),
+            Text::sanitize($town, 35),
+            $country
+        );
     }
 
     /**
@@ -57,15 +81,15 @@ class StructuredPostalAddress implements PostalAddressInterface
     {
         $root = $doc->createElement('PstlAdr');
 
-        if (strlen($this->street)) {
-            $root->appendChild($doc->createElement('StrtNm', $this->street));
+        if ($this->street !== null) {
+            $root->appendChild(Text::xml($doc, 'StrtNm', $this->street));
         }
-        if (strlen($this->buildingNo)) {
-            $root->appendChild($doc->createElement('BldgNb', $this->buildingNo));
+        if ($this->buildingNo !== null) {
+            $root->appendChild(Text::xml($doc, 'BldgNb', $this->buildingNo));
         }
-        $root->appendChild($doc->createElement('PstCd', $this->postCode));
-        $root->appendChild($doc->createElement('TwnNm', $this->town));
-        $root->appendChild($doc->createElement('Ctry', $this->country));
+        $root->appendChild(Text::xml($doc, 'PstCd', $this->postCode));
+        $root->appendChild(Text::xml($doc, 'TwnNm', $this->town));
+        $root->appendChild(Text::xml($doc, 'Ctry', $this->country));
 
         return $root;
     }

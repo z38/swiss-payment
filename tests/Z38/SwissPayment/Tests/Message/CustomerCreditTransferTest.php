@@ -149,7 +149,7 @@ class CustomerCreditTransferTest extends TestCase
             'instr-012',
             'e2e-012',
             new Money\CHF(50000), // CHF 500.00
-            'Fritz Bischof',
+            'Meier & Söhne AG',
             new StructuredPostalAddress('Dorfstrasse', '17', '9911', 'Musterwald'),
             new PostalAccount('60-9-9')
         );

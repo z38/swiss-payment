@@ -23,17 +23,37 @@ class UnstructuredPostalAddress implements PostalAddressInterface
      * @param string $addressLine1 Street name and house number
      * @param string $addressLine2 Postcode and town
      * @param string $country      Country code (ISO 3166-1 alpha-2)
+     *
+     * @throws \InvalidArgumentException When the address contains invalid characters or is too long.
      */
     public function __construct($addressLine1 = null, $addressLine2 = null, $country = 'CH')
     {
         $this->addressLines = [];
         if ($addressLine1 !== null) {
-            $this->addressLines[] = $addressLine1;
+            $this->addressLines[] = Text::assert($addressLine1, 70);
         }
         if ($addressLine2 !== null) {
-            $this->addressLines[] = $addressLine2;
+            $this->addressLines[] = Text::assert($addressLine2, 70);
         }
-        $this->country = (string) $country;
+        $this->country = Text::assertCountryCode($country);
+    }
+
+    /**
+     * Creates a new instance after sanitizing all inputs
+     *
+     * @param string $addressLine1 Street name and house number
+     * @param string $addressLine2 Postcode and town
+     * @param string $country      Country code (ISO 3166-1 alpha-2)
+     *
+     * @return UnstructuredPostalAddress
+     */
+    public static function sanitize($addressLine1 = null, $addressLine2 = null, $country = 'CH')
+    {
+        return new self(
+            Text::sanitizeOptional($addressLine1, 70),
+            Text::sanitizeOptional($addressLine2, 70),
+            $country
+        );
     }
 
     /**
@@ -43,9 +63,9 @@ class UnstructuredPostalAddress implements PostalAddressInterface
     {
         $root = $doc->createElement('PstlAdr');
 
-        $root->appendChild($doc->createElement('Ctry', $this->country));
+        $root->appendChild(Text::xml($doc, 'Ctry', $this->country));
         foreach ($this->addressLines as $line) {
-            $root->appendChild($doc->createElement('AdrLine', $line));
+            $root->appendChild(Text::xml($doc, 'AdrLine', $line));
         }
 
         return $root;

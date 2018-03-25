@@ -10,8 +10,6 @@ use InvalidArgumentException;
  */
 class GeneralAccount implements AccountInterface
 {
-    const MAX_LENGTH = 34;
-
     /**
      * @var string
      */
@@ -26,12 +24,7 @@ class GeneralAccount implements AccountInterface
      */
     public function __construct($id)
     {
-        $stringId = (string) $id;
-        if (strlen($stringId) > self::MAX_LENGTH) {
-            throw new InvalidArgumentException('The account identifcation is too long.');
-        }
-
-        $this->id = $stringId;
+        $this->id = Text::assert($id, 34);
     }
 
     /**
@@ -49,7 +42,7 @@ class GeneralAccount implements AccountInterface
     {
         $root = $doc->createElement('Id');
         $other = $doc->createElement('Othr');
-        $other->appendChild($doc->createElement('Id', $this->format()));
+        $other->appendChild(Text::xml($doc, 'Id', $this->format()));
         $root->appendChild($other);
 
         return $root;

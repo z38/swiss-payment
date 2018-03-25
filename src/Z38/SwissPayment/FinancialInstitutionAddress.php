@@ -22,10 +22,12 @@ class FinancialInstitutionAddress implements FinancialInstitutionInterface
      *
      * @param string $name Name of the FI
      * @param PostalAddressInterface Address of the FI
+     *
+     * @throws \InvalidArgumentException When the name is invalid.
      */
     public function __construct($name, PostalAddressInterface $address)
     {
-        $this->name = (string) $name;
+        $this->name = Text::assert($name, 70);
         $this->address = $address;
     }
 
@@ -35,7 +37,7 @@ class FinancialInstitutionAddress implements FinancialInstitutionInterface
     public function asDom(\DOMDocument $doc)
     {
         $xml = $doc->createElement('FinInstnId');
-        $xml->appendChild($doc->createElement('Nm', $this->name));
+        $xml->appendChild(Text::xml($doc, 'Nm', $this->name));
         $xml->appendChild($this->address->asDom($doc));
 
         return $xml;
