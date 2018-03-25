@@ -48,7 +48,7 @@ class CustomerCreditTransferTest extends TestCase
             new Money\CHF(30000), // CHF 300.00
             'Finanzverwaltung Stadt Musterhausen',
             new StructuredPostalAddress('Altstadt', '1a', '4998', 'Muserhausen'),
-            new PostalAccount('80-151-4')
+            new PostalAccount('80-5928-4')
         );
 
         $transaction3 = new IS2CreditTransfer(
@@ -59,7 +59,7 @@ class CustomerCreditTransferTest extends TestCase
             new StructuredPostalAddress('Gartenstrasse', '61', '3000', 'Bern'),
             new IBAN('CH03 0900 0000 3054 1118 8'),
             'Musterbank AG',
-            new PostalAccount('80-5928-4')
+            new PostalAccount('80-151-4')
         );
 
         $iban4 = new IBAN('CH51 0022 5225 9529 1301 C');
