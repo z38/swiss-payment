@@ -27,8 +27,8 @@ use Z38\SwissPayment\UnstructuredPostalAddress;
 
 class CustomerCreditTransferTest extends TestCase
 {
-    const SCHEMA = 'pain.001.001.03.ch.02.xsd';
-    const NS_URI_ROOT = 'http://www.six-interbank-clearing.com/de/';
+    const SCHEMA = 'http://www.six-interbank-clearing.com/de/pain.001.001.03.ch.02.xsd';
+    const SCHEMA_PATH = 'pain.001.001.03.ch.02.xsd';
 
     protected function buildMessage()
     {
@@ -194,7 +194,7 @@ class CustomerCreditTransferTest extends TestCase
         $doc = new \DOMDocument();
         $doc->loadXML($xml);
         $xpath = new \DOMXPath($doc);
-        $xpath->registerNamespace('pain001', self::NS_URI_ROOT.self::SCHEMA);
+        $xpath->registerNamespace('pain001', self::SCHEMA);
 
         $nbOfTxs = $xpath->evaluate('string(//pain001:GrpHdr/pain001:NbOfTxs)');
         $this->assertEquals('12', $nbOfTxs);
@@ -206,7 +206,7 @@ class CustomerCreditTransferTest extends TestCase
     public function testSchemaValidation()
     {
         $xml = $this->buildMessage()->asXml();
-        $schemaPath = __DIR__.'/../../../../'.self::SCHEMA;
+        $schemaPath = __DIR__.'/../../../../'.self::SCHEMA_PATH;
 
         $doc = new \DOMDocument();
         $doc->loadXML($xml);

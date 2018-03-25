@@ -9,8 +9,6 @@ use Z38\SwissPayment\Text;
  */
 abstract class AbstractMessage implements MessageInterface
 {
-    const SCHEMA_LOCATION = 'http://www.six-interbank-clearing.com/de/%s';
-
     /**
      * Builds the DOM of the actual message
      *
@@ -28,6 +26,13 @@ abstract class AbstractMessage implements MessageInterface
     abstract protected function getSchemaName();
 
     /**
+     * Gets the location of the schema
+     *
+     * @return string|null The location or null
+     */
+    abstract protected function getSchemaLocation();
+
+    /**
      * Builds a DOM document of the message
      *
      * @return \DOMDocument
@@ -35,13 +40,15 @@ abstract class AbstractMessage implements MessageInterface
     public function asDom()
     {
         $schema = $this->getSchemaName();
-        $ns = sprintf(self::SCHEMA_LOCATION, $schema);
+        $location = $this->getSchemaLocation();
 
         $doc = new \DOMDocument('1.0', 'UTF-8');
         $root = $doc->createElement('Document');
-        $root->setAttribute('xmlns', $ns);
-        $root->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
-        $root->setAttribute('xsi:schemaLocation', sprintf('%s %s', $ns, $schema));
+        $root->setAttribute('xmlns', $schema);
+        if ($location !== null) {
+            $root->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
+            $root->setAttribute('xsi:schemaLocation', $schema.' '.$location);
+        }
         $root->appendChild($this->buildDom($doc));
         $doc->appendChild($root);
 

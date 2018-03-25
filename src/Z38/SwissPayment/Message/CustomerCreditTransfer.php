@@ -90,6 +90,14 @@ class CustomerCreditTransfer extends AbstractMessage
      */
     protected function getSchemaName()
     {
+        return 'http://www.six-interbank-clearing.com/de/pain.001.001.03.ch.02.xsd';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getSchemaLocation()
+    {
         return 'pain.001.001.03.ch.02.xsd';
     }
 
