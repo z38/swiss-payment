@@ -97,9 +97,9 @@ class CustomerCreditTransferTest extends TestCase
         $transaction7 = new ForeignCreditTransfer(
             'instr-007',
             'e2e-007',
-            new Money\GBP(30000), // GBP 300.00
-            'United Development Brazil Ltda.',
-            new UnstructuredPostalAddress('Rua do Castelino, 1650', '41610-480 Salvador-BA', 'BR'),
+            new Money\KWD(300001), // KWD 300.001
+            'United Development Kuwait',
+            new UnstructuredPostalAddress('P.O. Box 23954 Safat', '13100 Kuwait', 'KW'),
             new IBAN('BR97 0036 0305 0000 1000 9795 493P 1'),
             new FinancialInstitutionAddress('Caixa Economica Federal', new UnstructuredPostalAddress('Rua Sao Valentim, 620', '03446-040 Sao Paulo-SP', 'BR'))
         );
@@ -200,7 +200,7 @@ class CustomerCreditTransferTest extends TestCase
         $this->assertEquals('12', $nbOfTxs);
 
         $ctrlSum = $xpath->evaluate('string(//pain001:GrpHdr/pain001:CtrlSum)');
-        $this->assertEquals('4210.00', $ctrlSum);
+        $this->assertEquals('4210.001', $ctrlSum);
     }
 
     public function testSchemaValidation()
