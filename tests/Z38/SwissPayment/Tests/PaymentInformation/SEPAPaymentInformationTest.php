@@ -52,6 +52,15 @@ class SEPAPaymentInformationTest extends TestCase
             new IBAN('DE89 3704 0044 0532 0130 00'),
             new BIC('COBADEFFXXX')
         ));
+        $payment->addTransaction(new SEPACreditTransfer(
+            'instr-002',
+            'e2e-002',
+            new Money\EUR(70000), // EUR 700.00
+            'Muster Immo AG',
+            new UnstructuredPostalAddress('Musterstraße 35', '80333 München', 'DE'),
+            new IBAN('DE89 3704 0044 0532 0130 00'),
+            new BIC('COBADEFFXXX')
+        ));
 
         $doc = new \DOMDocument();
         $dom = $payment->asDom($doc);
@@ -60,6 +69,9 @@ class SEPAPaymentInformationTest extends TestCase
         $xpath = new \DOMXPath($doc);
         $this->assertEquals('SEPA', $xpath->evaluate('string(/PmtInf/PmtTpInf/SvcLvl/Cd)'));
         $this->assertEquals(0, $xpath->evaluate('count(//CdtTrfTxInf/PmtTpInf)'));
+
+        $this->assertEquals(1, $xpath->evaluate('count(/PmtInf/ChrgBr)'));
+        $this->assertEquals('SLEV', $xpath->evaluate('string(/PmtInf/ChrgBr)'));
     }
 
     /**

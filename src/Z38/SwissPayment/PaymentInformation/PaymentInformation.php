@@ -257,6 +257,11 @@ class PaymentInformation
         $debtorAgent->appendChild($this->debtorAgent->asDom($doc));
         $root->appendChild($debtorAgent);
 
+        if($this->serviceLevel === "SEPA"){
+            $chargeBearer = $doc->createElement("ChrgBr", "SLEV");
+            $root->appendChild($chargeBearer);
+        }
+
         foreach ($this->transactions as $transaction) {
             if ($this->hasPaymentTypeInformation()) {
                 if ($transaction->getLocalInstrument() !== $localInstrument) {
