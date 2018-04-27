@@ -46,10 +46,12 @@ abstract class Money
         if ($this->getDecimals() > 0) {
             $sign = ($this->cents < 0 ? '-' : '');
             $base = pow(10, $this->getDecimals());
+            $minor = abs($this->cents) % $base;
+            $major = (abs($this->cents) - $minor) / $base;
 
-            return sprintf('%s%d.%0'.$this->getDecimals().'d', $sign, intval(abs($this->cents) / $base), abs($this->cents) % $base);
+            return sprintf('%s%d.%0'.$this->getDecimals().'d', $sign, $major, $minor);
         } else {
-            return sprintf('%d', intval($this->cents));
+            return sprintf('%d', $this->cents);
         }
     }
 
