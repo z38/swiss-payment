@@ -19,7 +19,7 @@ abstract class Money
      */
     public function __construct($cents)
     {
-        $this->cents = intval($cents);
+        $this->cents = is_int($cents) ? $cents : intval(round($cents));
     }
 
     /**
