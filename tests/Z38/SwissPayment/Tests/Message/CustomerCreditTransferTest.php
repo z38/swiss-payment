@@ -68,7 +68,7 @@ class CustomerCreditTransferTest extends TestCase
             'e2e-004',
             new Money\CHF(30000), // CHF 300.00
             'Muster Transport AG',
-            new StructuredPostalAddress('Wiesenweg', '14b', '8058', 'Zürich-Flughafen'),
+            null,
             $iban4,
             IID::fromIBAN($iban4)
         );

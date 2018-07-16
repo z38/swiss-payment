@@ -7,7 +7,6 @@ use InvalidArgumentException;
 use Z38\SwissPayment\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
 use Z38\SwissPayment\PostalAccount;
-use Z38\SwissPayment\PostalAddressInterface;
 
 /**
  * IS1CreditTransfer contains all the information about a IS 1-stage (type 2.1) transaction.
@@ -26,7 +25,7 @@ class IS1CreditTransfer extends CreditTransfer
      *
      * @throws \InvalidArgumentException When the amount is not in EUR or CHF.
      */
-    public function __construct($instructionId, $endToEndId, Money\Money $amount, $creditorName, PostalAddressInterface $creditorAddress, PostalAccount $creditorAccount)
+    public function __construct($instructionId, $endToEndId, Money\Money $amount, $creditorName, $creditorAddress, PostalAccount $creditorAccount)
     {
         if (!$amount instanceof Money\EUR && !$amount instanceof Money\CHF) {
             throw new InvalidArgumentException(sprintf(

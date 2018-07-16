@@ -7,7 +7,6 @@ use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
-use Z38\SwissPayment\PostalAddressInterface;
 
 /**
  * SEPACreditTransfer contains all the information about a foreign SEPA (type 5) transaction.
@@ -30,7 +29,7 @@ class SEPACreditTransfer extends CreditTransfer
      * @param IBAN     $creditorIBAN     IBAN of the creditor
      * @param BIC|null $creditorAgentBIC BIC of the creditor's financial institution
      */
-    public function __construct($instructionId, $endToEndId, Money\EUR $amount, $creditorName, PostalAddressInterface $creditorAddress, IBAN $creditorIBAN, BIC $creditorAgentBIC = null)
+    public function __construct($instructionId, $endToEndId, Money\EUR $amount, $creditorName, $creditorAddress, IBAN $creditorIBAN, BIC $creditorAgentBIC = null)
     {
         parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress);
 
