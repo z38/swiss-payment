@@ -3,7 +3,6 @@
 namespace Z38\SwissPayment\Tests\Message;
 
 use Z38\SwissPayment\BIC;
-use Z38\SwissPayment\EmptyPostalAddress;
 use Z38\SwissPayment\FinancialInstitutionAddress;
 use Z38\SwissPayment\GeneralAccount;
 use Z38\SwissPayment\IBAN;
@@ -69,23 +68,13 @@ class CustomerCreditTransferTest extends TestCase
             'e2e-004',
             new Money\CHF(30000), // CHF 300.00
             'Muster Transport AG',
-            new StructuredPostalAddress('Wiesenweg', '14b', '8058', 'Zürich-Flughafen'),
+            null,
             $iban4,
             IID::fromIBAN($iban4)
         );
         $transaction4->setPurpose(new PurposeCode('AIRB'));
 
-        $transaction5 = new BankCreditTransfer(
-            'instr-005',
-            'e2e-005',
-            new Money\CHF(130000), // CHF 1300.00
-            'Muster Transport AG',
-            new EmptyPostalAddress(),
-            new IBAN('CH51 0022 5225 9529 1301 C'),
-            new BIC('UBSWCHZH80A')
-        );
-        
-        $transaction6 = new SEPACreditTransfer(
+        $transaction5 = new SEPACreditTransfer(
             'instr-005',
             'e2e-005',
             new Money\EUR(70000), // EUR 700.00
@@ -95,7 +84,7 @@ class CustomerCreditTransferTest extends TestCase
             new BIC('COBADEFFXXX')
         );
 
-        $transaction7 = new ForeignCreditTransfer(
+        $transaction6 = new ForeignCreditTransfer(
             'instr-006',
             'e2e-006',
             new Money\GBP(6500), // GBP 65.00
@@ -105,7 +94,7 @@ class CustomerCreditTransferTest extends TestCase
             new BIC('NWBKGB2L')
         );
 
-        $transaction8 = new ForeignCreditTransfer(
+        $transaction7 = new ForeignCreditTransfer(
             'instr-007',
             'e2e-007',
             new Money\KWD(300001), // KWD 300.001
@@ -115,7 +104,7 @@ class CustomerCreditTransferTest extends TestCase
             new FinancialInstitutionAddress('Caixa Economica Federal', new UnstructuredPostalAddress('Rua Sao Valentim, 620', '03446-040 Sao Paulo-SP', 'BR'))
         );
 
-        $transaction9 = new ForeignCreditTransfer(
+        $transaction8 = new ForeignCreditTransfer(
             'instr-008',
             'e2e-008',
             new Money\GBP(4500), // GBP 45.00
@@ -124,9 +113,9 @@ class CustomerCreditTransferTest extends TestCase
             new GeneralAccount('123-4567890-78'),
             new FinancialInstitutionAddress('Belfius Bank', new UnstructuredPostalAddress('Pachecolaan 44', '1000 Brussel', 'BE'))
         );
-        $transaction9->setIntermediaryAgent(new BIC('SWHQBEBB'));
+        $transaction8->setIntermediaryAgent(new BIC('SWHQBEBB'));
 
-        $transaction10 = new SEPACreditTransfer(
+        $transaction9 = new SEPACreditTransfer(
             'instr-009',
             'e2e-009',
             new Money\EUR(10000), // EUR 100.00
@@ -136,7 +125,7 @@ class CustomerCreditTransferTest extends TestCase
             new BIC('NOLADE21EMS')
         );
 
-        $transaction11 = new ISRCreditTransfer(
+        $transaction10 = new ISRCreditTransfer(
             'instr-010',
             'e2e-010',
             new Money\CHF(20000), // CHF 200.00
@@ -144,19 +133,19 @@ class CustomerCreditTransferTest extends TestCase
             '210000000003139471430009017'
         );
 
-        $transaction12 = new ISRCreditTransfer(
+        $transaction11 = new ISRCreditTransfer(
             'instr-011',
             'e2e-011',
             new Money\CHF(20000), // CHF 200.00
             new ISRParticipant('01-95106-8'),
             '6019701803969733825'
         );
-        $transaction12->setCreditorDetails(
+        $transaction11->setCreditorDetails(
             'Fritz Bischof',
             new StructuredPostalAddress('Dorfstrasse', '17', '9911', 'Musterwald')
         );
 
-        $transaction13 = new IS1CreditTransfer(
+        $transaction12 = new IS1CreditTransfer(
             'instr-012',
             'e2e-012',
             new Money\CHF(50000), // CHF 500.00
@@ -170,24 +159,23 @@ class CustomerCreditTransferTest extends TestCase
         $payment->addTransaction($transaction2);
         $payment->addTransaction($transaction3);
         $payment->addTransaction($transaction4);
-        $payment->addTransaction($transaction5);
 
         $payment2 = new PaymentInformation('payment-002', 'InnoMuster AG', new BIC('POFICHBEXXX'), new IBAN('CH6309000000250097798'));
+        $payment2->addTransaction($transaction5);
         $payment2->addTransaction($transaction6);
         $payment2->addTransaction($transaction7);
         $payment2->addTransaction($transaction8);
-        $payment2->addTransaction($transaction9);
 
         $payment3 = new SEPAPaymentInformation('payment-003', 'InnoMuster AG', new BIC('POFICHBEXXX'), new IBAN('CH6309000000250097798'));
-        $payment3->addTransaction($transaction10);
+        $payment3->addTransaction($transaction9);
 
         $payment4 = new PaymentInformation('payment-004', 'InnoMuster AG', new BIC('POFICHBEXXX'), new IBAN('CH6309000000250097798'));
+        $payment4->addTransaction($transaction10);
         $payment4->addTransaction($transaction11);
-        $payment4->addTransaction($transaction12);
 
         $payment5 = new PaymentInformation('payment-005', 'InnoMuster AG', new BIC('POFICHBEXXX'), new IBAN('CH6309000000250097798'));
         $payment5->setCategoryPurpose(new CategoryPurposeCode('SALA'));
-        $payment5->addTransaction($transaction13);
+        $payment5->addTransaction($transaction12);
 
         $message = new CustomerCreditTransfer('message-001', 'InnoMuster AG');
         $message->addPayment($payment);
@@ -209,10 +197,10 @@ class CustomerCreditTransferTest extends TestCase
         $xpath->registerNamespace('pain001', self::SCHEMA);
 
         $nbOfTxs = $xpath->evaluate('string(//pain001:GrpHdr/pain001:NbOfTxs)');
-        $this->assertEquals('13', $nbOfTxs);
+        $this->assertEquals('12', $nbOfTxs);
 
         $ctrlSum = $xpath->evaluate('string(//pain001:GrpHdr/pain001:CtrlSum)');
-        $this->assertEquals('5510.001', $ctrlSum);
+        $this->assertEquals('4210.001', $ctrlSum);
     }
 
     public function testSchemaValidation()

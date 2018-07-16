@@ -10,7 +10,6 @@ use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\IID;
 use Z38\SwissPayment\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
-use Z38\SwissPayment\PostalAddressInterface;
 
 /**
  * BankCreditTransfer contains all the information about a type 3 transaction.
@@ -35,7 +34,7 @@ class BankCreditTransfer extends CreditTransfer
      *
      * @throws \InvalidArgumentException When the amount is not in EUR or CHF or when the creditor agent is not BIC or IID.
      */
-    public function __construct($instructionId, $endToEndId, Money\Money $amount, $creditorName, PostalAddressInterface $creditorAddress, IBAN $creditorIBAN, FinancialInstitutionInterface $creditorAgent)
+    public function __construct($instructionId, $endToEndId, Money\Money $amount, $creditorName, $creditorAddress, IBAN $creditorIBAN, FinancialInstitutionInterface $creditorAgent)
     {
         if (!$amount instanceof Money\EUR && !$amount instanceof Money\CHF) {
             throw new InvalidArgumentException(sprintf(

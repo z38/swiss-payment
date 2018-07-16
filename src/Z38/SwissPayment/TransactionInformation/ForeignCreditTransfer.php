@@ -9,7 +9,6 @@ use Z38\SwissPayment\FinancialInstitutionAddress;
 use Z38\SwissPayment\FinancialInstitutionInterface;
 use Z38\SwissPayment\Money\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
-use Z38\SwissPayment\PostalAddressInterface;
 
 /**
  * ForeignCreditTransfer contains all the information about a foreign (type 6) transaction.
@@ -37,7 +36,7 @@ class ForeignCreditTransfer extends CreditTransfer
      * @param AccountInterface                $creditorAccount Account of the creditor
      * @param BIC|FinancialInstitutionAddress $creditorAgent   BIC or address of the creditor's financial institution
      */
-    public function __construct($instructionId, $endToEndId, Money $amount, $creditorName, PostalAddressInterface $creditorAddress, AccountInterface $creditorAccount, FinancialInstitutionInterface $creditorAgent)
+    public function __construct($instructionId, $endToEndId, Money $amount, $creditorName, $creditorAddress, AccountInterface $creditorAccount, FinancialInstitutionInterface $creditorAgent)
     {
         parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress);
 

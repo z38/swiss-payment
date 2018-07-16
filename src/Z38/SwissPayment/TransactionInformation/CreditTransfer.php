@@ -28,7 +28,7 @@ abstract class CreditTransfer
     protected $creditorName;
 
     /**
-     * @var PostalAddressInterface
+     * @var PostalAddressInterface|null
      */
     protected $creditorAddress;
 
@@ -60,15 +60,15 @@ abstract class CreditTransfer
     /**
      * Constructor
      *
-     * @param string                 $instructionId   Identifier of the instruction (should be unique within the message)
-     * @param string                 $endToEndId      End-To-End Identifier of the instruction (passed unchanged along the complete processing chain)
-     * @param Money                  $amount          Amount of money to be transferred
-     * @param string                 $creditorName    Name of the creditor
-     * @param PostalAddressInterface $creditorAddress Address of the creditor
+     * @param string                      $instructionId   Identifier of the instruction (should be unique within the message)
+     * @param string                      $endToEndId      End-To-End Identifier of the instruction (passed unchanged along the complete processing chain)
+     * @param Money                       $amount          Amount of money to be transferred
+     * @param string                      $creditorName    Name of the creditor
+     * @param PostalAddressInterface|null $creditorAddress Address of the creditor
      *
      * @throws \InvalidArgumentException When any of the inputs contain invalid characters or are too long.
      */
-    public function __construct($instructionId, $endToEndId, Money $amount, $creditorName, PostalAddressInterface $creditorAddress)
+    public function __construct($instructionId, $endToEndId, Money $amount, $creditorName, PostalAddressInterface $creditorAddress = null)
     {
         $this->instructionId = Text::assertIdentifier($instructionId);
         $this->endToEndId = Text::assertIdentifier($endToEndId);
@@ -199,7 +199,7 @@ abstract class CreditTransfer
     {
         $creditor = $doc->createElement('Cdtr');
         $creditor->appendChild(Text::xml($doc, 'Nm', $this->creditorName));
-        if (!is_null($this->creditorAddress->asDom($doc))) {
+        if ($this->creditorAddress !== null) {
             $creditor->appendChild($this->creditorAddress->asDom($doc));
         }
 
