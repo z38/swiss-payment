@@ -20,8 +20,8 @@ class FinancialInstitutionAddress implements FinancialInstitutionInterface
     /**
      * Constructor
      *
-     * @param string $name Name of the FI
-     * @param PostalAddressInterface Address of the FI
+     * @param string                 $name    Name of the FI
+     * @param PostalAddressInterface $address Address of the FI
      *
      * @throws \InvalidArgumentException When the name is invalid.
      */
