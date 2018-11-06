@@ -34,11 +34,11 @@ class BankCreditTransfer extends CreditTransfer
      *
      * @throws \InvalidArgumentException When the amount is not in EUR or CHF or when the creditor agent is not BIC or IID.
      */
-    public function __construct($instructionId, $endToEndId, Money\Money $amount, $creditorName, $creditorAddress, IBAN $creditorIBAN, FinancialInstitutionInterface $creditorAgent)
+    public function __construct($instructionId, $endToEndId, Money\Money $amount, $creditorName, $creditorAddress, AccountInterface $creditorAccount, FinancialInstitutionInterface $creditorAgent)
     {
-        if (!$amount instanceof Money\EUR && !$amount instanceof Money\CHF) {
+        if (!$amount instanceof Money) {
             throw new InvalidArgumentException(sprintf(
-                'The amount must be an instance of Z38\SwissPayment\Money\EUR or Z38\SwissPayment\Money\CHF (instance of %s given).',
+                'The amount must be an instance of Z38\SwissPayment\Money (instance of %s given).',
                 get_class($amount)
             ));
         }
@@ -49,7 +49,7 @@ class BankCreditTransfer extends CreditTransfer
 
         parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress);
 
-        $this->creditorIBAN = $creditorIBAN;
+        $this->creditorAccount = $creditorAccount;
         $this->creditorAgent = $creditorAgent;
     }
 
@@ -67,7 +67,7 @@ class BankCreditTransfer extends CreditTransfer
         $root->appendChild($this->buildCreditor($doc));
 
         $creditorAccount = $doc->createElement('CdtrAcct');
-        $creditorAccount->appendChild($this->creditorIBAN->asDom($doc));
+        $creditorAccount->appendChild($this->creditorAccount->asDom($doc));
         $root->appendChild($creditorAccount);
 
         $this->appendPurpose($doc, $root);
