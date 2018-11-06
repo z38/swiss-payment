@@ -37,13 +37,6 @@ class BankCreditTransfer extends CreditTransfer
      */
     public function __construct($instructionId, $endToEndId, Money\Money $amount, $creditorName, $creditorAddress, AccountInterface $creditorAccount, FinancialInstitutionInterface $creditorAgent)
     {
-        if (!$amount instanceof Money) {
-            throw new InvalidArgumentException(sprintf(
-                'The amount must be an instance of Z38\SwissPayment\Money (instance of %s given).',
-                get_class($amount)
-            ));
-        }
-
         if (!$creditorAgent instanceof BIC && !$creditorAgent instanceof IID) {
             throw new InvalidArgumentException('The creditor agent must be an instance of BIC or IID.');
         }

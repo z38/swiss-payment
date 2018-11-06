@@ -1,8 +1,8 @@
 <?php
 
-namespace NordeaPayment\Tests;
+namespace Z38\SwissPayment\Tests;
 
-use NordeaPayment\BBAN;
+use Z38\SwissPayment\BBAN;
 
 class BBANTest extends TestCase
 {
