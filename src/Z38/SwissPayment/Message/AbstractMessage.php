@@ -92,10 +92,15 @@ abstract class AbstractMessage implements MessageInterface
      */
     protected function buildContactDetails(\DOMDocument $doc)
     {
-        $root = $doc->createElement('CtctDtls');
-
-        $root->appendChild(Text::xml($doc, 'Nm', $this->getSoftwareName()));
-        $root->appendChild(Text::xml($doc, 'Othr', $this->getSoftwareVersion()));
+        $root = $doc->createElement('Id');
+        $orgId = $doc->createElement('OrgId');
+        $other = $doc->createElement('Othr');
+        $schmeNm = $doc->createElement('SchmeNm');
+        $schmeNm->appendChild(Text::xml($doc, 'Cd', 'BANK'));
+        $other->appendChild(Text::xml($doc, 'Id', '1111111111'));
+        $other->appendChild($schmeNm);
+        $orgId->appendChild($other);
+        $root->appendChild($orgId);
 
         return $root;
     }
