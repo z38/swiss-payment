@@ -1,5 +1,5 @@
 {
-    "name": "z38/swiss-payment",
+    "name": "invoicery/iso20022-payment",
     "type": "library",
     "license": "MIT",
     "description": "PHP library to generate Swiss pain.001 messages (complies with ISO-20022)",
