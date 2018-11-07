@@ -92,7 +92,6 @@ class BBAN implements AccountInterface
      */
     public function asDom(DOMDocument $doc)
     {
-
         $code = $doc->createElement('Cd', 'BBAN');
         $schem = $doc->createElement('SchmeNm');
         $schem->appendChild($code);

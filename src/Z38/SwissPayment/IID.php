@@ -66,7 +66,7 @@ class IID implements FinancialInstitutionInterface
         $xml = $doc->createElement('FinInstnId');
         $clearingSystem = $doc->createElement('ClrSysMmbId');
         $clearingSystemId = $doc->createElement('ClrSysId');
-        $clearingSystemId->appendChild($doc->createElement('Cd', 'CHBCC'));
+        $clearingSystemId->appendChild($doc->createElement('Cd', 'SESBA'));
         $clearingSystem->appendChild($clearingSystemId);
         $clearingSystem->appendChild($doc->createElement('MmbId', ltrim($this->iid, '0'))); // strip zeroes for legacy systems
         $xml->appendChild($clearingSystem);
