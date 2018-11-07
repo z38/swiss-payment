@@ -31,6 +31,11 @@ class CustomerCreditTransfer extends AbstractMessage
      */
     protected $creationTime;
 
+   /**
+     * @var string
+     */
+    protected $initiatingPartyId;
+
     /**
      * Constructor
      *
@@ -39,12 +44,13 @@ class CustomerCreditTransfer extends AbstractMessage
      *
      * @throws \InvalidArgumentException When any of the inputs contain invalid characters or are too long.
      */
-    public function __construct($id, $initiatingParty)
+    public function __construct($id, $initiatingParty, $initiatingPartyId = null)
     {
         $this->id = Text::assertIdentifier($id);
         $this->initiatingParty = Text::assert($initiatingParty, 70);
         $this->payments = [];
         $this->creationTime = new \DateTime();
+        $this->initiatingPartyId = Text::assertOptional($initiatingPartyId, 70);
     }
 
     /**
