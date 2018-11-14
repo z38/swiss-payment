@@ -88,6 +88,10 @@ class PaymentInformation
         $this->debtorName = Text::assert($debtorName, 70);
         $this->debtorAgent = $debtorAgent;
         $this->debtorIBAN = $debtorIBAN;
+
+        // this is special for our usecase with SEB
+        $this->serviceLevel = 'MPNS';
+        $this->localInstrument = 'SDCL';
     }
 
     /**

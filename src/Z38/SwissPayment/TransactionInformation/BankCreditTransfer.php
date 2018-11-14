@@ -45,7 +45,6 @@ class BankCreditTransfer extends CreditTransfer
 
         $this->creditorAccount = $creditorAccount;
         $this->creditorAgent = $creditorAgent;
-        $this->serviceLevel = 'MPNS';
     }
 
     /**
