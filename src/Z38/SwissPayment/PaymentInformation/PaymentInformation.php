@@ -75,7 +75,7 @@ class PaymentInformation
      *
      * @throws \InvalidArgumentException When any of the inputs contain invalid characters or are too long.
      */
-    public function __construct($id, $debtorName, FinancialInstitutionInterface $debtorAgent, IBAN $debtorIBAN)
+    public function __construct($id, $debtorName, FinancialInstitutionInterface $debtorAgent, IBAN $debtorIBAN, $serviceLevel = '', $localInstrument = '')
     {
         if (!$debtorAgent instanceof BIC && !$debtorAgent instanceof IID) {
             throw new \InvalidArgumentException('The debtor agent must be an instance of BIC or IID.');
@@ -90,8 +90,13 @@ class PaymentInformation
         $this->debtorIBAN = $debtorIBAN;
 
         // this is special for our usecase with SEB
-        $this->serviceLevel = 'MPNS';
-        $this->localInstrument = 'SDCL';
+        if ($serviceLevel) {
+            $this->serviceLevel = 'MPNS';
+        }
+
+        if ($localInstrument) {
+            $this->localInstrument = 'SDCL';
+        }
     }
 
     /**
