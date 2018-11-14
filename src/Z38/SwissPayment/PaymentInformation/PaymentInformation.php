@@ -91,11 +91,11 @@ class PaymentInformation
 
         // this is special for our usecase with SEB
         if ($serviceLevel) {
-            $this->serviceLevel = 'MPNS';
+            $this->serviceLevel = $serviceLevel;
         }
 
         if ($localInstrument) {
-            $this->localInstrument = 'SDCL';
+            $this->localInstrument = $localInstrument;
         }
     }
 
