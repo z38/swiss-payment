@@ -268,10 +268,10 @@ class PaymentInformation
 
         foreach ($this->transactions as $transaction) {
             if ($this->hasPaymentTypeInformation()) {
-                if ($transaction->getLocalInstrument() !== $localInstrument) {
+                if (!empty($transaction->getLocalInstrument()) && $transaction->getLocalInstrument() !== $localInstrument) {
                     throw new \LogicException('You can not set the local instrument on B- and C-level.');
                 }
-                if ($transaction->getServiceLevel() !== $serviceLevel) {
+                if (!empty($transaction->getServiceLevel()) && $transaction->getServiceLevel() !== $serviceLevel) {
                     throw new \LogicException('You can not set the service level on B- and C-level.');
                 }
             }
