@@ -230,17 +230,17 @@ class PaymentInformation
 
         if ($this->hasPaymentTypeInformation()) {
             $paymentType = $doc->createElement('PmtTpInf');
-            $localInstrument = $this->localInstrument ?: $this->inferLocalInstrument();
-            if ($localInstrument !== null) {
-                $localInstrumentNode = $doc->createElement('LclInstrm');
-                $localInstrumentNode->appendChild($doc->createElement('Prtry', $localInstrument));
-                $paymentType->appendChild($localInstrumentNode);
-            }
             $serviceLevel = $this->serviceLevel ?: $this->inferServiceLevel();
             if ($serviceLevel !== null) {
                 $serviceLevelNode = $doc->createElement('SvcLvl');
                 $serviceLevelNode->appendChild($doc->createElement('Cd', $serviceLevel));
                 $paymentType->appendChild($serviceLevelNode);
+            }
+            $localInstrument = $this->localInstrument ?: $this->inferLocalInstrument();
+            if ($localInstrument !== null) {
+                $localInstrumentNode = $doc->createElement('LclInstrm');
+                $localInstrumentNode->appendChild($doc->createElement('Prtry', $localInstrument));
+                $paymentType->appendChild($localInstrumentNode);
             }
             if ($this->categoryPurpose !== null) {
                 $categoryPurposeNode = $doc->createElement('CtgyPurp');
