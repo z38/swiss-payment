@@ -233,13 +233,13 @@ class PaymentInformation
             $serviceLevel = $this->serviceLevel ?: $this->inferServiceLevel();
             if ($serviceLevel !== null) {
                 $serviceLevelNode = $doc->createElement('SvcLvl');
-                $serviceLevelNode->appendChild($doc->createElement('Cd', $serviceLevel));
+                $serviceLevelNode->appendChild($doc->createElement('Prtry', $serviceLevel));
                 $paymentType->appendChild($serviceLevelNode);
             }
             $localInstrument = $this->localInstrument ?: $this->inferLocalInstrument();
             if ($localInstrument !== null) {
                 $localInstrumentNode = $doc->createElement('LclInstrm');
-                $localInstrumentNode->appendChild($doc->createElement('Prtry', $localInstrument));
+                $localInstrumentNode->appendChild($doc->createElement('Cd', $localInstrument));
                 $paymentType->appendChild($localInstrumentNode);
             }
             if ($this->categoryPurpose !== null) {
