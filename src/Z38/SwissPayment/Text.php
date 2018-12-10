@@ -92,10 +92,10 @@ class Text
     {
         $length = function_exists('mb_strlen') ? mb_strlen($input, 'UTF-8') : strlen($input);
         if (!is_string($input) || $length === 0 || $length > $maxLength) {
-            throw new InvalidArgumentException(sprintf('The string %s can not be empty or longer than %d characters.', $input, $maxLength));
+            throw new InvalidArgumentException(sprintf('The string can not be empty or longer than %d characters.', $maxLength));
         }
         if (preg_match($pattern, $input)) {
-            throw new InvalidArgumentException('The string contains invalid characters.');
+            throw new InvalidArgumentException(sprintf('The string %s contains invalid characters.', $input));
         }
 
         return $input;
