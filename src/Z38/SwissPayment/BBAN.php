@@ -32,29 +32,16 @@ class BBAN implements AccountInterface
         if (!self::check($registrationNumber, 4)) {
             throw new InvalidArgumentException('Bank registration number not valid.');
         }
-        if (!self::check($accountNumber, 10)) {
+        if (!self::check($accountNumber, 12)) {
             throw new InvalidArgumentException('Account number not valid.');
         }
         $this->accountNumber = $accountNumber;
         $this->registrationNumber = $registrationNumber;
     }
 
-    /**
-     * Format the BBAN according to Nordea requirements.
-     *
-     * Bank account number must be 14 digits. The first 4 digits of the bank
-     * account number must be the bank registration number. The last 10 digits
-     * must be the account number. If the bank registration number is
-     * shorter than 4 digits or the account number is shorter than 10 digits, it
-     * must be right aligned and padded with leading zeroes.
-     *
-     * @return string The formatted BBAN
-     */
     public function format()
     {
-        $registrationNumber = str_pad($this->registrationNumber, 4, '0', STR_PAD_LEFT);
-        $accountNumber = str_pad($this->accountNumber, 10, '0', STR_PAD_LEFT);
-        return $registrationNumber . $accountNumber;
+        return $this->registrationNumber . $this->accountNumber;
     }
 
     /**
