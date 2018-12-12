@@ -26,7 +26,7 @@ class IID implements FinancialInstitutionInterface
     {
         $iid = (string) $iid;
         if (!preg_match('/^[0-9]{3,5}$/', $iid)) {
-            throw new InvalidArgumentException('IID is not properly formatted.');
+            throw new InvalidArgumentException(sprintf('IID %s is not properly formatted.', $iid));
         }
 
         $this->iid = str_pad($iid, 5, '0', STR_PAD_LEFT);
