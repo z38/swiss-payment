@@ -17,31 +17,25 @@ class BBAN implements AccountInterface
     /**
      * @var string
      */
-    protected $registrationNumber;
     protected $accountNumber;
 
     /**
      * Constructor
      *
-     * @param int $registrationNumber
      * @param int $accountNumber
      *
      */
-    public function __construct($registrationNumber, $accountNumber)
+    public function __construct($accountNumber)
     {
-        if (!self::check($registrationNumber, 4)) {
-            throw new InvalidArgumentException('Bank registration number not valid.');
-        }
         if (!self::check($accountNumber, 12)) {
             throw new InvalidArgumentException('Account number not valid.');
         }
         $this->accountNumber = $accountNumber;
-        $this->registrationNumber = $registrationNumber;
     }
 
     public function format()
     {
-        return $this->registrationNumber . $this->accountNumber;
+        return $this->accountNumber;
     }
 
     /**
