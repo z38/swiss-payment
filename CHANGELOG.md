@@ -1,5 +1,9 @@
 # SwissPayment Changelog
 
+## 1.0.0
+
+  * Set new version for publishing fork on packagist.
+
 ## 0.6.0 (2018-03-25)
 
   * Enforce stricter validation of inputs.
