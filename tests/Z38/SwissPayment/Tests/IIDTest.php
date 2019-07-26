@@ -66,6 +66,9 @@ class IIDTest extends TestCase
     {
         $instance = IID::fromIBAN(new IBAN('CH31 8123 9000 0012 4568 9'));
         $this->assertSame('81239', $instance->format());
+
+        $instance = IID::fromIBAN(new IBAN('LI21 0881 0000 2324 013A A'));
+        $this->assertSame('08810', $instance->format());
     }
 
     /**
