@@ -1,5 +1,10 @@
 # SwissPayment Changelog
 
+## 0.7.0 (2019-01-05)
+
+  * Support creation of IIDs from Lichtenstein IBANs.
+  * Drop support for PHP 5.4 and 5.5.
+
 ## 0.6.0 (2018-03-25)
 
   * Enforce stricter validation of inputs.
