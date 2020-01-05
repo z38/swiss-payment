@@ -81,6 +81,8 @@ class TextTest extends TestCase
             ['  中文A B中文C  ', 'A B'],
             ["ä \nÇ \n \nz", 'ä Ç'],
             ['äääää', 'äää'],
+            ['ab c', 'ab'],
+            ['a | b', 'a b'],
         ];
     }
 

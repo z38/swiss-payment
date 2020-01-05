@@ -21,10 +21,11 @@ class Text
      */
     public static function sanitize($input, $maxLength)
     {
-        $input = preg_replace('/\s+/', ' ', (string) $input);
-        $input = trim(preg_replace(self::TEXT_NON_CH, '', $input));
+        $input = preg_replace(self::TEXT_NON_CH, '', $input);
+        $input = trim(preg_replace('/\s+/', ' ', (string) $input));
+        $input = trim(function_exists('mb_substr') ? mb_substr($input, 0, $maxLength, 'UTF-8') : substr($input, 0, $maxLength));
 
-        return function_exists('mb_substr') ? mb_substr($input, 0, $maxLength, 'UTF-8') : substr($input, 0, $maxLength);
+        return $input;
     }
 
     /**
