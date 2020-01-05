@@ -60,15 +60,21 @@ class IIDTest extends TestCase
     }
 
     /**
+     * @dataProvider fromIBANSamples
      * @covers ::fromIBAN
      */
-    public function testFromIBAN()
+    public function testFromIBAN($iban, $iid)
     {
-        $instance = IID::fromIBAN(new IBAN('CH31 8123 9000 0012 4568 9'));
-        $this->assertSame('81239', $instance->format());
+        $instance = IID::fromIBAN(new IBAN($iban));
+        $this->assertSame($iid, $instance->format());
+    }
 
-        $instance = IID::fromIBAN(new IBAN('LI21 0881 0000 2324 013A A'));
-        $this->assertSame('08810', $instance->format());
+    public function fromIBANSamples()
+    {
+        return [
+            ['CH31 8123 9000 0012 4568 9', '81239'],
+            ['LI21 0881 0000 2324 013A A', '08810'],
+        ];
     }
 
     /**

@@ -37,16 +37,12 @@ class IID implements FinancialInstitutionInterface
      *
      * @param IBAN $iban
      *
-     * @throws \InvalidArgumentException When the supplied IBAN is not from Switzerland
+     * @throws \InvalidArgumentException When the supplied IBAN is not from a supported country.
      */
     public static function fromIBAN(IBAN $iban)
     {
-        $supportedCountries = ['CH', 'LI'];
-
-        if (!in_array($iban->getCountry(), $supportedCountries)) {
-            throw new InvalidArgumentException(
-                 'IID can only be extracted from IBANs of these countries: ' . implode(', ', $supportedCountries)
-            );
+        if (!in_array($iban->getCountry(), ['CH', 'LI'])) {
+            throw new InvalidArgumentException('IID can only be extracted from Swiss and Lichtenstein IBANs.');
         }
 
         return new self(substr($iban->normalize(), 4, 5));
