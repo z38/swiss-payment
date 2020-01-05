@@ -2,6 +2,8 @@
 
 namespace Z38\SwissPayment\Tests;
 
-abstract class TestCase extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase as BaseTestCase;
+
+abstract class TestCase extends BaseTestCase
 {
 }

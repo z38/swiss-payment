@@ -3,6 +3,7 @@
 namespace Z38\SwissPayment\Tests\TransactionInformation;
 
 use Z38\SwissPayment\BIC;
+use Z38\SwissPayment\FinancialInstitutionInterface;
 use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\Money;
 use Z38\SwissPayment\StructuredPostalAddress;
@@ -20,7 +21,7 @@ class BankCreditTransferTest extends TestCase
      */
     public function testInvalidCreditorAgent()
     {
-        $creditorAgent = $this->getMock('\Z38\SwissPayment\FinancialInstitutionInterface');
+        $creditorAgent = $this->createMock(FinancialInstitutionInterface::class);
 
         $transfer = new BankCreditTransfer(
             'id000',

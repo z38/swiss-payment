@@ -5,6 +5,7 @@ namespace Z38\SwissPayment\Tests\PaymentInformation;
 use DOMDocument;
 use DOMXPath;
 use Z38\SwissPayment\BIC;
+use Z38\SwissPayment\FinancialInstitutionInterface;
 use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\Money;
 use Z38\SwissPayment\PaymentInformation\CategoryPurposeCode;
@@ -25,7 +26,7 @@ class PaymentInformationTest extends TestCase
      */
     public function testInvalidDebtorAgent()
     {
-        $debtorAgent = $this->getMock('\Z38\SwissPayment\FinancialInstitutionInterface');
+        $debtorAgent = $this->createMock(FinancialInstitutionInterface::class);
 
         $payment = new PaymentInformation(
             'id000',
