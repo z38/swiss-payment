@@ -17,6 +17,8 @@ use Z38\SwissPayment\PostalAccount;
 use Z38\SwissPayment\StructuredPostalAddress;
 use Z38\SwissPayment\Tests\TestCase;
 use Z38\SwissPayment\TransactionInformation\BankCreditTransfer;
+use Z38\SwissPayment\TransactionInformation\BankCreditTransferWithCreditorReference;
+use Z38\SwissPayment\TransactionInformation\BankCreditTransferWithQRR;
 use Z38\SwissPayment\TransactionInformation\ForeignCreditTransfer;
 use Z38\SwissPayment\TransactionInformation\IS1CreditTransfer;
 use Z38\SwissPayment\TransactionInformation\IS2CreditTransfer;
@@ -51,6 +53,7 @@ class CustomerCreditTransferTest extends TestCase
             new IBAN('CH51 0022 5225 9529 1301 C'),
             new BIC('UBSWCHZH80A')
         );
+        $transaction->setRemittanceInformation("Test Remittance");
         $payment->addTransaction($transaction);
 
         $transaction = new IS1CreditTransfer(
@@ -73,6 +76,7 @@ class CustomerCreditTransferTest extends TestCase
             'Musterbank AG',
             new PostalAccount('80-151-4')
         );
+        $transaction->setRemittanceInformation("Test Remittance");
         $payment->addTransaction($transaction);
 
         $iban = new IBAN('CH51 0022 5225 9529 1301 C');
@@ -85,6 +89,7 @@ class CustomerCreditTransferTest extends TestCase
             $iban,
             IID::fromIBAN($iban)
         );
+        $transaction->setRemittanceInformation("Test Remittance");
         $transaction->setPurpose(new PurposeCode('AIRB'));
         $payment->addTransaction($transaction);
 
@@ -207,6 +212,42 @@ class CustomerCreditTransferTest extends TestCase
             new StructuredPostalAddress('Dorfstrasse', '17', '9911', 'Musterwald'),
             new PostalAccount('60-9-9')
         );
+        $transaction->setRemittanceInformation("Test Remittance");
+        $payment->addTransaction($transaction);
+
+        $payment = new PaymentInformation(
+            'payment-050',
+            'InnoMuster AG',
+            new BIC('ZKBKCHZZ80A'),
+            new IBAN('CH6600700110000204481')
+        );
+        $message->addPayment($payment);
+
+        $qrIban = new IBAN('CH44 3199 9123 0008 8901 2');
+        $transaction = new BankCreditTransferWithQRR(
+            'instr-050',
+            'e2e-050',
+            new Money\CHF(130000), // CHF 1300.00
+            'Muster Transport AG',
+            new StructuredPostalAddress('Wiesenweg', '14b', '8058', 'Zürich-Flughafen'),
+            $qrIban,
+            IID::fromIBAN($qrIban),
+            '210000000003139471430009017'
+        );
+        $transaction->setRemittanceInformation("Test Remittance");
+        $payment->addTransaction($transaction);
+
+        $transaction = new BankCreditTransferWithCreditorReference(
+            'instr-050',
+            'e2e-050',
+            new Money\CHF(130000), // CHF 1300.00
+            'Muster Transport AG',
+            new StructuredPostalAddress('Wiesenweg', '14b', '8058', 'Zürich-Flughafen'),
+            $iban,
+            IID::fromIBAN($iban),
+            'RF 72 0191 2301 0040 5JSH 0438'
+        );
+        $transaction->setRemittanceInformation("Test Remittance");
         $payment->addTransaction($transaction);
 
         return $message;
@@ -222,10 +263,10 @@ class CustomerCreditTransferTest extends TestCase
         $xpath->registerNamespace('pain001', self::SCHEMA);
 
         $nbOfTxs = $xpath->evaluate('string(//pain001:GrpHdr/pain001:NbOfTxs)');
-        $this->assertEquals('12', $nbOfTxs);
+        $this->assertEquals('14', $nbOfTxs);
 
         $ctrlSum = $xpath->evaluate('string(//pain001:GrpHdr/pain001:CtrlSum)');
-        $this->assertEquals('4210.001', $ctrlSum);
+        $this->assertEquals('6810.001', $ctrlSum);
     }
 
     public function testSchemaValidation()
@@ -250,6 +291,6 @@ class CustomerCreditTransferTest extends TestCase
     {
         $message = $this->buildMessage();
 
-        $this->assertSame(5, $message->getPaymentCount());
+        $this->assertSame(6, $message->getPaymentCount());
     }
 }
