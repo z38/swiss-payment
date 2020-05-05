@@ -2,6 +2,8 @@
 
 namespace Z38\SwissPayment\Tests\Message;
 
+use DOMDocument;
+use DOMXPath;
 use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\FinancialInstitutionAddress;
 use Z38\SwissPayment\GeneralAccount;
@@ -216,9 +218,9 @@ class CustomerCreditTransferTest extends TestCase
     {
         $xml = $this->buildMessage()->asXml();
 
-        $doc = new \DOMDocument();
+        $doc = new DOMDocument();
         $doc->loadXML($xml);
-        $xpath = new \DOMXPath($doc);
+        $xpath = new DOMXPath($doc);
         $xpath->registerNamespace('pain001', self::SCHEMA);
 
         $nbOfTxs = $xpath->evaluate('string(//pain001:GrpHdr/pain001:NbOfTxs)');
@@ -233,7 +235,7 @@ class CustomerCreditTransferTest extends TestCase
         $xml = $this->buildMessage()->asXml();
         $schemaPath = __DIR__.'/../../../../'.self::SCHEMA_PATH;
 
-        $doc = new \DOMDocument();
+        $doc = new DOMDocument();
         $doc->loadXML($xml);
 
         libxml_use_internal_errors(true);

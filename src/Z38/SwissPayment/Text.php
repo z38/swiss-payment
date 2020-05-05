@@ -3,6 +3,7 @@
 namespace Z38\SwissPayment;
 
 use DOMDocument;
+use DOMElement;
 use InvalidArgumentException;
 
 class Text
@@ -44,6 +45,9 @@ class Text
     }
 
     /**
+     * @param $input
+     * @param $maxLength
+     * @return string|null
      * @internal
      */
     public static function assertOptional($input, $maxLength)
@@ -56,6 +60,9 @@ class Text
     }
 
     /**
+     * @param $input
+     * @param $maxLength
+     * @return string
      * @internal
      */
     public static function assert($input, $maxLength)
@@ -64,6 +71,8 @@ class Text
     }
 
     /**
+     * @param $input
+     * @return string
      * @internal
      */
     public static function assertIdentifier($input)
@@ -77,6 +86,8 @@ class Text
     }
 
     /**
+     * @param $input
+     * @return mixed
      * @internal
      */
     public static function assertCountryCode($input)
@@ -102,6 +113,10 @@ class Text
     }
 
     /**
+     * @param DOMDocument $doc
+     * @param $tag
+     * @param $content
+     * @return DOMElement
      * @internal
      */
     public static function xml(DOMDocument $doc, $tag, $content)

@@ -74,6 +74,8 @@ class PostalAccount implements AccountInterface
     }
 
     /**
+     * @param $number
+     * @return bool
      * @internal
      */
     public static function validateCheckDigit($number)

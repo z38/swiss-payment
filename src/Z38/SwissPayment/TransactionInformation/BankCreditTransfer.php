@@ -32,7 +32,7 @@ class BankCreditTransfer extends CreditTransfer
      * @param IBAN    $creditorIBAN  IBAN of the creditor
      * @param BIC|IID $creditorAgent BIC or IID of the creditor's financial institution
      *
-     * @throws \InvalidArgumentException When the amount is not in EUR or CHF or when the creditor agent is not BIC or IID.
+     * @throws InvalidArgumentException When the amount is not in EUR or CHF or when the creditor agent is not BIC or IID.
      */
     public function __construct($instructionId, $endToEndId, Money\Money $amount, $creditorName, $creditorAddress, IBAN $creditorIBAN, FinancialInstitutionInterface $creditorAgent)
     {

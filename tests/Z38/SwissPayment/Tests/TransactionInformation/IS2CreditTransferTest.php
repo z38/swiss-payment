@@ -2,6 +2,7 @@
 
 namespace Z38\SwissPayment\Tests\TransactionInformation;
 
+use InvalidArgumentException;
 use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\Money;
 use Z38\SwissPayment\PostalAccount;
@@ -16,11 +17,11 @@ class IS2CreditTransferTest extends TestCase
 {
     /**
      * @covers ::__construct
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalidAmount()
     {
-        $transfer = new IS2CreditTransfer(
+        $this->expectException(InvalidArgumentException::class);
+        new IS2CreditTransfer(
             'id000',
             'name',
             new Money\USD(100),

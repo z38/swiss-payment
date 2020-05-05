@@ -2,6 +2,7 @@
 
 namespace Z38\SwissPayment\Tests\TransactionInformation;
 
+use InvalidArgumentException;
 use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\FinancialInstitutionInterface;
 use Z38\SwissPayment\IBAN;
@@ -17,13 +18,13 @@ class BankCreditTransferTest extends TestCase
 {
     /**
      * @covers ::__construct
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalidCreditorAgent()
     {
+        $this->expectException(InvalidArgumentException::class);
         $creditorAgent = $this->createMock(FinancialInstitutionInterface::class);
 
-        $transfer = new BankCreditTransfer(
+        new BankCreditTransfer(
             'id000',
             'name',
             new Money\CHF(100),
@@ -36,11 +37,11 @@ class BankCreditTransferTest extends TestCase
 
     /**
      * @covers ::__construct
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalidAmount()
     {
-        $transfer = new BankCreditTransfer(
+        $this->expectException(InvalidArgumentException::class);
+        new BankCreditTransfer(
             'id000',
             'name',
             new Money\USD(100),

@@ -23,7 +23,7 @@ class IS1CreditTransfer extends CreditTransfer
      *
      * @param PostalAccount $creditorAccount Postal account of the creditor
      *
-     * @throws \InvalidArgumentException When the amount is not in EUR or CHF.
+     * @throws InvalidArgumentException When the amount is not in EUR or CHF.
      */
     public function __construct($instructionId, $endToEndId, Money\Money $amount, $creditorName, $creditorAddress, PostalAccount $creditorAccount)
     {

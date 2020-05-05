@@ -2,6 +2,9 @@
 
 namespace Z38\SwissPayment;
 
+use DOMDocument;
+use InvalidArgumentException;
+
 /**
  * FinancialInstitutionAddress holds information to identify a FI by name and address
  */
@@ -23,7 +26,7 @@ class FinancialInstitutionAddress implements FinancialInstitutionInterface
      * @param string                 $name    Name of the FI
      * @param PostalAddressInterface $address Address of the FI
      *
-     * @throws \InvalidArgumentException When the name is invalid.
+     * @throws InvalidArgumentException When the name is invalid.
      */
     public function __construct($name, PostalAddressInterface $address)
     {
@@ -34,7 +37,7 @@ class FinancialInstitutionAddress implements FinancialInstitutionInterface
     /**
      * {@inheritdoc}
      */
-    public function asDom(\DOMDocument $doc)
+    public function asDom(DOMDocument $doc)
     {
         $xml = $doc->createElement('FinInstnId');
         $xml->appendChild(Text::xml($doc, 'Nm', $this->name));

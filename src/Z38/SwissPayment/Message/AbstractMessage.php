@@ -2,6 +2,8 @@
 
 namespace Z38\SwissPayment\Message;
 
+use DOMDocument;
+use DOMElement;
 use Z38\SwissPayment\Text;
 
 /**
@@ -12,11 +14,11 @@ abstract class AbstractMessage implements MessageInterface
     /**
      * Builds the DOM of the actual message
      *
-     * @param \DOMDocument $doc
+     * @param DOMDocument $doc
      *
-     * @return \DOMElement
+     * @return DOMElement
      */
-    abstract protected function buildDom(\DOMDocument $doc);
+    abstract protected function buildDom(DOMDocument $doc);
 
     /**
      * Gets the name of the schema
@@ -35,14 +37,14 @@ abstract class AbstractMessage implements MessageInterface
     /**
      * Builds a DOM document of the message
      *
-     * @return \DOMDocument
+     * @return DOMDocument
      */
     public function asDom()
     {
         $schema = $this->getSchemaName();
         $location = $this->getSchemaLocation();
 
-        $doc = new \DOMDocument('1.0', 'UTF-8');
+        $doc = new DOMDocument('1.0', 'UTF-8');
         $root = $doc->createElement('Document');
         $root->setAttribute('xmlns', $schema);
         if ($location !== null) {
@@ -86,11 +88,11 @@ abstract class AbstractMessage implements MessageInterface
     /**
      * Creates a DOM element which contains details about the software used to create the message
      *
-     * @param \DOMDocument $doc
+     * @param DOMDocument $doc
      *
-     * @return \DOMElement
+     * @return DOMElement
      */
-    protected function buildContactDetails(\DOMDocument $doc)
+    protected function buildContactDetails(DOMDocument $doc)
     {
         $root = $doc->createElement('CtctDtls');
 

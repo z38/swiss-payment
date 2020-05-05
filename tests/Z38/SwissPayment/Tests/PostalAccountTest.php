@@ -11,6 +11,7 @@ use Z38\SwissPayment\PostalAccount;
 class PostalAccountTest extends TestCase
 {
     /**
+     * @param $postalAccount
      * @dataProvider validSamples
      * @covers ::__construct
      */
@@ -33,13 +34,14 @@ class PostalAccountTest extends TestCase
     }
 
     /**
+     * @param $postalAccount
      * @dataProvider invalidFormatSamples
      * @covers ::__construct
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Postal account number is not properly formatted.
      */
     public function testInvalidFormat($postalAccount)
     {
+        $this->expectExceptionMessage("Postal account number is not properly formatted.");
+        $this->expectException(InvalidArgumentException::class);
         new PostalAccount($postalAccount);
     }
 
@@ -55,13 +57,14 @@ class PostalAccountTest extends TestCase
     }
 
     /**
+     * @param $postalAccount
      * @dataProvider invalidCheckDigitSamples
      * @covers ::__construct
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Postal account number has an invalid check digit.
      */
     public function testInvalidCheckDigit($postalAccount)
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Postal account number has an invalid check digit.");
         new PostalAccount($postalAccount);
     }
 
@@ -75,6 +78,7 @@ class PostalAccountTest extends TestCase
     }
 
     /**
+     * @param $postalAccount
      * @dataProvider validSamples
      * @covers ::format
      */

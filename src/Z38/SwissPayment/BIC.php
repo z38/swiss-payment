@@ -2,6 +2,9 @@
 
 namespace Z38\SwissPayment;
 
+use DOMDocument;
+use InvalidArgumentException;
+
 /**
  * BIC
  */
@@ -19,12 +22,12 @@ class BIC implements FinancialInstitutionInterface
      *
      * @param string $bic
      *
-     * @throws \InvalidArgumentException When the BIC does contain invalid characters or the length does not match.
+     * @throws InvalidArgumentException When the BIC does contain invalid characters or the length does not match.
      */
     public function __construct($bic)
     {
         if (!preg_match(self::PATTERN, $bic)) {
-            throw new \InvalidArgumentException('BIC is not properly formatted.');
+            throw new InvalidArgumentException('BIC is not properly formatted.');
         }
 
         $this->bic = $bic;
@@ -43,7 +46,7 @@ class BIC implements FinancialInstitutionInterface
     /**
      * {@inheritdoc}
      */
-    public function asDom(\DOMDocument $doc)
+    public function asDom(DOMDocument $doc)
     {
         $xml = $doc->createElement('FinInstnId');
         $xml->appendChild($doc->createElement('BIC', $this->format()));

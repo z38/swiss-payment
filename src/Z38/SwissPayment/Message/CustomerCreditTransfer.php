@@ -2,6 +2,9 @@
 
 namespace Z38\SwissPayment\Message;
 
+use DateTime;
+use DOMDocument;
+use InvalidArgumentException;
 use Z38\SwissPayment\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
 use Z38\SwissPayment\Text;
@@ -27,7 +30,7 @@ class CustomerCreditTransfer extends AbstractMessage
     protected $payments;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     protected $creationTime;
 
@@ -37,24 +40,24 @@ class CustomerCreditTransfer extends AbstractMessage
      * @param string $id              Identifier of the message (should usually be unique over a period of at least 90 days)
      * @param string $initiatingParty Name of the initiating party
      *
-     * @throws \InvalidArgumentException When any of the inputs contain invalid characters or are too long.
+     * @throws InvalidArgumentException When any of the inputs contain invalid characters or are too long.
      */
     public function __construct($id, $initiatingParty)
     {
         $this->id = Text::assertIdentifier($id);
         $this->initiatingParty = Text::assert($initiatingParty, 70);
         $this->payments = [];
-        $this->creationTime = new \DateTime();
+        $this->creationTime = new DateTime();
     }
 
     /**
      * Manually sets the creation time
      *
-     * @param \DateTime $creationTime The desired creation time
+     * @param DateTime $creationTime The desired creation time
      *
      * @return CustomerCreditTransfer This message
      */
-    public function setCreationTime(\DateTime $creationTime)
+    public function setCreationTime(DateTime $creationTime)
     {
         $this->creationTime = $creationTime;
 
@@ -104,7 +107,7 @@ class CustomerCreditTransfer extends AbstractMessage
     /**
      * {@inheritdoc}
      */
-    protected function buildDom(\DOMDocument $doc)
+    protected function buildDom(DOMDocument $doc)
     {
         $transactionCount = 0;
         $transactionSum = new Money\Mixed(0);

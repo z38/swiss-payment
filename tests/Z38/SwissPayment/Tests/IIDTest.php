@@ -4,6 +4,7 @@ namespace Z38\SwissPayment\Tests;
 
 use DOMDocument;
 use DOMXPath;
+use InvalidArgumentException;
 use Z38\SwissPayment\IBAN;
 use Z38\SwissPayment\IID;
 
@@ -13,6 +14,7 @@ use Z38\SwissPayment\IID;
 class IIDTest extends TestCase
 {
     /**
+     * @param $iid
      * @dataProvider validSamples
      * @covers ::__construct
      */
@@ -30,12 +32,13 @@ class IIDTest extends TestCase
     }
 
     /**
+     * @param $iid
      * @dataProvider invalidSamples
      * @covers ::__construct
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalidLength($iid)
     {
+        $this->expectException(InvalidArgumentException::class);
         new IID($iid);
     }
 
@@ -60,6 +63,8 @@ class IIDTest extends TestCase
     }
 
     /**
+     * @param $iban
+     * @param $iid
      * @dataProvider fromIBANSamples
      * @covers ::fromIBAN
      */
@@ -79,10 +84,10 @@ class IIDTest extends TestCase
 
     /**
      * @cover ::fromIban
-     * @expectedException \InvalidArgumentException
      */
     public function testFromIBANForeign()
     {
+        $this->expectException(InvalidArgumentException::class);
         IID::fromIBAN(new IBAN('GB29 NWBK 6016 1331 9268 19'));
     }
 

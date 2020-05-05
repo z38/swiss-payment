@@ -3,6 +3,7 @@
 namespace Z38\SwissPayment\TransactionInformation;
 
 use DOMDocument;
+use DOMElement;
 use InvalidArgumentException;
 use LogicException;
 use Z38\SwissPayment\ISRParticipant;
@@ -101,7 +102,7 @@ class ISRCreditTransfer extends CreditTransfer
     /**
      * {@inheritdoc}
      */
-    protected function appendRemittanceInformation(\DOMDocument $doc, \DOMElement $transaction)
+    protected function appendRemittanceInformation(DOMDocument $doc, DOMElement $transaction)
     {
         $remittanceInformation = $doc->createElement('RmtInf');
 
