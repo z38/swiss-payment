@@ -2,6 +2,10 @@
 
 namespace Z38\SwissPayment\TransactionInformation;
 
+use DOMDocument;
+use DOMElement;
+use DOMNode;
+use InvalidArgumentException;
 use Z38\SwissPayment\Money\Money;
 use Z38\SwissPayment\PaymentInformation\PaymentInformation;
 use Z38\SwissPayment\PostalAddressInterface;
@@ -66,7 +70,7 @@ abstract class CreditTransfer
      * @param string                      $creditorName    Name of the creditor
      * @param PostalAddressInterface|null $creditorAddress Address of the creditor
      *
-     * @throws \InvalidArgumentException When any of the inputs contain invalid characters or are too long.
+     * @throws InvalidArgumentException When any of the inputs contain invalid characters or are too long.
      */
     public function __construct($instructionId, $endToEndId, Money $amount, $creditorName, PostalAddressInterface $creditorAddress = null)
     {
@@ -118,7 +122,7 @@ abstract class CreditTransfer
      *
      * @return CreditTransfer This credit transfer
      *
-     * @throws \InvalidArgumentException When the information contains invalid characters or is too long.
+     * @throws InvalidArgumentException When the information contains invalid characters or is too long.
      */
     public function setRemittanceInformation($remittanceInformation)
     {
@@ -140,22 +144,22 @@ abstract class CreditTransfer
     /**
      * Builds a DOM tree of this transaction
      *
-     * @param \DOMDocument       $doc
+     * @param DOMDocument       $doc
      * @param PaymentInformation $paymentInformation Information on B-level
      *
-     * @return \DOMElement The built DOM tree
+     * @return DOMElement The built DOM tree
      */
-    abstract public function asDom(\DOMDocument $doc, PaymentInformation $paymentInformation);
+    abstract public function asDom(DOMDocument $doc, PaymentInformation $paymentInformation);
 
     /**
      * Builds a DOM tree of this transaction and adds header nodes
      *
-     * @param \DOMDocument       $doc
+     * @param DOMDocument       $doc
      * @param PaymentInformation $paymentInformation The corresponding B-level element
      *
-     * @return \DOMNode The built DOM node
+     * @return DOMNode The built DOM node
      */
-    protected function buildHeader(\DOMDocument $doc, PaymentInformation $paymentInformation)
+    protected function buildHeader(DOMDocument $doc, PaymentInformation $paymentInformation)
     {
         $root = $doc->createElement('CdtTrfTxInf');
 
@@ -191,11 +195,11 @@ abstract class CreditTransfer
     /**
      * Builds a DOM node of the Creditor field
      *
-     * @param \DOMDocument $doc
+     * @param DOMDocument $doc
      *
-     * @return \DOMNode The built DOM node
+     * @return DOMNode The built DOM node
      */
-    protected function buildCreditor(\DOMDocument $doc)
+    protected function buildCreditor(DOMDocument $doc)
     {
         $creditor = $doc->createElement('Cdtr');
         $creditor->appendChild(Text::xml($doc, 'Nm', $this->creditorName));
@@ -209,10 +213,10 @@ abstract class CreditTransfer
     /**
      * Appends the purpose to the transaction
      *
-     * @param \DOMDocument $doc
-     * @param \DOMElement  $transaction
+     * @param DOMDocument $doc
+     * @param DOMElement  $transaction
      */
-    protected function appendPurpose(\DOMDocument $doc, \DOMElement $transaction)
+    protected function appendPurpose(DOMDocument $doc, DOMElement $transaction)
     {
         if ($this->purpose !== null) {
             $purposeNode = $doc->createElement('Purp');
@@ -224,10 +228,10 @@ abstract class CreditTransfer
     /**
      * Appends the remittance information to the transaction
      *
-     * @param \DOMDocument $doc
-     * @param \DOMElement  $transaction
+     * @param DOMDocument $doc
+     * @param DOMElement  $transaction
      */
-    protected function appendRemittanceInformation(\DOMDocument $doc, \DOMElement $transaction)
+    protected function appendRemittanceInformation(DOMDocument $doc, DOMElement $transaction)
     {
         if (!empty($this->remittanceInformation)) {
             $remittanceNode = $doc->createElement('RmtInf');

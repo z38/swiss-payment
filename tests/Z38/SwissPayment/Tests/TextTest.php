@@ -3,6 +3,7 @@
 namespace Z38\SwissPayment\Tests;
 
 use DOMDocument;
+use InvalidArgumentException;
 use Z38\SwissPayment\Text;
 
 /**
@@ -10,11 +11,9 @@ use Z38\SwissPayment\Text;
  */
 class TextTest extends TestCase
 {
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testAssertTooLong()
     {
+        $this->expectException(InvalidArgumentException::class);
         Text::assert('abcd', 3);
     }
 
@@ -28,44 +27,38 @@ class TextTest extends TestCase
         $this->assertSame('÷ß', Text::assert('÷ß', 2));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testAssertInvalid()
     {
+        $this->expectException(InvalidArgumentException::class);
         Text::assert('°', 10);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testAssertIdentiferBeginsWithSlash()
+    public function testAssertIdentifierBeginsWithSlash()
     {
+        $this->expectException(InvalidArgumentException::class);
         Text::assertIdentifier('/abc');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testAssertIdentiferContainsDoubleSlash()
+    public function testAssertIdentifierContainsDoubleSlash()
     {
+        $this->expectException(InvalidArgumentException::class);
         Text::assertIdentifier('ab//c');
     }
 
-    public function testAssertIdentiferContainsSlash()
+    public function testAssertIdentifierContainsSlash()
     {
         $this->assertSame('ab/c', Text::assertIdentifier('ab/c'));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testAssertCountryCodeUppercase()
     {
+        $this->expectException(InvalidArgumentException::class);
         Text::assertCountryCode('ch');
     }
 
     /**
+     * @param $input
+     * @param $expected
      * @dataProvider sanitizeSamples
      */
     public function testSanitize($input, $expected)

@@ -20,7 +20,7 @@ class ISRParticipant implements AccountInterface
      *
      * @param string $number
      *
-     * @throws \InvalidArgumentException When the participation number is not valid.
+     * @throws InvalidArgumentException When the participation number is not valid.
      */
     public function __construct($number)
     {

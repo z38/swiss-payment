@@ -2,11 +2,13 @@
 
 namespace Z38\SwissPayment\Tests;
 
+use InvalidArgumentException;
 use Z38\SwissPayment\IBAN;
 
 class IBANTest extends TestCase
 {
     /**
+     * @param $iban
      * @dataProvider samplesValid
      * @covers \Z38\SwissPayment\IBAN::__construct
      */
@@ -34,6 +36,8 @@ class IBANTest extends TestCase
     }
 
     /**
+     * @param $iban
+     * @param $expectedCountry
      * @dataProvider samplesValid
      * @covers \Z38\SwissPayment\IBAN::getCountry
      */
@@ -62,9 +66,10 @@ class IBANTest extends TestCase
     }
 
     /**
-     * @depends testFormat
+     * @depends      testFormat
      * @dataProvider samplesValid
-     * @covers \Z38\SwissPayment\IBAN::__toString
+     * @covers       \Z38\SwissPayment\IBAN::__toString
+     * @param $iban
      */
     public function testToString($iban)
     {
@@ -81,12 +86,16 @@ class IBANTest extends TestCase
         ];
     }
 
+    /**
+     * @param $iban
+     * @param $valid
+     */
     protected function check($iban, $valid)
     {
         $exception = false;
         try {
-            $temp = new IBAN($iban);
-        } catch (\InvalidArgumentException $e) {
+            new IBAN($iban);
+        } catch (InvalidArgumentException $e) {
             $exception = true;
         }
         $this->assertTrue($exception != $valid);

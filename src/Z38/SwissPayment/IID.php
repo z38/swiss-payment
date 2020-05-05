@@ -20,7 +20,7 @@ class IID implements FinancialInstitutionInterface
      *
      * @param string $iid
      *
-     * @throws \InvalidArgumentException When the IID does contain invalid characters or the length does not match.
+     * @throws InvalidArgumentException When the IID does contain invalid characters or the length does not match.
      */
     public function __construct($iid)
     {
@@ -37,7 +37,8 @@ class IID implements FinancialInstitutionInterface
      *
      * @param IBAN $iban
      *
-     * @throws \InvalidArgumentException When the supplied IBAN is not from a supported country.
+     * @return IID
+     * @throws InvalidArgumentException When the supplied IBAN is not from a supported country.
      */
     public static function fromIBAN(IBAN $iban)
     {

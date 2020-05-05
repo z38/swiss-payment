@@ -2,6 +2,8 @@
 
 namespace Z38\SwissPayment\Tests\Money;
 
+use InvalidArgumentException;
+use stdClass;
 use Z38\SwissPayment\Money;
 use Z38\SwissPayment\Tests\TestCase;
 
@@ -67,16 +69,21 @@ class MoneyTest extends TestCase
 
         $this->assertFalse($instance->equals(false));
         $this->assertFalse($instance->equals(null));
-        $this->assertFalse($instance->equals(new \stdClass()));
+        $this->assertFalse($instance->equals(new stdClass()));
         $this->assertFalse($instance->equals(new Money\EUR(-451)));
         $this->assertFalse($instance->equals(new Money\CHF(-41)));
     }
 
     /**
      * @dataProvider validSamplePairs
-     * @covers \Z38\SwissPayment\Money\Money::plus
-     * @covers \Z38\SwissPayment\Money\Money::minus
-     * @covers \Z38\SwissPayment\Money\Money::compareTo
+     * @covers       \Z38\SwissPayment\Money\Money::plus
+     * @covers       \Z38\SwissPayment\Money\Money::minus
+     * @covers       \Z38\SwissPayment\Money\Money::compareTo
+     * @param $a
+     * @param $b
+     * @param $expectedSum
+     * @param $expectedDiff
+     * @param $expectedComparison
      */
     public function testBinaryOperands($a, $b, $expectedSum, $expectedDiff, $expectedComparison)
     {
@@ -86,32 +93,41 @@ class MoneyTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     *
      * @dataProvider invalidSamplePairs
-     * @covers \Z38\SwissPayment\Money\Money::plus
+     * @covers       \Z38\SwissPayment\Money\Money::plus
+     * @param $a
+     * @param $b
      */
     public function testInvalidPlus($a, $b)
     {
+        $this->expectException(InvalidArgumentException::class);
         $a->plus($b);
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     *
      * @dataProvider invalidSamplePairs
-     * @covers \Z38\SwissPayment\Money\Money::minus
+     * @covers       \Z38\SwissPayment\Money\Money::minus
+     * @param $a
+     * @param $b
      */
     public function testInvalidMinus($a, $b)
     {
+        $this->expectException(InvalidArgumentException::class);
         $a->minus($b);
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     *
      * @dataProvider invalidSamplePairs
-     * @covers \Z38\SwissPayment\Money\Money::minus
+     * @covers       \Z38\SwissPayment\Money\Money::minus
+     * @param $a
+     * @param $b
      */
     public function testInvalidCompareTo($a, $b)
     {
+        $this->expectException(InvalidArgumentException::class);
         $a->compareTo($b);
     }
 

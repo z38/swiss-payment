@@ -2,6 +2,9 @@
 
 namespace Z38\SwissPayment;
 
+use DOMDocument;
+use InvalidArgumentException;
+
 /**
  * This class holds a structured representation of a postal address
  */
@@ -41,7 +44,7 @@ class StructuredPostalAddress implements PostalAddressInterface
      * @param string      $town       Town name
      * @param string      $country    Country code (ISO 3166-1 alpha-2)
      *
-     * @throws \InvalidArgumentException When the address contains invalid characters or is too long.
+     * @throws InvalidArgumentException When the address contains invalid characters or is too long.
      */
     public function __construct($street, $buildingNo, $postCode, $town, $country = 'CH')
     {
@@ -77,7 +80,7 @@ class StructuredPostalAddress implements PostalAddressInterface
     /**
      * {@inheritdoc}
      */
-    public function asDom(\DOMDocument $doc)
+    public function asDom(DOMDocument $doc)
     {
         $root = $doc->createElement('PstlAdr');
 

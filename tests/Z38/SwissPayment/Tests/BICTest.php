@@ -2,11 +2,13 @@
 
 namespace Z38\SwissPayment\Tests;
 
+use InvalidArgumentException;
 use Z38\SwissPayment\BIC;
 
 class BICTest extends TestCase
 {
     /**
+     * @param $bic
      * @dataProvider validSamples
      * @covers \Z38\SwissPayment\BIC::__construct
      */
@@ -34,6 +36,7 @@ class BICTest extends TestCase
     }
 
     /**
+     * @param $bic
      * @dataProvider validSamples
      * @covers \Z38\SwissPayment\BIC::format
      */
@@ -52,12 +55,16 @@ class BICTest extends TestCase
         ];
     }
 
+    /**
+     * @param $iban
+     * @param $valid
+     */
     protected function check($iban, $valid)
     {
         $exception = false;
         try {
-            $temp = new BIC($iban);
-        } catch (\InvalidArgumentException $e) {
+            new BIC($iban);
+        } catch (InvalidArgumentException $e) {
             $exception = true;
         }
         $this->assertTrue($exception != $valid);

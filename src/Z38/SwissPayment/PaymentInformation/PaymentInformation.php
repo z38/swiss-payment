@@ -2,6 +2,11 @@
 
 namespace Z38\SwissPayment\PaymentInformation;
 
+use DateTime;
+use DOMDocument;
+use DOMElement;
+use InvalidArgumentException;
+use LogicException;
 use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\FinancialInstitutionInterface;
 use Z38\SwissPayment\IBAN;
@@ -46,7 +51,7 @@ class PaymentInformation
     protected $categoryPurpose;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     protected $executionDate;
 
@@ -68,23 +73,22 @@ class PaymentInformation
     /**
      * Constructor
      *
-     * @param string  $id          Identifier of this group (should be unique within a message)
-     * @param string  $debtorName  Name of the debtor
-     * @param BIC|IID $debtorAgent BIC or IID of the debtor's financial institution
-     * @param IBAN    $debtorIBAN  IBAN of the debtor's account
+     * @param string $id Identifier of this group (should be unique within a message)
+     * @param string $debtorName Name of the debtor
+     * @param FinancialInstitutionInterface $debtorAgent BIC or IID of the debtor's financial institution
+     * @param IBAN $debtorIBAN IBAN of the debtor's account
      *
-     * @throws \InvalidArgumentException When any of the inputs contain invalid characters or are too long.
      */
     public function __construct($id, $debtorName, FinancialInstitutionInterface $debtorAgent, IBAN $debtorIBAN)
     {
         if (!$debtorAgent instanceof BIC && !$debtorAgent instanceof IID) {
-            throw new \InvalidArgumentException('The debtor agent must be an instance of BIC or IID.');
+            throw new InvalidArgumentException('The debtor agent must be an instance of BIC or IID.');
         }
 
         $this->id = Text::assertIdentifier($id);
         $this->transactions = [];
         $this->batchBooking = true;
-        $this->executionDate = new \DateTime();
+        $this->executionDate = new DateTime();
         $this->debtorName = Text::assert($debtorName, 70);
         $this->debtorAgent = $debtorAgent;
         $this->debtorIBAN = $debtorIBAN;
@@ -134,11 +138,11 @@ class PaymentInformation
      * Sets the required execution date.
      * Where appropriate, the value data is automatically modified to the next possible banking/Post Office working day.
      *
-     * @param \DateTime $executionDate
+     * @param DateTime $executionDate
      *
      * @return PaymentInformation This payment instruction
      */
-    public function setExecutionDate(\DateTime $executionDate)
+    public function setExecutionDate(DateTime $executionDate)
     {
         $this->executionDate = $executionDate;
 
@@ -207,17 +211,20 @@ class PaymentInformation
     /**
      * Builds a DOM tree of this payment instruction
      *
-     * @param \DOMDocument $doc
+     * @param DOMDocument $doc
      *
-     * @return \DOMElement The built DOM tree
+     * @return DOMElement The built DOM tree
      */
-    public function asDom(\DOMDocument $doc)
+    public function asDom(DOMDocument $doc)
     {
         $root = $doc->createElement('PmtInf');
 
         $root->appendChild(Text::xml($doc, 'PmtInfId', $this->id));
         $root->appendChild($doc->createElement('PmtMtd', 'TRF'));
         $root->appendChild($doc->createElement('BtchBookg', ($this->batchBooking ? 'true' : 'false')));
+
+        $localInstrument = null;
+        $serviceLevel = null;
 
         if ($this->hasPaymentTypeInformation()) {
             $paymentType = $doc->createElement('PmtTpInf');
@@ -260,10 +267,10 @@ class PaymentInformation
         foreach ($this->transactions as $transaction) {
             if ($this->hasPaymentTypeInformation()) {
                 if ($transaction->getLocalInstrument() !== $localInstrument) {
-                    throw new \LogicException('You can not set the local instrument on B- and C-level.');
+                    throw new LogicException('You can not set the local instrument on B- and C-level.');
                 }
                 if ($transaction->getServiceLevel() !== $serviceLevel) {
-                    throw new \LogicException('You can not set the service level on B- and C-level.');
+                    throw new LogicException('You can not set the service level on B- and C-level.');
                 }
             }
             $root->appendChild($transaction->asDom($doc, $this));

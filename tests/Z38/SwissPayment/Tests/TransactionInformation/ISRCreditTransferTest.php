@@ -2,6 +2,8 @@
 
 namespace Z38\SwissPayment\Tests\TransactionInformation;
 
+use InvalidArgumentException;
+use LogicException;
 use Z38\SwissPayment\ISRParticipant;
 use Z38\SwissPayment\Money;
 use Z38\SwissPayment\StructuredPostalAddress;
@@ -15,11 +17,11 @@ class ISRCreditTransferTest extends TestCase
 {
     /**
      * @covers ::__construct
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalidAmount()
     {
-        $transfer = new ISRCreditTransfer(
+        $this->expectException(InvalidArgumentException::class);
+        new ISRCreditTransfer(
             'id000',
             'name',
             new Money\USD(100),
@@ -30,11 +32,11 @@ class ISRCreditTransferTest extends TestCase
 
     /**
      * @covers ::__construct
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalidCreditorReference()
     {
-        $transfer = new ISRCreditTransfer(
+        $this->expectException(InvalidArgumentException::class);
+        new ISRCreditTransfer(
             'id000',
             'name',
             new Money\CHF(100),
@@ -45,10 +47,10 @@ class ISRCreditTransferTest extends TestCase
 
     /**
      * @covers ::setRemittanceInformation
-     * @expectedException \LogicException
      */
     public function testSetRemittanceInformation()
     {
+        $this->expectException(LogicException::class);
         $transfer = new ISRCreditTransfer(
             'id000',
             'name',
@@ -75,6 +77,8 @@ class ISRCreditTransferTest extends TestCase
 
         $creditorName = 'name';
         $creditorAddress = new StructuredPostalAddress('foo', '99', '9999', 'bar');
+        $creditorAddressSan = StructuredPostalAddress::sanitize('foo', '99', '9999', 'bar');
+        $this->assertEquals($creditorAddress, $creditorAddressSan);
         $transfer->setCreditorDetails($creditorName, $creditorAddress);
     }
 }

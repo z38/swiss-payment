@@ -3,6 +3,7 @@
 namespace Z38\SwissPayment\TransactionInformation;
 
 use DOMDocument;
+use DOMElement;
 use InvalidArgumentException;
 
 /**
@@ -20,7 +21,7 @@ class PurposeCode
      *
      * @param string $code
      *
-     * @throws \InvalidArgumentException When the code is not valid
+     * @throws InvalidArgumentException When the code is not valid
      */
     public function __construct($code)
     {
@@ -35,9 +36,9 @@ class PurposeCode
     /**
      * Returns a XML representation of this purpose
      *
-     * @param \DOMDocument $doc
+     * @param DOMDocument $doc
      *
-     * @return \DOMElement The built DOM element
+     * @return DOMElement The built DOM element
      */
     public function asDom(DOMDocument $doc)
     {

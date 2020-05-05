@@ -3,6 +3,7 @@
 namespace Z38\SwissPayment\Tests\PaymentInformation;
 
 use DOMDocument;
+use InvalidArgumentException;
 use Z38\SwissPayment\PaymentInformation\CategoryPurposeCode;
 use Z38\SwissPayment\Tests\TestCase;
 
@@ -14,6 +15,7 @@ class CategoryPurposeCodeTest extends TestCase
     /**
      * @dataProvider validSamples
      * @covers ::__construct
+     * @param $code
      */
     public function testValid($code)
     {
@@ -31,10 +33,12 @@ class CategoryPurposeCodeTest extends TestCase
     /**
      * @dataProvider invalidSamples
      * @covers ::__construct
-     * @expectedException \InvalidArgumentException
+     *
+     * @param $code
      */
     public function testInvalid($code)
     {
+        $this->expectException(InvalidArgumentException::class);
         new CategoryPurposeCode($code);
     }
 

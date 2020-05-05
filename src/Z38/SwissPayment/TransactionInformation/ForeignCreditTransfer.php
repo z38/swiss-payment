@@ -3,6 +3,7 @@
 namespace Z38\SwissPayment\TransactionInformation;
 
 use DOMDocument;
+use InvalidArgumentException;
 use Z38\SwissPayment\AccountInterface;
 use Z38\SwissPayment\BIC;
 use Z38\SwissPayment\FinancialInstitutionAddress;
@@ -41,7 +42,7 @@ class ForeignCreditTransfer extends CreditTransfer
         parent::__construct($instructionId, $endToEndId, $amount, $creditorName, $creditorAddress);
 
         if (!$creditorAgent instanceof BIC && !$creditorAgent instanceof FinancialInstitutionAddress) {
-            throw new \InvalidArgumentException('The creditor agent must be an instance of BIC or FinancialInstitutionAddress.');
+            throw new InvalidArgumentException('The creditor agent must be an instance of BIC or FinancialInstitutionAddress.');
         }
 
         $this->creditorAccount = $creditorAccount;

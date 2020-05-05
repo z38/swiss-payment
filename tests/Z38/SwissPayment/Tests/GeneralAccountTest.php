@@ -13,15 +13,16 @@ class GeneralAccountTest extends TestCase
     public function testValid()
     {
         $instance = new GeneralAccount('A-123-4567890-78');
+        $this->assertEquals('A-123-4567890-78', $instance->format());
     }
 
     /**
      * @covers \Z38\SwissPayment\GeneralAccount::__construct
-     * @expectedException InvalidArgumentException
      */
     public function testInvalid()
     {
-        $instance = new GeneralAccount('0123456789012345678901234567890123456789');
+        $this->expectException(InvalidArgumentException::class);
+        new GeneralAccount('0123456789012345678901234567890123456789');
     }
 
     /**
