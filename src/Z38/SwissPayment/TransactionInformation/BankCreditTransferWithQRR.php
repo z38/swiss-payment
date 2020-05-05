@@ -11,7 +11,8 @@ use Z38\SwissPayment\Money;
 use Z38\SwissPayment\PostalAccount;
 
 /**
- * BankCreditTransfer contains all the information about a type 3 transaction.
+ * BankCreditTransfer contains all the information about a type 3 transaction
+ * for a QR-Bill with QR reference (QRR)
  */
 class BankCreditTransferWithQRR extends BankCreditTransfer
 {
