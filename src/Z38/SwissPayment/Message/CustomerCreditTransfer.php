@@ -137,4 +137,34 @@ class CustomerCreditTransfer extends AbstractMessage
 
         return $root;
     }
-}
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function buildDNBDom(\DOMDocument $doc)
+    {
+        $transactionCount = 0;
+        $transactionSum = new Money\Mixed(0);
+        foreach ($this->payments as $payment) {
+            $transactionCount += $payment->getTransactionCount();
+            $transactionSum = $transactionSum->plus($payment->getTransactionSum());
+        }
+
+        $root = $doc->createElement('CstmrCdtTrfInitn');
+        $header = $doc->createElement('GrpHdr');
+        $header->appendChild(Text::xml($doc, 'MsgId', $this->id));
+        $header->appendChild(Text::xml($doc, 'CreDtTm', $this->creationTime->format('Y-m-d\TH:i:sP')));
+        $header->appendChild(Text::xml($doc, 'NbOfTxs', $transactionCount));
+        $header->appendChild(Text::xml($doc, 'CtrlSum', $transactionSum->format()));
+        $initgParty = $doc->createElement('InitgPty');
+        $initgParty->appendChild(Text::xml($doc, 'Nm', $this->initiatingParty));
+        $initgParty->appendChild($this->buildDNBContactDetails($doc));
+        $header->appendChild($initgParty);
+        $root->appendChild($header);
+
+        foreach ($this->payments as $payment) {
+            $root->appendChild($payment->asDom($doc));
+        }
+
+        return $root;
+    }

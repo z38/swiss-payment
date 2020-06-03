@@ -13,4 +13,11 @@ interface MessageInterface
      * @return string The XML source
      */
     public function asXml();
+
+    /**
+     * Returns a XML representation of the message
+     *
+     * @return string The XML source
+     */
+    public function asDNBXml();
 }

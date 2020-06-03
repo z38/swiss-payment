@@ -19,6 +19,15 @@ abstract class AbstractMessage implements MessageInterface
     abstract protected function buildDom(\DOMDocument $doc);
 
     /**
+     * Builds the DOM of the actual message for DNB
+     *
+     * @param \DOMDocument $doc
+     *
+     * @return \DOMElement
+     */
+    abstract protected function buildDNBDom(\DOMDocument $doc);
+
+    /**
      * Gets the name of the schema
      *
      * @return string
@@ -56,11 +65,42 @@ abstract class AbstractMessage implements MessageInterface
     }
 
     /**
+     * Builds a DOM document of the message for DNB
+     *
+     * @return \DOMDocument
+     */
+    public function asDNBDom()
+    {
+        $schema = $this->getSchemaName();
+        $location = $this->getSchemaLocation();
+
+        $doc = new \DOMDocument('1.0', 'UTF-8');
+        $root = $doc->createElement('Document');
+        $root->setAttribute('xmlns', $schema);
+        if ($location !== null) {
+            $root->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
+            $root->setAttribute('xsi:schemaLocation', $schema.' '.$location);
+        }
+        $root->appendChild($this->buildDNBDom($doc));
+        $doc->appendChild($root);
+
+        return $doc;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function asXml()
     {
         return $this->asDom()->saveXML();
+    }
+
+     /**
+     * {@inheritdoc}
+     */
+    public function asDNBXml()
+    {
+        return $this->asDNBDom()->saveXML();
     }
 
     /**
