@@ -144,4 +144,35 @@ abstract class AbstractMessage implements MessageInterface
 
         return $root;
     }
+
+    /**
+     * Creates a DNB DOM element which contains details about the software used to create the message
+     *
+     * @param \DOMDocument $doc
+     *
+     * @return \DOMElement
+     */
+    protected function buildDNBContactDetails(\DOMDocument $doc)
+    {
+        $root = $doc->createElement('Id');
+        $orgId = $doc->createElement('OrgId');
+
+        $other = $doc->createElement('Othr');
+        $schmeNm = $doc->createElement('SchmeNm');
+        $schmeNm->appendChild(Text::xml($doc, 'Cd', 'CUST'));
+        $other->appendChild(Text::xml($doc, 'Id', 'LØNNSFIL'));
+
+        $other2 = $doc->createElement('Othr');
+        $schmeNm2 = $doc->createElement('SchmeNm');
+        $schmeNm2->appendChild(Text::xml($doc, 'Cd', 'BANK'));
+        $other2->appendChild(Text::xml($doc, 'Id', $this->initiatingPartyId));
+
+        $other->appendChild($schmeNm);
+        $other2->appendChild($schmeNm2);
+        $orgId->appendChild($other);
+        $orgId->appendChild($other2);
+        $root->appendChild($orgId);
+
+        return $root;
+    }
 }

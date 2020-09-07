@@ -50,7 +50,7 @@ class BankCreditTransferDNB extends CreditTransfer
     /**
      * {@inheritdoc}
      */
-    public function asDNBDom(DOMDocument $doc, PaymentInformation $paymentInformation)
+    public function asDom(DOMDocument $doc, PaymentInformation $paymentInformation)
     {
         $root = $this->buildHeader($doc, $paymentInformation);
 
