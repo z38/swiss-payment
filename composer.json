@@ -1,6 +1,6 @@
 {
     "name": "invoicery/iso20022-payment",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "type": "library",
     "license": "MIT",
     "description": "PHP library to generate Swiss pain.001 messages (complies with ISO-20022)",
