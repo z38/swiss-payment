@@ -168,3 +168,4 @@ class CustomerCreditTransfer extends AbstractMessage
 
         return $root;
     }
+}
