@@ -222,10 +222,10 @@ class CustomerCreditTransferTest extends TestCase
         $xpath->registerNamespace('pain001', self::SCHEMA);
 
         $nbOfTxs = $xpath->evaluate('string(//pain001:GrpHdr/pain001:NbOfTxs)');
-        $this->assertEquals('12', $nbOfTxs);
+        self::assertEquals('12', $nbOfTxs);
 
         $ctrlSum = $xpath->evaluate('string(//pain001:GrpHdr/pain001:CtrlSum)');
-        $this->assertEquals('4210.001', $ctrlSum);
+        self::assertEquals('4210.001', $ctrlSum);
     }
 
     public function testSchemaValidation()
@@ -241,7 +241,7 @@ class CustomerCreditTransferTest extends TestCase
         foreach (libxml_get_errors() as $error) {
             $this->fail($error->message);
         }
-        $this->assertTrue($valid);
+        self::assertTrue($valid);
         libxml_clear_errors();
         libxml_use_internal_errors(false);
     }
@@ -250,6 +250,6 @@ class CustomerCreditTransferTest extends TestCase
     {
         $message = $this->buildMessage();
 
-        $this->assertSame(5, $message->getPaymentCount());
+        self::assertSame(5, $message->getPaymentCount());
     }
 }

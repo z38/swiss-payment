@@ -22,10 +22,10 @@ class PaymentInformationTest extends TestCase
 {
     /**
      * @covers ::__construct
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalidDebtorAgent()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $debtorAgent = $this->createMock(FinancialInstitutionInterface::class);
 
         $payment = new PaymentInformation(
@@ -48,7 +48,7 @@ class PaymentInformationTest extends TestCase
             new IBAN('CH31 8123 9000 0012 4568 9')
         );
 
-        $this->assertFalse($payment->hasPaymentTypeInformation());
+        self::assertFalse($payment->hasPaymentTypeInformation());
     }
 
     /**
@@ -84,9 +84,9 @@ class PaymentInformationTest extends TestCase
         $xml = $payment->asDom($doc);
 
         $xpath = new DOMXPath($doc);
-        $this->assertNull($payment->getServiceLevel());
-        $this->assertNull($payment->getLocalInstrument());
-        $this->assertSame('CH02', $xpath->evaluate('string(./PmtTpInf/LclInstrm/Prtry)', $xml));
-        $this->assertSame(0.0, $xpath->evaluate('count(./CdtTrfTxInf/PmtTpInf/LclInstrm/Prtry)', $xml));
+        self::assertNull($payment->getServiceLevel());
+        self::assertNull($payment->getLocalInstrument());
+        self::assertSame('CH02', $xpath->evaluate('string(./PmtTpInf/LclInstrm/Prtry)', $xml));
+        self::assertSame(0.0, $xpath->evaluate('count(./CdtTrfTxInf/PmtTpInf/LclInstrm/Prtry)', $xml));
     }
 }

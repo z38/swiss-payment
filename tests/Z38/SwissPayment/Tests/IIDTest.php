@@ -18,7 +18,7 @@ class IIDTest extends TestCase
      */
     public function testValid($iid)
     {
-        $this->assertInstanceOf('Z38\SwissPayment\IID', new IID($iid));
+        self::assertInstanceOf('Z38\SwissPayment\IID', new IID($iid));
     }
 
     public function validSamples()
@@ -32,10 +32,10 @@ class IIDTest extends TestCase
     /**
      * @dataProvider invalidSamples
      * @covers ::__construct
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalidLength($iid)
     {
+        $this->expectException(\InvalidArgumentException::class);
         new IID($iid);
     }
 
@@ -56,7 +56,7 @@ class IIDTest extends TestCase
     public function testFormat()
     {
         $instance = new IID('350');
-        $this->assertSame('00350', $instance->format());
+        self::assertSame('00350', $instance->format());
     }
 
     /**
@@ -66,7 +66,7 @@ class IIDTest extends TestCase
     public function testFromIBAN($iban, $iid)
     {
         $instance = IID::fromIBAN(new IBAN($iban));
-        $this->assertSame($iid, $instance->format());
+        self::assertSame($iid, $instance->format());
     }
 
     public function fromIBANSamples()
@@ -79,10 +79,10 @@ class IIDTest extends TestCase
 
     /**
      * @cover ::fromIban
-     * @expectedException \InvalidArgumentException
      */
     public function testFromIBANForeign()
     {
+        $this->expectException(\InvalidArgumentException::class);
         IID::fromIBAN(new IBAN('GB29 NWBK 6016 1331 9268 19'));
     }
 
@@ -97,6 +97,6 @@ class IIDTest extends TestCase
         $xml = $iid->asDom($doc);
 
         $xpath = new DOMXPath($doc);
-        $this->assertSame('9000', $xpath->evaluate('string(.//MmbId)', $xml));
+        self::assertSame('9000', $xpath->evaluate('string(.//MmbId)', $xml));
     }
 }

@@ -13,16 +13,16 @@ class MoneyTest extends TestCase
     public function testFormatWithDecimals()
     {
         $zero = new Money\CHF(0);
-        $this->assertEquals('0.00', $zero->format());
+        self::assertEquals('0.00', $zero->format());
 
         $money = new Money\CHF(1234567);
-        $this->assertEquals('12345.67', $money->format());
+        self::assertEquals('12345.67', $money->format());
 
         $money = new Money\CHF(-1234567);
-        $this->assertEquals('-12345.67', $money->format());
+        self::assertEquals('-12345.67', $money->format());
 
         $money = new Money\CHF(-2);
-        $this->assertEquals('-0.02', $money->format());
+        self::assertEquals('-0.02', $money->format());
     }
 
     /**
@@ -31,13 +31,13 @@ class MoneyTest extends TestCase
     public function testFormatWithoutDecimals()
     {
         $zero = new Money\JPY(0);
-        $this->assertEquals('0', $zero->format());
+        self::assertEquals('0', $zero->format());
 
         $money = new Money\JPY(123);
-        $this->assertEquals('123', $money->format());
+        self::assertEquals('123', $money->format());
 
         $money = new Money\JPY(-1123);
-        $this->assertEquals('-1123', $money->format());
+        self::assertEquals('-1123', $money->format());
     }
 
     /**
@@ -46,13 +46,13 @@ class MoneyTest extends TestCase
     public function testGetAmount()
     {
         $instance = new Money\CHF(345);
-        $this->assertEquals(345, $instance->getAmount());
+        self::assertEquals(345, $instance->getAmount());
 
         $instance = new Money\CHF(-345);
-        $this->assertEquals(-345, $instance->getAmount());
+        self::assertEquals(-345, $instance->getAmount());
 
         $instance = new Money\CHF(0);
-        $this->assertEquals(0, $instance->getAmount());
+        self::assertEquals(0, $instance->getAmount());
     }
 
     /**
@@ -62,14 +62,14 @@ class MoneyTest extends TestCase
     {
         $instance = new Money\CHF(-451);
 
-        $this->assertTrue($instance->equals($instance));
-        $this->assertTrue($instance->equals(new Money\CHF(-451)));
+        self::assertTrue($instance->equals($instance));
+        self::assertTrue($instance->equals(new Money\CHF(-451)));
 
-        $this->assertFalse($instance->equals(false));
-        $this->assertFalse($instance->equals(null));
-        $this->assertFalse($instance->equals(new \stdClass()));
-        $this->assertFalse($instance->equals(new Money\EUR(-451)));
-        $this->assertFalse($instance->equals(new Money\CHF(-41)));
+        self::assertFalse($instance->equals(false));
+        self::assertFalse($instance->equals(null));
+        self::assertFalse($instance->equals(new \stdClass()));
+        self::assertFalse($instance->equals(new Money\EUR(-451)));
+        self::assertFalse($instance->equals(new Money\CHF(-41)));
     }
 
     /**
@@ -80,38 +80,38 @@ class MoneyTest extends TestCase
      */
     public function testBinaryOperands($a, $b, $expectedSum, $expectedDiff, $expectedComparison)
     {
-        $this->assertTrue($expectedSum->equals($a->plus($b)));
-        $this->assertTrue($expectedDiff->equals($a->minus($b)));
-        $this->assertEquals($expectedComparison, $a->compareTo($b));
+        self::assertTrue($expectedSum->equals($a->plus($b)));
+        self::assertTrue($expectedDiff->equals($a->minus($b)));
+        self::assertEquals($expectedComparison, $a->compareTo($b));
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      * @dataProvider invalidSamplePairs
      * @covers \Z38\SwissPayment\Money\Money::plus
      */
     public function testInvalidPlus($a, $b)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $a->plus($b);
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      * @dataProvider invalidSamplePairs
      * @covers \Z38\SwissPayment\Money\Money::minus
      */
     public function testInvalidMinus($a, $b)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $a->minus($b);
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      * @dataProvider invalidSamplePairs
      * @covers \Z38\SwissPayment\Money\Money::minus
      */
     public function testInvalidCompareTo($a, $b)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $a->compareTo($b);
     }
 

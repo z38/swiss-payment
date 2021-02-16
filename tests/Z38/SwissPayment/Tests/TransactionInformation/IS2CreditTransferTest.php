@@ -16,10 +16,10 @@ class IS2CreditTransferTest extends TestCase
 {
     /**
      * @covers ::__construct
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalidAmount()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $transfer = new IS2CreditTransfer(
             'id000',
             'name',

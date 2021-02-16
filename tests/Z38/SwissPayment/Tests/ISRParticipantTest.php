@@ -15,16 +15,16 @@ class ISRParticipantTest extends TestCase
      */
     public function testValid($number)
     {
-        $this->assertInstanceOf('Z38\SwissPayment\ISRParticipant', new ISRParticipant($number));
+        self::assertInstanceOf('Z38\SwissPayment\ISRParticipant', new ISRParticipant($number));
     }
 
     /**
      * @dataProvider invalidSamples
      * @covers ::__construct
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalid($number)
     {
+        $this->expectException(\InvalidArgumentException::class);
         new ISRParticipant($number);
     }
 
@@ -34,7 +34,7 @@ class ISRParticipantTest extends TestCase
     public function testFormat()
     {
         $instance = new ISRParticipant('010001628');
-        $this->assertEquals('01-162-8', $instance->format());
+        self::assertEquals('01-162-8', $instance->format());
     }
 
     public function validSamples()

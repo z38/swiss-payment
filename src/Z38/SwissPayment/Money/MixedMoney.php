@@ -5,7 +5,7 @@ namespace Z38\SwissPayment\Money;
 /**
  * Sum of money in mixed currencies
  */
-class Mixed extends Money
+class MixedMoney extends Money
 {
     /**
      * @var int

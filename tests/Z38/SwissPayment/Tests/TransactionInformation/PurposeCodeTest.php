@@ -17,7 +17,7 @@ class PurposeCodeTest extends TestCase
      */
     public function testValid($code)
     {
-        $this->assertInstanceOf('Z38\SwissPayment\TransactionInformation\PurposeCode', new PurposeCode($code));
+        self::assertInstanceOf('Z38\SwissPayment\TransactionInformation\PurposeCode', new PurposeCode($code));
     }
 
     public function validSamples()
@@ -33,10 +33,10 @@ class PurposeCodeTest extends TestCase
     /**
      * @dataProvider invalidSamples
      * @covers ::__construct
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalid($code)
     {
+        $this->expectException(\InvalidArgumentException::class);
         new PurposeCode($code);
     }
 
@@ -60,7 +60,7 @@ class PurposeCodeTest extends TestCase
 
         $xml = $iid->asDom($doc);
 
-        $this->assertSame('Cd', $xml->nodeName);
-        $this->assertSame('PHON', $xml->textContent);
+        self::assertSame('Cd', $xml->nodeName);
+        self::assertSame('PHON', $xml->textContent);
     }
 }
