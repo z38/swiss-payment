@@ -1,5 +1,10 @@
 # SwissPayment Changelog
 
+## 0.8.0 (2021-xx-yy)
+
+  * Renamed Mixed to MixedMoney (reserved word as of PHP 7).
+  * Dropped support for PHP 5.6.
+
 ## 0.7.0 (2019-01-05)
 
   * Support creation of IIDs from Lichtenstein IBANs.

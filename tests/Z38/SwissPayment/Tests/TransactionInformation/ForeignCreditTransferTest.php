@@ -16,10 +16,10 @@ class ForeignCreditTransferTest extends TestCase
 {
     /**
      * @covers ::__construct
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalidCreditorAgent()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $creditorAgent = $this->createMock(FinancialInstitutionInterface::class);
 
         $transfer = new ForeignCreditTransfer(

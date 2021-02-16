@@ -15,10 +15,10 @@ class ISRCreditTransferTest extends TestCase
 {
     /**
      * @covers ::__construct
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalidAmount()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $transfer = new ISRCreditTransfer(
             'id000',
             'name',
@@ -30,10 +30,10 @@ class ISRCreditTransferTest extends TestCase
 
     /**
      * @covers ::__construct
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalidCreditorReference()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $transfer = new ISRCreditTransfer(
             'id000',
             'name',
@@ -45,10 +45,11 @@ class ISRCreditTransferTest extends TestCase
 
     /**
      * @covers ::setRemittanceInformation
-     * @expectedException \LogicException
      */
     public function testSetRemittanceInformation()
     {
+        $this->expectException(\LogicException::class);
+
         $transfer = new ISRCreditTransfer(
             'id000',
             'name',
@@ -76,5 +77,7 @@ class ISRCreditTransferTest extends TestCase
         $creditorName = 'name';
         $creditorAddress = new StructuredPostalAddress('foo', '99', '9999', 'bar');
         $transfer->setCreditorDetails($creditorName, $creditorAddress);
+
+        self::assertInstanceOf(ISRCreditTransfer::class, $transfer);
     }
 }

@@ -29,7 +29,7 @@ class SEPAPaymentInformationTest extends TestCase
             new IBAN('CH31 8123 9000 0012 4568 9')
         );
 
-        $this->assertTrue($payment->hasPaymentTypeInformation());
+        self::assertTrue($payment->hasPaymentTypeInformation());
     }
 
     /**
@@ -58,17 +58,17 @@ class SEPAPaymentInformationTest extends TestCase
         $doc->appendChild($dom);
 
         $xpath = new \DOMXPath($doc);
-        $this->assertEquals('SEPA', $xpath->evaluate('string(/PmtInf/PmtTpInf/SvcLvl/Cd)'));
-        $this->assertEquals(0, $xpath->evaluate('count(//CdtTrfTxInf/PmtTpInf)'));
+        self::assertEquals('SEPA', $xpath->evaluate('string(/PmtInf/PmtTpInf/SvcLvl/Cd)'));
+        self::assertEquals(0, $xpath->evaluate('count(//CdtTrfTxInf/PmtTpInf)'));
     }
 
     /**
      * @covers ::asDom
-     * @expectedException \LogicException
-     * @expectedExceptionMessage You can not set the service level on B- and C-level.
      */
     public function testAsDomWithNonSEPATransaction()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('You can not set the service level on B- and C-level.');
         $payment = new SEPAPaymentInformation(
             'id000',
             'name',

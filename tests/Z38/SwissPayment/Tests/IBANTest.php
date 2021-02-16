@@ -40,7 +40,7 @@ class IBANTest extends TestCase
     public function testGetCountry($iban, $expectedCountry)
     {
         $instance = new IBAN($iban);
-        $this->assertEquals($expectedCountry, $instance->getCountry());
+        self::assertEquals($expectedCountry, $instance->getCountry());
     }
 
     /**
@@ -49,7 +49,7 @@ class IBANTest extends TestCase
     public function testFormat()
     {
         $iban = new IBAN('ch9300762011623852 957');
-        $this->assertEquals('CH93 0076 2011 6238 5295 7', $iban->format());
+        self::assertEquals('CH93 0076 2011 6238 5295 7', $iban->format());
     }
 
     /**
@@ -58,7 +58,7 @@ class IBANTest extends TestCase
     public function testNormalize()
     {
         $iban = new IBAN('fr14 2004 10100505 0001 3M02 606');
-        $this->assertEquals('FR1420041010050500013M02606', $iban->normalize());
+        self::assertEquals('FR1420041010050500013M02606', $iban->normalize());
     }
 
     /**
@@ -69,7 +69,7 @@ class IBANTest extends TestCase
     public function testToString($iban)
     {
         $instance = new IBAN($iban);
-        $this->assertEquals($instance->format(), (string) $instance);
+        self::assertEquals($instance->format(), (string) $instance);
     }
 
     public function samplesValid()
@@ -89,6 +89,6 @@ class IBANTest extends TestCase
         } catch (\InvalidArgumentException $e) {
             $exception = true;
         }
-        $this->assertTrue($exception != $valid);
+        self::assertTrue($exception != $valid);
     }
 }

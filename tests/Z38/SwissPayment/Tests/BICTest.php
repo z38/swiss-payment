@@ -40,7 +40,7 @@ class BICTest extends TestCase
     public function testFormat($bic)
     {
         $instance = new BIC($bic);
-        $this->assertEquals($bic, $instance->format());
+        self::assertEquals($bic, $instance->format());
     }
 
     public function validSamples()
@@ -60,6 +60,6 @@ class BICTest extends TestCase
         } catch (\InvalidArgumentException $e) {
             $exception = true;
         }
-        $this->assertTrue($exception != $valid);
+        self::assertTrue($exception != $valid);
     }
 }
