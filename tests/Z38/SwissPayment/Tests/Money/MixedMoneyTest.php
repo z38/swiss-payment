@@ -5,14 +5,14 @@ namespace Z38\SwissPayment\Tests\Money;
 use Z38\SwissPayment\Money;
 use Z38\SwissPayment\Tests\TestCase;
 
-class MixedTest extends TestCase
+class MixedMoneyTest extends TestCase
 {
     /**
-     * @covers \Z38\SwissPayment\Money\Mixed::plus
+     * @covers \Z38\SwissPayment\Money\MixedMoney::plus
      */
     public function testPlus()
     {
-        $sum = new Money\Mixed(0);
+        $sum = new Money\MixedMoney(0);
         $sum = $sum->plus(new Money\CHF(2456));
         $sum = $sum->plus(new Money\CHF(1000));
         $sum = $sum->plus(new Money\JPY(1200));
@@ -21,11 +21,11 @@ class MixedTest extends TestCase
     }
 
     /**
-     * @covers \Z38\SwissPayment\Money\Mixed::minus
+     * @covers \Z38\SwissPayment\Money\MixedMoney::minus
      */
     public function testMinus()
     {
-        $sum = new Money\Mixed(100);
+        $sum = new Money\MixedMoney(100);
         $sum = $sum->minus(new Money\CHF(5000));
         $sum = $sum->minus(new Money\CHF(99));
         $sum = $sum->minus(new Money\JPY(300));

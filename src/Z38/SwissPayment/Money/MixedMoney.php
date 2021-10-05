@@ -5,7 +5,7 @@ namespace Z38\SwissPayment\Money;
 /**
  * Sum of money in mixed currencies
  */
-class Mixed extends Money
+class MixedMoney extends Money
 {
     /**
      * @var int
@@ -80,12 +80,14 @@ class Mixed extends Money
     {
         $decimalsDiff = ($a->getDecimals() - $b->getDecimals());
         $decimalsMax = max($a->getDecimals(), $b->getDecimals());
-        if ($decimalsDiff > 0) {
-            return [$a->getAmount(), pow(10, $decimalsDiff) * $b->getAmount(), $decimalsMax];
-        } elseif ($decimalsDiff < 0) {
-            return [pow(10, -$decimalsDiff) * $a->getAmount(), $b->getAmount(), $decimalsMax];
-        } else {
-            return [$a->getAmount(), $b->getAmount(), $decimalsMax];
-        }
-    }
+		if($decimalsDiff > 0) {
+			return [$a->getAmount(), pow(10, $decimalsDiff) * $b->getAmount(), $decimalsMax];
+		}
+
+		if ($decimalsDiff < 0) {
+			return [pow(10, -$decimalsDiff) * $a->getAmount(), $b->getAmount(), $decimalsMax];
+		}
+
+		return [$a->getAmount(), $b->getAmount(), $decimalsMax];
+	}
 }
